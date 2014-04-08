@@ -26,7 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 /**
- * Main class. Only 
+ * Main class. Only used for reporting plugin metrics
  *
  * @since 1.0.0
  * @author 1Rogue
@@ -34,6 +34,16 @@ import org.mcstats.Metrics;
  */
 public class CodelanxLib extends JavaPlugin {
 
+    /**
+     * Reports metrics to http://mcstats.org/
+     * <br /><br />
+     * {@inheritDoc}
+     * 
+     * Test
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     */
     @Override
     public void onEnable() {
         try {
