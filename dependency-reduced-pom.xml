@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.codelanx</groupId>
+  <artifactId>codelanxlib</artifactId>
+  <name>CodelanxLib</name>
+  <version>1.0.0</version>
+  <description>External supercharged plugin library for ridiculously simplified plugin making</description>
+  <licenses>
+    <license>
+      <name>Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International</name>
+      <url>https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <build>
+    <resources>
+      <resource>
+        <targetPath>.</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
+    </resources>
+    <finalName>${project.name}</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>org.mcstats.bukkit:metrics</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <repositories>
+    <repository>
+      <id>bukkit-repo</id>
+      <url>http://repo.bukkit.org/content/repositories/public/</url>
+    </repository>
+    <repository>
+      <id>Plugin Metrics</id>
+      <url>http://repo.mcstats.org/content/repositories/public</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>LATEST</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  <properties>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
+</project>
+

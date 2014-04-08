@@ -1,0 +1,8 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+load: STARTUP
+author: 1Rogue
+website: http://codelanx.com/
+main: ${project.groupId}.${project.artifactId}.${project.name}
+prefix: CL-Lib
