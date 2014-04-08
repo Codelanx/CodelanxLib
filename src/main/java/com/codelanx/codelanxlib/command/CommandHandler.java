@@ -43,6 +43,7 @@ public class CommandHandler<T extends Plugin> implements CommandExecutor {
     private final T plugin;
     /** Private {@link HashMap} of subcommands */
     private final Map<String, SubCommand> commands = new HashMap<>();
+    private final String command;
 
     /**
      * {@link CommandHandler} constructor
@@ -55,6 +56,8 @@ public class CommandHandler<T extends Plugin> implements CommandExecutor {
      */
     public CommandHandler(T plugin, String command) {
         this.plugin = plugin;
+        
+        this.command = command;
         
         final CommandHandler chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
@@ -157,5 +160,13 @@ public class CommandHandler<T extends Plugin> implements CommandExecutor {
             this.commands.put(command.getName(), command);
         }
     }
-    
+
+    public String getMainCommand() {
+        return this.command;
+    }
+
+    public T getPlugin() {
+        return this.plugin;
+    }
+
 }

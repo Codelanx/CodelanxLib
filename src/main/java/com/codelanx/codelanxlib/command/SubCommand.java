@@ -19,7 +19,6 @@
  */
 package com.codelanx.codelanxlib.command;
 
-import org.bukkit.plugin.Plugin;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -32,7 +31,7 @@ import org.bukkit.command.CommandSender;
 public abstract class SubCommand {
 
     /** The main {@link PhanaticWalls} instance */
-    protected final Plugin plugin;
+    protected final CommandHandler handler;
 
     /**
      * {@link SubCommand} constructor
@@ -40,10 +39,10 @@ public abstract class SubCommand {
      * @since 1.0.0
      * @version 1.0.0
      * 
-     * @param plugin The main {@link PhanaticWalls} instance
+     * @param handler The {@link CommandHandler} associated with this command
      */
-    public SubCommand(Plugin plugin) {
-        this.plugin = plugin;
+    public SubCommand(CommandHandler handler) {
+        this.handler = handler;
     }
 
     /**
@@ -72,6 +71,8 @@ public abstract class SubCommand {
 
     /**
      * Returns the command usage
+     * <br /><br />
+     * TODO: Make this better/dynamic
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -79,7 +80,7 @@ public abstract class SubCommand {
      * @return Usage for this {@link SubCommand}
      */
     public String getUsage() {
-        return "/nations " + this.getName();
+        return "/" + this.handler.getMainCommand() + " " + this.getName();
     }
 
     /**
