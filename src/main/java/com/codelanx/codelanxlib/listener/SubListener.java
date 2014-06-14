@@ -40,7 +40,7 @@ public abstract class SubListener<T extends Plugin> implements Listener {
     }
 
     public final String getName() {
-        return this.getClass().getName() + "@" + this.plugin.getName();
+        return this.getClass().getName();
     }
 
 }

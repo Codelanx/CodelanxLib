@@ -19,11 +19,8 @@
  */
 package com.codelanx.codelanxlib.listener;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 
@@ -75,19 +72,12 @@ public class ListenerManager<T extends Plugin> {
      * @since 1.0.0
      * @version 1.0.0
      * 
-     * @deprecated Use {@link #getListener(com.codelanx.codelanxlib.listener.SubListener)} 
      * @param <T> The {@link SubListener} class to get
      * @param listener An instance of the class type to retrieve
      * @return The listener class, null if disabled or not registered
      */
     public <T extends SubListener> SubListener getListener(Class<T> listener) {
-        try {
-            Method m = listener.getDeclaredMethod("getName");
-            return this.listeners.get((String) m.invoke(null));
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            this.plugin.getLogger().log(Level.SEVERE, "Error reflecting listener field for name!", ex);
-        }
-        return null;
+        return this.listeners.get(listener.getName());
     }
     
     /**
@@ -109,11 +99,11 @@ public class ListenerManager<T extends Plugin> {
      * @since 1.0.0
      * @version 1.0.0
      * 
-     * @param name The name to place the listener as, cannot be the same as a current listener
      * @param listener The listener to register
      * @throws ListenerReregisterException Attempted to register a Listener under a similar key
      */
-    public void registerListener(String name, SubListener listener) throws ListenerReregisterException {
+    public void registerListener(SubListener listener) throws ListenerReregisterException {
+        String name = listener.getName();
         if (!this.listeners.containsKey(name)) {
             this.listeners.put(name, listener);
             this.plugin.getServer().getPluginManager().registerEvents(listener, this.plugin);
