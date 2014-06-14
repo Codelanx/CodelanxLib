@@ -62,8 +62,8 @@ public class ListenerManager<E extends Plugin> {
      * @param listener An instance of the class type to retrieve
      * @return The listener class, null if disabled or not registered
      */
-    public <T extends SubListener<E>> SubListener getListener(Class<T> listener) {
-        return this.listeners.get(listener.getName());
+    public <T extends SubListener<E>> T getListener(Class<T> listener) {
+        return (T) this.listeners.get(listener.getName());
     }
     
     /**
