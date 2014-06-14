@@ -31,11 +31,12 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 1.0.0
  * 
- * @param <T> The specific plugin to use
+ * @param <E> The specific {@link Plugin} to bound all {@link SubListener}
+ *            classes to
  */
-public class ListenerManager<T extends Plugin> {
+public class ListenerManager<E extends Plugin> {
     
-    private final T plugin;
+    private final E plugin;
     private final Map<String, SubListener> listeners = new HashMap<>();
     
     /**
@@ -46,23 +47,8 @@ public class ListenerManager<T extends Plugin> {
      * 
      * @param plugin The main {@link Plugin} instance
      */
-    public ListenerManager(T plugin) {
+    public ListenerManager(E plugin) {
         this.plugin = plugin;
-    }
-    
-    /**
-     * Gets a listener by its string name. Returns null if the listener is
-     * disabled or not registered.
-     * 
-     * @since 1.0.0
-     * @version 1.0.0
-     * 
-     * @deprecated Use {@link #getListener(com.codelanx.codelanxlib.listener.SubListener)} 
-     * @param name Name of the listener
-     * @return The listener class, null if disabled or not registered
-     */
-    public SubListener getListener(String name) {
-        return this.listeners.get(name);
     }
 
     /**
@@ -76,7 +62,7 @@ public class ListenerManager<T extends Plugin> {
      * @param listener An instance of the class type to retrieve
      * @return The listener class, null if disabled or not registered
      */
-    public <T extends SubListener> SubListener getListener(Class<T> listener) {
+    public <T extends SubListener<E>> SubListener getListener(Class<T> listener) {
         return this.listeners.get(listener.getName());
     }
     
@@ -86,11 +72,12 @@ public class ListenerManager<T extends Plugin> {
      * @since 1.0.0
      * @version 1.0.0
      * 
-     * @param name The key to look for
+     * @param <T> The {@link SubListener} class to get
+     * @param listener The listener class to look for
      * @return {@code true} if registered, {@code false} otherwise
      */
-    public boolean isRegistered(String name) {
-        return this.listeners.containsKey(name);
+    public <T extends SubListener<E>> boolean isRegistered(Class<T> listener) {
+        return this.listeners.containsKey(listener.getName());
     }
 
     /**
@@ -99,10 +86,11 @@ public class ListenerManager<T extends Plugin> {
      * @since 1.0.0
      * @version 1.0.0
      * 
+     * @param <T> The {@link SubListener} class to register
      * @param listener The listener to register
      * @throws ListenerReregisterException Attempted to register a Listener under a similar key
      */
-    public void registerListener(SubListener listener) throws ListenerReregisterException {
+    public <T extends SubListener<E>> void registerListener(T listener) throws ListenerReregisterException {
         String name = listener.getName();
         if (!this.listeners.containsKey(name)) {
             this.listeners.put(name, listener);
@@ -119,6 +107,6 @@ public class ListenerManager<T extends Plugin> {
      * @version 1.0.0
      */
     public void cleanup() {
-        HandlerList.unregisterAll(this.plugin);
+        this.listeners.values().forEach((l) -> { HandlerList.unregisterAll(l); });
     }
 }
