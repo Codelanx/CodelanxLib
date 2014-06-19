@@ -89,6 +89,7 @@ public class ListenerManager<E extends Plugin> {
      * @param <T> The {@link SubListener} class to register
      * @param listener The listener to register
      * @throws ListenerReregisterException Attempted to register a Listener under a similar key
+     * @return The listener that was registered
      */
     public <T extends SubListener<E>> T registerListener(T listener) throws ListenerReregisterException {
         String name = listener.getName();
@@ -98,6 +99,32 @@ public class ListenerManager<E extends Plugin> {
             return listener;
         } else {
             throw new ListenerReregisterException("Listener Map already contains key: " + name);
+        }
+    }
+
+    /**
+     * Calls {@link ListenerManager#registerListener(SubListener)} for every
+     * passed listener. Any exception thrown will be re-thrown after all
+     * listeners are registered
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @param <T> The {@link SubListener} class to register
+     * @param listeners The listeners to register
+     * @throws ListenerReregisterException Attempted to register a Listener under a similar key
+     */
+    public <T extends SubListener<E>> void registerListeners(T... listeners) throws ListenerReregisterException {
+        ListenerReregisterException ex = null;
+        for (T listener : listeners) {
+            try {
+                this.registerListener(listener);
+            } catch (ListenerReregisterException e) {
+                if (ex != null) { ex = e; }
+            }
+        }
+        if (ex != null) {
+            throw ex;
         }
     }
     
