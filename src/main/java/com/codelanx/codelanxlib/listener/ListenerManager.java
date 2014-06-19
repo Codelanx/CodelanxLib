@@ -90,11 +90,12 @@ public class ListenerManager<E extends Plugin> {
      * @param listener The listener to register
      * @throws ListenerReregisterException Attempted to register a Listener under a similar key
      */
-    public <T extends SubListener<E>> void registerListener(T listener) throws ListenerReregisterException {
+    public <T extends SubListener<E>> T registerListener(T listener) throws ListenerReregisterException {
         String name = listener.getName();
         if (!this.listeners.containsKey(name)) {
             this.listeners.put(name, listener);
             this.plugin.getServer().getPluginManager().registerEvents(listener, this.plugin);
+            return listener;
         } else {
             throw new ListenerReregisterException("Listener Map already contains key: " + name);
         }
