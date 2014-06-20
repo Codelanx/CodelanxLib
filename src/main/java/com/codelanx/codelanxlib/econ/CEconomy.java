@@ -119,4 +119,9 @@ public class CEconomy {
     public boolean isEnabled() {
         return this.econ != null;
     }
+
+    public net.milkbowl.vault.economy.Economy getVaultEconomy() {
+        return this.econ;
+    }
+
 }
