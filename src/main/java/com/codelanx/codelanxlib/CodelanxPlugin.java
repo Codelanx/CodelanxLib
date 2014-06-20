@@ -26,6 +26,7 @@ import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.implementers.Configurable;
 import com.codelanx.codelanxlib.implementers.Listening;
 import com.codelanx.codelanxlib.listener.ListenerManager;
+import java.io.IOException;
 import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,26 +41,29 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable, Configurable, Listening {
 
-    private final String command;
     protected CommandHandler<E> commands;
     protected ConfigurationLoader config;
     protected ListenerManager<E> listener;
-    
-    public CodelanxPlugin(String command) {
-        this.command = command;
-    }
-    
-    @Override
-    public void onEnable() {
+
+    public <T extends Enum<T> & ConfigMarker<T>> void enable(String command, Class<T> config) {
+        this.getLogger().log(Level.INFO, "Loading configuration...");
+        this.config = new ConfigurationLoader(this, config);
+        
         this.getLogger().log(Level.INFO, "Enabling listeners...");
         this.listener = new ListenerManager<>((E) this);
         
         this.getLogger().log(Level.INFO, "Enabling command handler...");
-        this.commands = new CommandHandler<>((E) this, this.command);
+        this.commands = new CommandHandler<>((E) this, command);
     }
-    
-    protected <T extends Enum<T> & ConfigMarker<T>> void loadConfig(Class<T> config) {
-        this.config = new ConfigurationLoader(this, config);
+
+    @Override
+    public void onDisable() {
+        this.listener.cleanup();
+        try {
+            this.config.saveConfig();
+        } catch (IOException ex) {
+            this.getLogger().log(Level.INFO, "Error saving current configuration!");
+        }
     }
 
     @Override
