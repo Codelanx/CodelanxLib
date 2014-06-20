@@ -27,6 +27,7 @@ import com.codelanx.codelanxlib.implementers.Configurable;
 import com.codelanx.codelanxlib.implementers.Listening;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,19 +42,31 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable, Configurable, Listening {
 
+    private WeakReference<FreshVarWrap> cnfg;
+    private WeakReference<String> cmd;
     protected CommandHandler<E> commands;
     protected ConfigurationLoader config;
     protected ListenerManager<E> listener;
+    
+    public <T extends Enum<T> & ConfigMarker<T>> CodelanxPlugin(String command, Class<T> config) {
+        this.cmd = new WeakReference(command);
+        this.cnfg = new WeakReference(new FreshVarWrap<>(config));
+    }
 
-    public <T extends Enum<T> & ConfigMarker<T>> void enable(String command, Class<T> config) {
+    @Override
+    public void onEnable() {
         this.getLogger().log(Level.INFO, "Loading configuration...");
-        this.config = new ConfigurationLoader(this, config);
+        this.config = new ConfigurationLoader(this, this.cnfg.get().getInst());
+        this.cnfg.clear();
+        this.cnfg = null;
         
         this.getLogger().log(Level.INFO, "Enabling listeners...");
         this.listener = new ListenerManager<>((E) this);
         
         this.getLogger().log(Level.INFO, "Enabling command handler...");
-        this.commands = new CommandHandler<>((E) this, command);
+        this.commands = new CommandHandler<>((E) this, this.cmd.get());
+        this.cmd.clear();
+        this.cmd = null;
     }
 
     @Override
@@ -79,6 +92,23 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     @Override
     public ListenerManager<E> getListenerManager() {
         return this.listener;
+    }
+
+    /** 
+     * Helper class for procuring the fresh-type variable for the passed config
+     * class
+     */
+    private class FreshVarWrap<T extends Enum<T> & ConfigMarker<T>> {
+        
+        private final Class<T> inst;
+        
+        public FreshVarWrap(Class<T> inst) {
+            this.inst = inst;
+        }
+
+        public Class<T> getInst() {
+            return this.inst;
+        }
     }
 
 }
