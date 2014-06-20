@@ -26,13 +26,10 @@ package com.codelanx.codelanxlib.command;
  * @author 1Rogue
  * @version 1.0.0
  */
-public class CommandInUseException extends Exception {
-
-    public CommandInUseException() {
-        super();
-    }
+public class CommandInUseException extends RuntimeException {
 
     public CommandInUseException(String message) {
         super(message);
     }
+
 }

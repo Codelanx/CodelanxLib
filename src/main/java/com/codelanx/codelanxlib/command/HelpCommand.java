@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib.command;
 
+import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.lang.Lang;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Displays help information
@@ -33,13 +35,15 @@ import org.bukkit.command.CommandSender;
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
+ * 
+ * @param <E> Commandable
  */
-public class HelpCommand extends SubCommand {
+public class HelpCommand<E extends Plugin & Commandable> extends SubCommand<E> {
 
     private final String BAR;
 
-    public HelpCommand(CommandHandler handler) {
-        super(handler);
+    public HelpCommand(E plugin) {
+        super(plugin);
         String s = Lang.COMMAND_HELP_BARCHAR.format();
         if (s.isEmpty()) {
             this.BAR = "------------------------------"
@@ -73,7 +77,7 @@ public class HelpCommand extends SubCommand {
         List<String> last = new ArrayList<>();
 
         List<HelpItem> help = this.getOrderedCommands(sender,
-                this.handler.getCommands());
+                this.plugin.getCommandHandler().getCommands());
         int pages = 0;
         for (HelpItem h : help) {
             pages += ((h.getOutputs().size() - 1) / factor) + 1;
@@ -105,11 +109,11 @@ public class HelpCommand extends SubCommand {
         });
         List<String> temp = new ArrayList<>();
         for (SubCommand cmd : vals) {
-            if (this.handler.hasPermission(sender, cmd)) {
+            if (this.plugin.getCommandHandler().hasPermission(sender, cmd)) {
                 temp.add(Lang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info()));
             }
         }
-        back.add(new HelpItem(temp, this.handler.getMainCommand(), 0));
+        back.add(new HelpItem(temp, this.plugin.getCommandHandler().getMainCommand(), 0));
         return back;
     }
 

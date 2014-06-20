@@ -19,7 +19,9 @@
  */
 package com.codelanx.codelanxlib.command;
 
+import com.codelanx.codelanxlib.implementers.Commandable;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Skeleton class representing the structure of a command for use in {@link PhanaticWalls}.
@@ -27,11 +29,13 @@ import org.bukkit.command.CommandSender;
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
+ * 
+ * @param <T> The plugin to use for this listener
  */
-public abstract class SubCommand {
+public abstract class SubCommand<T extends Plugin & Commandable> {
 
     /** The main {@link PhanaticWalls} instance */
-    protected final CommandHandler handler;
+    protected final T plugin;
 
     /**
      * {@link SubCommand} constructor
@@ -39,10 +43,10 @@ public abstract class SubCommand {
      * @since 1.0.0
      * @version 1.0.0
      * 
-     * @param handler The {@link CommandHandler} associated with this command
+     * @param plugin The {@link Plugin} associated with this command
      */
-    public SubCommand(CommandHandler handler) {
-        this.handler = handler;
+    public SubCommand(T plugin) {
+        this.plugin = plugin;
     }
 
     /**
@@ -60,7 +64,7 @@ public abstract class SubCommand {
 
     /**
      * Returns the name of the command, used for storing a hashmap of the
-     * commands
+     * commands as well as the subcommand argument
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -80,7 +84,7 @@ public abstract class SubCommand {
      * @return Usage for this {@link SubCommand}
      */
     public String getUsage() {
-        return "/" + this.handler.getMainCommand() + " " + this.getName();
+        return "/" + this.plugin.getCommandHandler().getMainCommand() + " " + this.getName();
     }
 
     /**

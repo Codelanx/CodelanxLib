@@ -19,6 +19,8 @@
  */
 package com.codelanx.codelanxlib.command;
 
+import com.codelanx.codelanxlib.implementers.Commandable;
+import com.codelanx.codelanxlib.lang.Lang;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,14 +37,14 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 1.0.0
  * 
- * @param <T> The specific plugin to use
+ * @param <E> The specific plugin to use
  */
-public class CommandHandler<T extends Plugin> implements CommandExecutor {
+public class CommandHandler<E extends Plugin & Commandable> implements CommandExecutor {
 
     /** Private {@link Plugin} instance */
-    private final T plugin;
+    private final E plugin;
     /** Private {@link HashMap} of subcommands */
-    private final Map<String, SubCommand> commands = new HashMap<>();
+    private final Map<String, SubCommand<E>> commands = new HashMap<>();
     private final String command;
 
     /**
@@ -54,7 +56,7 @@ public class CommandHandler<T extends Plugin> implements CommandExecutor {
      * @param plugin The main {@link Nations} instance
      * @param command The command to write subcommands under
      */
-    public CommandHandler(T plugin, String command) {
+    public CommandHandler(E plugin, String command) {
         this.plugin = plugin;
         
         this.command = command;
@@ -95,8 +97,8 @@ public class CommandHandler<T extends Plugin> implements CommandExecutor {
             if (command.execute(sender, newArgs)) {
                 return true;
             } else {
-                //sender.sendMessage(__("Usage: " + command.getUsage()));
-                //sender.sendMessage(__(command.info()));
+                sender.sendMessage(Lang.__("Usage: " + command.getUsage()));
+                sender.sendMessage(Lang.__(command.info()));
             }
         } else {
             sender.sendMessage("[Nations] Unknown Command");
@@ -113,7 +115,7 @@ public class CommandHandler<T extends Plugin> implements CommandExecutor {
      * @param name The name of the subcommand
      * @return A relevant {@link Succommand}, or null if it does not exist
      */
-    public SubCommand getCommand(String name) {
+    public SubCommand<E> getCommand(String name) {
         return this.commands.get(name);
     }
     
@@ -125,7 +127,7 @@ public class CommandHandler<T extends Plugin> implements CommandExecutor {
      * 
      * @return A {@link Collection} of all registered {@link SubCommand}
      */
-    public Collection<SubCommand> getCommands() {
+    public Collection<SubCommand<E>> getCommands() {
         return this.commands.values();
     }
 
@@ -145,28 +147,52 @@ public class CommandHandler<T extends Plugin> implements CommandExecutor {
     }
 
     /**
-     * Registers a {@link SubCommand} under "/nations"
+     * Registers a {@link SubCommand} under the main supplied command name
      * 
      * @since 1.0.0
      * @version 1.0.0
      * 
+     * @param <T> The subcommand type
      * @param command The {@link SubCommand} to register
      * @throws CommandInUseException If the command's name is already in use
      */
-    public void registerSubCommand(SubCommand command) throws CommandInUseException {
+    public <T extends SubCommand<E>> T registerSubCommand(T command) throws CommandInUseException {
         if (this.commands.containsKey(command.getName())) {
-            throw new CommandInUseException();
+            throw new CommandInUseException("Command already in use: " + command.getName());
         } else {
             this.commands.put(command.getName(), command);
+            return command;
+        }
+    }
+
+    /**
+     * Registers multiple {@link SubCommand} instance under the provided
+     * command name. If an exception is encountered, it will continue
+     * registering commands and re-throw the exception upon method completion.
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @param <T> The subcommand type
+     * @param commands The {@link SubCommand} instances to register
+     * @throws CommandInUseException If the command's name is already in use
+     */
+    public <T extends SubCommand<E>> void registerSubCommands(T... commands) throws CommandInUseException {
+        CommandInUseException ex = null;
+        for (T command : commands) {
+            try {
+                this.registerSubCommand(command);
+            } catch (CommandInUseException e) {
+                if (ex == null) { ex = e; }
+            }
+        }
+        if (ex != null) {
+            throw ex;
         }
     }
 
     public String getMainCommand() {
         return this.command;
-    }
-
-    public T getPlugin() {
-        return this.plugin;
     }
 
 }
