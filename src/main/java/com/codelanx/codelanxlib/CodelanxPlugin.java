@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib;
 
 import com.codelanx.codelanxlib.command.CommandHandler;
-import com.codelanx.codelanxlib.config.ConfigValue;
+import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
 import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.implementers.Configurable;
@@ -51,14 +51,15 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     
     @Override
     public void onEnable() {
-        this.getLogger().log(Level.INFO, "Loading configuration...");
-        this.config = new ConfigurationLoader(this, ConfigValue.class);
-        
         this.getLogger().log(Level.INFO, "Enabling listeners...");
         this.listener = new ListenerManager<>((E) this);
         
         this.getLogger().log(Level.INFO, "Enabling command handler...");
         this.commands = new CommandHandler<>((E) this, this.command);
+    }
+    
+    protected <T extends Enum<T> & ConfigMarker<T>> void loadConfig(Class<T> config) {
+        this.config = new ConfigurationLoader(this, config);
     }
 
     @Override

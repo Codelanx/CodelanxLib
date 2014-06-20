@@ -38,7 +38,7 @@ import org.bukkit.plugin.Plugin;
  * 
  * @param <E> Commandable
  */
-public class HelpCommand<E extends Plugin & Commandable> extends SubCommand<E> {
+public final class HelpCommand<E extends Plugin & Commandable> extends SubCommand<E> {
 
     private final String BAR;
 

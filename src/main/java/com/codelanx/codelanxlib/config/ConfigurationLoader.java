@@ -37,8 +37,8 @@ import org.bukkit.plugin.Plugin;
  */
 public final class ConfigurationLoader {
 
-    private final File filePath;
-    private final FileConfiguration yaml;
+    protected final File filePath;
+    protected final FileConfiguration yaml;
 
     /**
      * Constructor for {@link ConfigurationLoader}
@@ -73,7 +73,7 @@ public final class ConfigurationLoader {
      * @param file The {@link FileConfiguration to work with
      * @param clazz The {@link ConfigMarker} enum to load config values from
      */
-    public <T extends Enum<T> & ConfigMarker> ConfigurationLoader(File filePath, FileConfiguration file, Class<T> clazz) {
+    public <T extends Enum<T> & ConfigMarker<T>> ConfigurationLoader(File filePath, FileConfiguration file, Class<T> clazz) {
         this.filePath = filePath;
         this.yaml = file;
         ConfigMarker.setDefaults(yaml, clazz);

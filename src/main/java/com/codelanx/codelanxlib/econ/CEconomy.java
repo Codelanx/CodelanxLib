@@ -39,7 +39,7 @@ public class CEconomy {
         private final boolean status;
         private final double amount;
         
-        public ChargeStatus(boolean status, double amount) {
+        protected ChargeStatus(boolean status, double amount) {
             this.status = status;
             this.amount = amount;
         }
@@ -53,8 +53,7 @@ public class CEconomy {
         }
     }
     
-    private final net.milkbowl.vault.economy.Economy econ;
-    private final double discount = 0.85D;
+    protected final net.milkbowl.vault.economy.Economy econ;
     
     public CEconomy(Plugin plugin) {
         if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
@@ -117,10 +116,10 @@ public class CEconomy {
     }
 
     public boolean isEnabled() {
-        return this.econ != null;
+        return this.getVaultEconomy() != null;
     }
 
-    public net.milkbowl.vault.economy.Economy getVaultEconomy() {
+    public final net.milkbowl.vault.economy.Economy getVaultEconomy() {
         return this.econ;
     }
 

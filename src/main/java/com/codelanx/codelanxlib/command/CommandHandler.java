@@ -42,10 +42,10 @@ import org.bukkit.plugin.Plugin;
 public class CommandHandler<E extends Plugin & Commandable> implements CommandExecutor {
 
     /** Private {@link Plugin} instance */
-    private final E plugin;
+    protected final E plugin;
     /** Private {@link HashMap} of subcommands */
-    private final Map<String, SubCommand<E>> commands = new HashMap<>();
-    private final String command;
+    protected final Map<String, SubCommand<E>> commands = new HashMap<>();
+    protected String command;
 
     /**
      * {@link CommandHandler} constructor
@@ -115,7 +115,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
      * @param name The name of the subcommand
      * @return A relevant {@link Succommand}, or null if it does not exist
      */
-    public SubCommand<E> getCommand(String name) {
+    public final SubCommand<E> getCommand(String name) {
         return this.commands.get(name);
     }
     
@@ -127,7 +127,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
      * 
      * @return A {@link Collection} of all registered {@link SubCommand}
      */
-    public Collection<SubCommand<E>> getCommands() {
+    public final Collection<SubCommand<E>> getCommands() {
         return this.commands.values();
     }
 
@@ -156,7 +156,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
      * @param command The {@link SubCommand} to register
      * @throws CommandInUseException If the command's name is already in use
      */
-    public <T extends SubCommand<E>> T registerSubCommand(T command) throws CommandInUseException {
+    public final <T extends SubCommand<E>> T registerSubCommand(T command) throws CommandInUseException {
         if (this.commands.containsKey(command.getName())) {
             throw new CommandInUseException("Command already in use: " + command.getName());
         } else {
@@ -177,7 +177,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
      * @param commands The {@link SubCommand} instances to register
      * @throws CommandInUseException If the command's name is already in use
      */
-    public <T extends SubCommand<E>> void registerSubCommands(T... commands) throws CommandInUseException {
+    public final <T extends SubCommand<E>> void registerSubCommands(T... commands) throws CommandInUseException {
         CommandInUseException ex = null;
         for (T command : commands) {
             try {

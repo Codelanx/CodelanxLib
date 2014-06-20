@@ -36,8 +36,8 @@ import org.bukkit.plugin.Plugin;
  */
 public class ListenerManager<E extends Plugin> {
     
-    private final E plugin;
-    private final Map<String, SubListener> listeners = new HashMap<>();
+    protected final E plugin;
+    protected final Map<String, SubListener> listeners = new HashMap<>();
     
     /**
      * {@link ListenerManager} constructor
