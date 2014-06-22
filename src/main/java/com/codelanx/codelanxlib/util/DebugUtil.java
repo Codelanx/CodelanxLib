@@ -148,9 +148,19 @@ public class DebugUtil {
         }
     }
 
-    public static void print(String out) {
+    public static void print(Level level, String format, Object... args) {
         if (!DebugUtil.ENABLED) { return; }
-        Logger.getLogger(DebugUtil.class.getName()).log(Level.WARNING, "[debug] {0}", out);
+        Logger.getLogger(DebugUtil.class.getName()).log(level,
+                "[debug] {0}", String.format(format, args));
+    }
+
+    public static void print(String format, Object... args) {
+        DebugUtil.print(Level.INFO, format, args);
+    }
+
+    public static void error(String message, Throwable error) {
+        Logger.getLogger(DebugUtil.class.getName()).log(Level.SEVERE,
+                message, error);
     }
 
     public static void toggleOutput(boolean output) {
