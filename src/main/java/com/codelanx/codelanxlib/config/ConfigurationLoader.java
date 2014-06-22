@@ -21,8 +21,10 @@ package com.codelanx.codelanxlib.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -175,7 +177,20 @@ public final class ConfigurationLoader {
     public synchronized boolean getBoolean(ConfigMarker path) {
         return this.yaml.getBoolean(path.getPath());
     }
-    
+
+    public Map<String, Object> getSection(ConfigMarker path) {
+        Object o = this.yaml.get(path.getPath());
+        Map<String, Object> map;
+        if (o instanceof MemorySection) {
+            map = ((MemorySection) o).getValues(false);
+        } else if (o instanceof Map) {
+            map = (Map<String, Object>) o;
+        } else {
+            return null;
+        }
+        return map;
+    }
+
     public Object get(ConfigMarker path) {
         return this.yaml.get(path.getPath());
     }
