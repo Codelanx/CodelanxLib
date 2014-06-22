@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  */
 public class DebugUtil {
     
-    private static final boolean ENABLED = true;
+    private static boolean ENABLED = true;
 
     public static class TimeUtil {
 
@@ -149,7 +149,12 @@ public class DebugUtil {
     }
 
     public static void print(String out) {
-        if (!ENABLED) { return; }
+        if (!DebugUtil.ENABLED) { return; }
         Logger.getLogger(DebugUtil.class.getName()).log(Level.WARNING, "[debug] {0}", out);
     }
+
+    public static void toggleOutput(boolean output) {
+        DebugUtil.ENABLED = output;
+    }
+
 }
