@@ -20,11 +20,10 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
-import com.codelanx.codelanxlib.lang.Lang;
+import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -44,7 +43,7 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
 
     public HelpCommand(E plugin) {
         super(plugin);
-        String s = Lang.COMMAND_HELP_BARCHAR.format();
+        String s = InternalLang.COMMAND_HELP_BARCHAR.format();
         if (s.isEmpty()) {
             this.BAR = "------------------------------"
                     + "------------------------------";
@@ -71,17 +70,10 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
         }
 
         int factor = 5;
-        int page = 1;
-        int num = 0;
-        String title;
-        List<String> last = new ArrayList<>();
-
         List<HelpItem> help = this.getOrderedCommands(sender,
                 this.plugin.getCommandHandler().getCommands());
         int pages = 0;
-        for (HelpItem h : help) {
-            pages += ((h.getOutputs().size() - 1) / factor) + 1;
-        }
+        pages = help.stream().map((h) -> ((h.getOutputs().size() - 1) / factor) + 1).reduce(pages, Integer::sum);
         if (select > pages) {
             select = pages;
         }
@@ -89,7 +81,7 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
             select = 1;
         }
 
-        sender.sendMessage(Lang.__(this.showHelp(
+        sender.sendMessage(InternalLang.__(this.showHelp(
                 this.getView(help, select, factor), pages)));
 
         return true;
@@ -99,20 +91,12 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
                                               Collection<SubCommand> cmds) {
         List<HelpItem> back = new ArrayList<>();
         List<SubCommand> vals = new ArrayList<>(cmds);
-        Collections.sort(vals, new Comparator<SubCommand>() {
-
-            @Override
-            public int compare(SubCommand o1, SubCommand o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-
-        });
+        Collections.sort(vals, (SubCommand o1, SubCommand o2) -> o1.getName().compareTo(o2.getName()));
         List<String> temp = new ArrayList<>();
-        for (SubCommand cmd : vals) {
-            if (this.plugin.getCommandHandler().hasPermission(sender, cmd)) {
-                temp.add(Lang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info()));
-            }
-        }
+        vals.stream().filter((cmd) ->
+                (this.plugin.getCommandHandler().hasPermission(sender, cmd))).forEach((cmd) -> {
+            temp.add(InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info()));
+        });
         back.add(new HelpItem(temp, this.plugin.getCommandHandler().getMainCommand(), 0));
         return back;
     }
@@ -141,15 +125,15 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
 
     private String showHelp(HelpItem item, int pages) {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.formatTitle(Lang.COMMAND_HELP_TITLEFORMAT.format(item.getTitle()),
-                Lang.COMMAND_HELP_BARCOLOR.format(),
-                Lang.COMMAND_HELP_TITLECOLOR.format()));
+        sb.append(this.formatTitle(InternalLang.COMMAND_HELP_TITLEFORMAT.format(item.getTitle()),
+                InternalLang.COMMAND_HELP_BARCOLOR.format(),
+                InternalLang.COMMAND_HELP_TITLECOLOR.format()));
         sb.append('\n');
-        sb.append(Lang.COMMAND_HELP_PAGEFORMAT.format(item.getPage(), pages));
+        sb.append(InternalLang.COMMAND_HELP_PAGEFORMAT.format(item.getPage(), pages));
         sb.append('\n');
-        for (String s : item.getOutputs()) {
+        item.getOutputs().stream().forEach((s) -> {
             sb.append(s).append('\n');
-        }
+        });
         sb.append(this.formatFooter("&f"));
         sb.append('\n');
         return sb.toString();
@@ -158,15 +142,15 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
     private String formatTitle(String title, String barcolor, String titlecolor) {
         String line = barcolor + this.BAR;
         int pivot = line.length() / 2;
-        String center = Lang.COMMAND_HELP_TITLECONTAINER.format(barcolor, titlecolor, title);
-        return Lang.__(line.substring(0, pivot - center.length() / 2)
+        String center = InternalLang.COMMAND_HELP_TITLECONTAINER.format(barcolor, titlecolor, title);
+        return InternalLang.__(line.substring(0, pivot - center.length() / 2)
                        + center
                        + line.substring(0, pivot - center.length() / 2));
     }
 
     private String formatFooter(String barcolor) {
         String back = barcolor + this.BAR;
-        return Lang.__(back.substring(0, back.length() - 11));
+        return InternalLang.__(back.substring(0, back.length() - 11));
     }
 
     @Override
@@ -181,7 +165,7 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
 
     @Override
     public String info() {
-        return Lang.COMMAND_HELP_INFO.format();
+        return InternalLang.COMMAND_HELP_INFO.format();
     }
 
 }

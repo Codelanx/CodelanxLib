@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
-import com.codelanx.codelanxlib.lang.Lang;
+import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,11 +97,12 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
             if (command.execute(sender, newArgs)) {
                 return true;
             } else {
-                sender.sendMessage(Lang.__("Usage: " + command.getUsage()));
-                sender.sendMessage(Lang.__(command.info()));
+                InternalLang.sendMessage(sender, InternalLang.COMMAND_HANDLER_USAGE, command.getUsage());
+                InternalLang.sendMessage(sender, command.info());
             }
         } else {
-            sender.sendMessage("[Nations] Unknown Command");
+            InternalLang.sendMessage(sender, InternalLang.COMMAND_HANDLER_UNKNOWN);
+            sender.sendMessage("[" + this.plugin.getName() + "] Unknown Command");
         }
         return false;
     }

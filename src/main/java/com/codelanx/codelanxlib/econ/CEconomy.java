@@ -21,10 +21,9 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.Observable;
-import java.util.UUID;
 import java.util.logging.Level;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -104,7 +103,7 @@ public class CEconomy extends Observable {
             return new ChargeStatus(true, 0);
         }
         if (cost < 0) {
-            //Lang.sendMessage(p, Lang.ECONOMY_FAILED);
+            InternalLang.sendMessage(p, InternalLang.ECONOMY_FAILED);
             return new ChargeStatus(false, -1);
         }
         return new ChargeStatus(this.econ.has(p.getName(), cost), cost);
@@ -119,13 +118,13 @@ public class CEconomy extends Observable {
             return true;
         }
         if (cost < 0) {
-            //Lang.sendMessage(p, Lang.ECONOMY_FAILED);
+           InternalLang.sendMessage(p, InternalLang.ECONOMY_FAILED);
             return false;
         }
         net.milkbowl.vault.economy.EconomyResponse r = this.econ.withdrawPlayer(p.getName(), cost);
         boolean bad = r.type == net.milkbowl.vault.economy.EconomyResponse.ResponseType.FAILURE;
         if (bad) {
-            //Lang.sendMessage(p, Lang.ECONOMY_INSUFF, cost);
+           InternalLang.sendMessage(p, InternalLang.ECONOMY_INSUFF, cost);
         }
         this.setChanged();
         this.notifyObservers(new EconomyChangePacket(p, this.getBalance(p)));

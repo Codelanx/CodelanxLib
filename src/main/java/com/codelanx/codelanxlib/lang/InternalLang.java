@@ -28,14 +28,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Class description for {@link Lang}
+ * Class description for {@link InternalLang}
  *
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
  */
-public enum Lang {
+public enum InternalLang {
 
+    COMMAND_HANDLER_UNKNOWN("command.handler.unknown", "Unknown command"),
+    COMMAND_HANDLER_USAGE("command.handler.info", "Usage: "),
     COMMAND_HELP_BARCHAR("command.help.barchar", "-"),
     COMMAND_HELP_BARCOLOR("command.help.barcolor", "&f"),
     COMMAND_HELP_TITLECOLOR("command.help.titlecolor", "&c"),
@@ -45,7 +47,10 @@ public enum Lang {
     COMMAND_HELP_PAGEFORMAT("command.help.format.page", "Page (%d/%d)"),
     COMMAND_HELP_ITEMFORMAT("command.help.format.item", "&9%s &f- &7%s"),
     COMMAND_HELP_INFO("command.help.info", "Displays help information about this plugin"),
-    FORMAT("format", "&7[&9Nations&7] %s");
+    ECONOMY_INSUFF("economy.insufficient", "You do not have enough money for this! (Required: %.2f)"),
+    ECONOMY_REFUND("economy.refund", "Refunded amount &7.2f&9"),
+    ECONOMY_FAILED("economy.trans-failed", "&cError:&7 Failed to charge your account!"),
+    FORMAT("format", "&f[&9CL-Lib&f] %s");
 
     private static FileConfiguration yaml;
     private final String def;
@@ -60,13 +65,13 @@ public enum Lang {
      * @param path The path to the value
      * @param def The default value
      */
-    private Lang(String path, String def) {
+    private InternalLang(String path, String def) {
         this.path = path;
         this.def = def;
     }
 
     /**
-     * Formats a {@link Lang} enum constant with the supplied arguments
+     * Formats a {@link InternalLang} enum constant with the supplied arguments
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -75,7 +80,7 @@ public enum Lang {
      * @return The formatted string
      */
     public String format(Object... args) {
-        return Lang.__(String.format(yaml.getString(this.path), args));
+        return InternalLang.__(String.format(yaml.getString(this.path), args));
     }
 
     /**
@@ -98,7 +103,7 @@ public enum Lang {
         String repl = yaml.getString(this.path);
         repl = repl.replaceAll("\\{PLURALA (.*)\\|(.*)\\}", amount == 1 ? "is " + amount + " $1" : "are " + amount + " $2");
         repl = repl.replaceAll("\\{PLURAL (.*)\\|(.*)\\}", amount == 1 ? "$1" : "$2");
-        return Lang.__(String.format(repl, args));
+        return InternalLang.__(String.format(repl, args));
     }
 
     /**
@@ -125,12 +130,26 @@ public enum Lang {
      * @throws IOException If the file cannot be read
      */
     public static void init(Plugin plugin) throws IOException {
-        File ref = new File(plugin.getDataFolder(), "lang.yml");
+        InternalLang.init(plugin.getDataFolder());
+    }
+
+    /**
+     * Loads the lang values from the configuration file. Safe to use for
+     * reloading.
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     *
+     * @param folder A {@link File} location to store the lang file in
+     * @throws IOException If the file cannot be read
+     */
+    public static void init(File folder) throws IOException {
+        File ref = new File(folder, "lang.yml");
         if (!ref.exists()) {
-            plugin.saveResource("lang.yml", true);
+            ref.createNewFile();
         }
         yaml = YamlConfiguration.loadConfiguration(ref);
-        for (Lang l : Lang.values()) {
+        for (InternalLang l : InternalLang.values()) {
             if (!yaml.isSet(l.getPath())) {
                 yaml.set(l.getPath(), l.getDefault());
             }
@@ -150,7 +169,7 @@ public enum Lang {
      * @param message The message to format and send
      */
     public static void sendMessage(CommandSender target, String message) {
-        target.sendMessage(Lang.FORMAT.format(message));
+        target.sendMessage(InternalLang.FORMAT.format(message));
     }
 
     /**
@@ -178,10 +197,10 @@ public enum Lang {
      * 
      * @param target The target to send to
      * @param message The message to colorize and send
-     * @param args Arguments to supply to the {@link Lang} message
+     * @param args Arguments to supply to the {@link InternalLang} message
      */
-    public static void sendMessage(CommandSender target, Lang message, Object... args) {
-        target.sendMessage(Lang.FORMAT.format(message.format(args)));
+    public static void sendMessage(CommandSender target, InternalLang message, Object... args) {
+        target.sendMessage(InternalLang.FORMAT.format(message.format(args)));
     }
 
     /**
@@ -194,9 +213,9 @@ public enum Lang {
      * 
      * @param target The target to send to
      * @param message The message to colorize and send
-     * @param args Arguments to supply to the {@link Lang} message
+     * @param args Arguments to supply to the {@link InternalLang} message
      */
-    public static void sendRawMessage(CommandSender target, Lang message, Object... args) {
+    public static void sendRawMessage(CommandSender target, InternalLang message, Object... args) {
         target.sendMessage(__(message.format(args)));
     }
 
