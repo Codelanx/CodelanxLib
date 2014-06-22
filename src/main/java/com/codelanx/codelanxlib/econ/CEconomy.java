@@ -58,26 +58,16 @@ public class CEconomy extends Observable {
 
     public class EconomyChangePacket {
         
-        private final UUID uuid;
-        private final String name;
+        private final Player p;
         private final double amount;
         
         public EconomyChangePacket(Player p, double amount) {
-            this.uuid = p.getUniqueId();
-            this.name = p.getName();
+            this.p = p;
             this.amount = amount;
         }
         
-        public UUID getUUID() {
-            return this.uuid;
-        }
-        
         public Player getPlayer() {
-            return Bukkit.getPlayer(this.uuid);
-        }
-        
-        public String getName() {
-            return this.name;
+            return this.p;
         }
         
         public double getAmount() {
