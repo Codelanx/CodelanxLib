@@ -21,7 +21,10 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import java.util.Observable;
+import java.util.UUID;
 import java.util.logging.Level;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -32,7 +35,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  * @author 1Rogue
  * @version 1.0.0
  */
-public class CEconomy {
+public class CEconomy extends Observable {
     
     public static class ChargeStatus {
         
@@ -51,6 +54,36 @@ public class CEconomy {
         public double getAmount() {
             return this.amount;
         }
+    }
+
+    public class EconomyChangePacket {
+        
+        private final UUID uuid;
+        private final String name;
+        private final double amount;
+        
+        public EconomyChangePacket(Player p, double amount) {
+            this.uuid = p.getUniqueId();
+            this.name = p.getName();
+            this.amount = amount;
+        }
+        
+        public UUID getUUID() {
+            return this.uuid;
+        }
+        
+        public Player getPlayer() {
+            return Bukkit.getPlayer(this.uuid);
+        }
+        
+        public String getName() {
+            return this.name;
+        }
+        
+        public double getAmount() {
+            return this.amount;
+        }
+
     }
     
     protected final net.milkbowl.vault.economy.Economy econ;
@@ -104,6 +137,8 @@ public class CEconomy {
         if (bad) {
             //Lang.sendMessage(p, Lang.ECONOMY_INSUFF, cost);
         }
+        this.setChanged();
+        this.notifyObservers(new EconomyChangePacket(p, this.getBalance(p)));
         return !bad;
     }
 
@@ -112,15 +147,20 @@ public class CEconomy {
             return true;
         }
         net.milkbowl.vault.economy.EconomyResponse r = this.econ.depositPlayer(p.getName(), amount);
+        this.setChanged();
+        this.notifyObservers(new EconomyChangePacket(p, this.getBalance(p)));
         return r.type != net.milkbowl.vault.economy.EconomyResponse.ResponseType.FAILURE;
     }
 
-    public boolean isEnabled() {
-        return this.getVaultEconomy() != null;
+    public double getBalance(Player p) {
+        if (this.econ == null) {
+            return -1;
+        }
+        return this.econ.getBalance(p.getName());
     }
 
-    public final net.milkbowl.vault.economy.Economy getVaultEconomy() {
-        return this.econ;
+    public boolean isEnabled() {
+        return this.econ != null;
     }
 
 }
