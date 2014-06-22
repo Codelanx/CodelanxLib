@@ -60,7 +60,7 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     public void onLoad() {
         DebugUtil.toggleOutput(true);
         try {
-            InternalLang.init(this);
+            InternalLang.init(this.getDataFolder().getParentFile());
         } catch (IOException ex) {
             DebugUtil.error("Error loading internal lang system, expect errors!", ex);
         }
