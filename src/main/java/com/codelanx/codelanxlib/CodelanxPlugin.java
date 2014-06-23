@@ -58,7 +58,6 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
 
     @Override
     public void onLoad() {
-        DebugUtil.toggleOutput(true);
         try {
             InternalLang.init(this.getDataFolder().getParentFile());
         } catch (IOException ex) {
