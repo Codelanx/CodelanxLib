@@ -37,7 +37,7 @@ import java.util.Properties;
  * @author 1Rogue
  * @version 1.0.0
  */
-public class MySQL {
+public class MySQL implements AutoCloseable {
 
     private static byte connections = 0;
     private static String HOST = "";

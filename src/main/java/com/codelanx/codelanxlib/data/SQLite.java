@@ -36,7 +36,7 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 1.0.0
  */
-public class SQLite {
+public class SQLite implements AutoCloseable {
 
     protected static byte connections = 0;
     protected Connection con = null;
