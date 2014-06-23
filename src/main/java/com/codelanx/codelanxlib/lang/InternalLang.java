@@ -80,7 +80,7 @@ public enum InternalLang {
      * @return The formatted string
      */
     public String format(Object... args) {
-        return InternalLang.__(String.format(yaml.getString(this.path), args));
+        return InternalLang.__(String.format(yaml.getString(this.path, this.def), args));
     }
 
     /**
@@ -91,6 +91,7 @@ public enum InternalLang {
      * "are &lt;amount&gt; 'word'".
      * </li><li> <em>PLURAL</em>: Token that will evaluate the word. An int
      * value of 1 will return the first word, value of 2 the second word.
+     * </ul>
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -189,7 +190,7 @@ public enum InternalLang {
     }
 
     /**
-     * Sends a formatted string and prepends the {@link Lang.FORMAT} to it.
+     * Sends a formatted string and prepends the {@link InternalLang.FORMAT} to it.
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -200,7 +201,13 @@ public enum InternalLang {
      * @param args Arguments to supply to the {@link InternalLang} message
      */
     public static void sendMessage(CommandSender target, InternalLang message, Object... args) {
-        target.sendMessage(InternalLang.FORMAT.format(message.format(args)));
+        if (message == null) {
+            return;
+        }
+        String s = InternalLang.FORMAT.format(message.format(args));
+        if (!s.isEmpty()) {
+            target.sendMessage(s);
+        }
     }
 
     /**
@@ -216,7 +223,13 @@ public enum InternalLang {
      * @param args Arguments to supply to the {@link InternalLang} message
      */
     public static void sendRawMessage(CommandSender target, InternalLang message, Object... args) {
-        target.sendMessage(__(message.format(args)));
+        if (message == null) {
+            return;
+        }
+        String s = __(message.format(args));
+        if (!s.isEmpty()) {
+            target.sendMessage(s);
+        }
     }
 
     /**
