@@ -106,7 +106,7 @@ public final class ConfigurationLoader {
      * @since 1.0.0
      * @version 1.0.0
      */
-    public void saveConfig() throws IOException {
+    public synchronized void saveConfig() throws IOException {
         this.yaml.save(this.filePath);
     }
 
@@ -165,6 +165,10 @@ public final class ConfigurationLoader {
         return this.yaml.getDouble(path.getPath());
     }
 
+    public synchronized long getLong(ConfigMarker path) {
+        return this.yaml.getLong(path.getPath());
+    }
+
     /**
      * Gets a boolean value from the config
      *
@@ -178,7 +182,7 @@ public final class ConfigurationLoader {
         return this.yaml.getBoolean(path.getPath());
     }
 
-    public Map<String, Object> getSection(ConfigMarker path) {
+    public synchronized Map<String, Object> getSection(ConfigMarker path) {
         Object o = this.yaml.get(path.getPath());
         Map<String, Object> map;
         if (o instanceof MemorySection) {
@@ -191,11 +195,11 @@ public final class ConfigurationLoader {
         return map;
     }
 
-    public Object get(ConfigMarker path) {
+    public synchronized Object get(ConfigMarker path) {
         return this.yaml.get(path.getPath());
     }
 
-    public void set(ConfigMarker path, Object set) {
+    public synchronized void set(ConfigMarker path, Object set) {
         this.yaml.set(path.getPath(), set);
     }
 }
