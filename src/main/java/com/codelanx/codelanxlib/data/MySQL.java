@@ -188,4 +188,23 @@ public class MySQL implements AutoCloseable {
         }
         return give;
     }
+
+    public void setAutoCommit(boolean set) throws SQLException {
+        if (this.con != null) {
+            this.con.setAutoCommit(set);
+        }
+    }
+
+    public void commit() throws SQLException {
+        if (this.con != null) {
+            this.con.commit();
+        }
+    }
+
+    public void rollback() throws SQLException {
+        if (this.con != null) {
+            this.con.commit();
+        }
+    }
+
 }
