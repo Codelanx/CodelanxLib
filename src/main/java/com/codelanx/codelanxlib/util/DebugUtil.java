@@ -37,8 +37,11 @@ public class DebugUtil {
     public static class TimeUtil {
 
         public static String getTime(long start) {
-            long diff = System.nanoTime() - start;
-            TimePoint point = TimeUtil.getTimePoint(diff);
+            return TimeUtil.formatTime(System.nanoTime() - start);
+        }
+
+        public static String formatTime(long durationNS) {
+            TimePoint point = TimeUtil.getTimePoint(durationNS);
             if (point.getNext() != null) {
                 return String.format("%d %s, %d %s", point.getTime(), TimeUtil.getProperUnitName(point.getUnit(), point.getTime()),
                         point.getNext().getTime(), TimeUtil.getProperUnitName(point.getNext().getUnit(), point.getNext().getTime()));
