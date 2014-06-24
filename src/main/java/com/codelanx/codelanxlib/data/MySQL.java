@@ -207,4 +207,8 @@ public class MySQL implements AutoCloseable {
         }
     }
 
+    public Connection getConnection() {
+        return this.con;
+    }
+
 }

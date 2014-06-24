@@ -184,4 +184,8 @@ public class SQLite implements AutoCloseable {
         }
     }
 
+    public Connection getConnection() {
+        return this.con;
+    }
+
 }
