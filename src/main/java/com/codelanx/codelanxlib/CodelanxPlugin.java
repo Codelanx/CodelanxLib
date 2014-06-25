@@ -29,9 +29,7 @@ import com.codelanx.codelanxlib.lang.InternalLang;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.util.DebugUtil;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -45,15 +43,15 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable, Configurable, Listening {
 
-    private WeakReference<FreshVarWrap> cnfg;
-    private WeakReference<String> cmd;
+    private Class cnfg;
+    private String cmd;
     protected CommandHandler<E> commands;
     protected ConfigurationLoader config;
     protected ListenerManager<E> listener;
     
     public <T extends Enum<T> & ConfigMarker<T>> CodelanxPlugin(String command, Class<T> config) {
-        this.cmd = new WeakReference(command);
-        this.cnfg = new WeakReference(new FreshVarWrap<>(config));
+        this.cmd = command;
+        this.cnfg = config;
     }
 
     @Override
@@ -68,16 +66,14 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     @Override
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Loading configuration...");
-        this.config = new ConfigurationLoader(this, this.cnfg.get().getInst());
-        this.cnfg.clear();
+        this.config = new ConfigurationLoader(this, this.cnfg);
         this.cnfg = null;
         
         this.getLogger().log(Level.INFO, "Enabling listeners...");
         this.listener = new ListenerManager<>((E) this);
         
         this.getLogger().log(Level.INFO, "Enabling command handler...");
-        this.commands = new CommandHandler<>((E) this, this.cmd.get());
-        this.cmd.clear();
+        this.commands = new CommandHandler<>((E) this, this.cmd);
         this.cmd = null;
     }
 
@@ -104,23 +100,6 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     @Override
     public ListenerManager<E> getListenerManager() {
         return this.listener;
-    }
-
-    /** 
-     * Helper class for procuring the fresh-type variable for the passed config
-     * class
-     */
-    private class FreshVarWrap<T extends Enum<T> & ConfigMarker<T>> {
-        
-        private final Class<T> inst;
-        
-        public FreshVarWrap(Class<T> inst) {
-            this.inst = inst;
-        }
-
-        public Class<T> getInst() {
-            return this.inst;
-        }
     }
 
 }
