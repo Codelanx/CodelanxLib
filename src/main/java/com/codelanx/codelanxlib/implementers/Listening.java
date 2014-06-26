@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.implementers;
 
 import com.codelanx.codelanxlib.listener.ListenerManager;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Class description for {@link Listening}
@@ -28,7 +29,7 @@ import com.codelanx.codelanxlib.listener.ListenerManager;
  * @author 1Rogue
  * @version 1.0.0
  */
-public interface Listening {
+public interface Listening<E extends Plugin> {
 
     /**
      * Gets the {@link ListenerManager} for the plugin
@@ -38,6 +39,6 @@ public interface Listening {
      * 
      * @return The {@link ListenerManager} instance
      */
-    public abstract ListenerManager getListenerManager();
+    public abstract ListenerManager<E> getListenerManager();
 
 }

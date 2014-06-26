@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.implementers;
 
 import com.codelanx.codelanxlib.command.CommandHandler;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Interface for a plugin that makes use of a {@link CommandHandler}
@@ -28,7 +29,7 @@ import com.codelanx.codelanxlib.command.CommandHandler;
  * @author 1Rogue
  * @version 1.0.0
  */
-public interface Commandable {
+public interface Commandable<E extends Plugin & Commandable<E>> {
 
     /**
      * Gets the {@link CommandHandler} for the plugin
@@ -38,6 +39,6 @@ public interface Commandable {
      * 
      * @return The {@link CommandHandler} instance
      */
-    public abstract CommandHandler getCommandHandler();
+    public abstract CommandHandler<E> getCommandHandler();
 
 }
