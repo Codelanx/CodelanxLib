@@ -145,6 +145,9 @@ public enum InternalLang {
      * @throws IOException If the file cannot be read
      */
     public static void init(File folder) throws IOException {
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
         File ref = new File(folder, "lang.yml");
         if (!ref.exists()) {
             ref.createNewFile();
