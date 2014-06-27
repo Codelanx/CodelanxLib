@@ -28,6 +28,7 @@ import com.codelanx.codelanxlib.implementers.Listening;
 import com.codelanx.codelanxlib.lang.InternalLang;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.util.DebugUtil;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,7 +58,7 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     @Override
     public void onLoad() {
         try {
-            InternalLang.init(this.getDataFolder().getParentFile());
+            InternalLang.init(new File(this.getDataFolder().getParentFile(), "CodelanxLib" + File.separator));
         } catch (IOException ex) {
             DebugUtil.error("Error loading internal lang system, expect errors!", ex);
         }

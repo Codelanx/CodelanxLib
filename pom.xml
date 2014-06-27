@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.codelanx</groupId>
     <artifactId>codelanxlib</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>CodelanxLib</name>
     <description>External supercharged plugin library for ridiculously simplified plugin making</description>
@@ -29,7 +29,22 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-  
+
+    <distributionManagement>
+        <repository>
+            <id>cl-deployment</id>
+            <name>Internal Releases</name>
+            <url>http://repo.codelanx.com/content/repositories/releases/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+        <snapshotRepository>
+            <id>cl-deployment</id>
+            <name>Internal Releases</name>
+            <url>http://repo.codelanx.com/content/repositories/snapshots/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>

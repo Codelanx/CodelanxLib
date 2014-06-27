@@ -4,7 +4,7 @@
   <groupId>com.codelanx</groupId>
   <artifactId>codelanxlib</artifactId>
   <name>CodelanxLib</name>
-  <version>1.0.0</version>
+  <version>1.0.0-SNAPSHOT</version>
   <description>External supercharged plugin library for ridiculously simplified plugin making</description>
   <licenses>
     <license>
@@ -72,6 +72,20 @@
       <scope>compile</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>cl-deployment</id>
+      <name>Internal Releases</name>
+      <url>http://repo.codelanx.com/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>cl-deployment</id>
+      <name>Internal Releases</name>
+      <url>http://repo.codelanx.com/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
