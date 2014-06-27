@@ -21,6 +21,8 @@ package com.codelanx.codelanxlib.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -184,6 +186,10 @@ public final class ConfigurationLoader {
 
     public synchronized Map<String, Object> getSection(ConfigMarker path) {
         Object o = this.yaml.get(path.getPath());
+        return ConfigurationLoader.getConfigSectionValue(o);
+    }
+
+    public static Map<String, Object> getConfigSectionValue(Object o) {
         Map<String, Object> map;
         if (o instanceof MemorySection) {
             map = ((MemorySection) o).getValues(false);
@@ -202,4 +208,5 @@ public final class ConfigurationLoader {
     public synchronized void set(ConfigMarker path, Object set) {
         this.yaml.set(path.getPath(), set);
     }
+
 }
