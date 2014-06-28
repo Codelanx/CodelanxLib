@@ -30,7 +30,8 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 1.0.0
  * 
- * @param <T> The plugin to use for this listener
+ * @param <T> Represents a {@link Plugin} that implements the
+ *            {@link Commandable} interface
  */
 public abstract class SubCommand<T extends Plugin & Commandable> {
 
@@ -50,7 +51,7 @@ public abstract class SubCommand<T extends Plugin & Commandable> {
     }
 
     /**
-     * Executes a relevant command grabbed from the CommandHandler.
+     * Executes a relevant command grabbed from the {@link CommandHandler}.
      *
      * @since 1.0.0
      * @version 1.0.0

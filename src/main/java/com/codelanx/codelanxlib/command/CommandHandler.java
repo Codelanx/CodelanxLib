@@ -45,6 +45,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
     protected final E plugin;
     /** Private {@link HashMap} of subcommands */
     protected final Map<String, SubCommand<E>> commands = new HashMap<>();
+    /** The primary command to access this {@link CommandHandler} in-game */
     protected String command;
 
     /**
@@ -134,7 +135,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
 
     /**
      * Returns a permissions check for
-     * {@code <plugin-name>.cmd.<subcommand-name>}
+     * {@code <plugin-name>.cmd.<subcommand-name>}, can be nested further
      * 
      * @since 1.0.0
      * @version 1.0.0
@@ -156,6 +157,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
      * @param <T> The subcommand type
      * @param command The {@link SubCommand} to register
      * @throws CommandInUseException If the command's name is already in use
+     * @return The registered subcommand
      */
     public final <T extends SubCommand<E>> T registerSubCommand(T command) throws CommandInUseException {
         if (this.commands.containsKey(command.getName())) {
@@ -192,6 +194,14 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
         }
     }
 
+    /**
+     * Returns the main command associated with this {@link CommandHandler}
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @return The main command
+     */
     public String getMainCommand() {
         return this.command;
     }

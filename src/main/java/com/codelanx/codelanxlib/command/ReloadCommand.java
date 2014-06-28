@@ -25,7 +25,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Class description for {@link ReloadCommand}
+ * Fires a {@link ReloadEvent} and, if applicable, calls
+ * {@link Reloadable#reload()} of a relevant {@link Plugin} instance
  *
  * @since 1.0.0
  * @author 1Rogue
@@ -33,15 +34,34 @@ import org.bukkit.plugin.Plugin;
  */
 public class ReloadCommand extends SubCommand {
 
+    /**
+     * {@link ReloadCommand constructor}
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @param plugin {@inheritDoc} 
+     */
     public ReloadCommand(Plugin plugin) {
         super(plugin);
     }
 
+    /**
+     * Fires the {@link ReloadEvent} and calls any relevant reload methods for
+     * the {@link Plugin} instance passed
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @param sender {@inheritDoc}
+     * @param args {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public boolean execute(CommandSender sender, String[] args) {
+        this.plugin.getServer().getPluginManager().callEvent(new ReloadEvent(this.plugin));
         if (this.plugin instanceof Reloadable) {
             ((Reloadable) this.plugin).reload();
-            this.plugin.getServer().getPluginManager().callEvent(new ReloadEvent(this.plugin));
             sender.sendMessage(this.plugin.getName() + " v" + this.plugin.getDescription().getVersion() + " reloaded!");
         } else {
             sender.sendMessage("This plugin does not support reloading!");
@@ -49,14 +69,31 @@ public class ReloadCommand extends SubCommand {
         return true;
     }
 
+    /**
+     * Subcommand name: "reload"
+     * <br /><br /> {@inheritDoc}
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     *
+     * @return {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "reload";
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     *
+     * @return {@inheritDoc}
+     */
     @Override
     public String info() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "Reloads the plugin";
     }
 
 }

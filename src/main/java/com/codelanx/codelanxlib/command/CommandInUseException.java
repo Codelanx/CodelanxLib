@@ -20,7 +20,8 @@
 package com.codelanx.codelanxlib.command;
 
 /**
- * Class description for {@link CommandInUseException}
+ * Thrown for when a {@link SubCommand} attempts to register under an already
+ * used command
  *
  * @since 1.0.0
  * @author 1Rogue
@@ -28,6 +29,14 @@ package com.codelanx.codelanxlib.command;
  */
 public class CommandInUseException extends RuntimeException {
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @param message {@inheritDoc}
+     */
     public CommandInUseException(String message) {
         super(message);
     }
