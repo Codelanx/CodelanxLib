@@ -88,6 +88,14 @@ public class SPlayerInventory implements ConfigurationSerializable {
         return this.inv;
     }
 
+    public void set(PlayerInventory inv) {
+        inv.setContents(this.getInventory().getContentsAsArray());
+        inv.setHelmet(this.getHelmet());
+        inv.setChestplate(this.getChestPlate());
+        inv.setLeggings(this.getLeggings());
+        inv.setBoots(this.getBoots());
+    }
+
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> back = new HashMap<>();
