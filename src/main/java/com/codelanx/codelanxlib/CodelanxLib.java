@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib;
 
+import com.codelanx.codelanxlib.serialize.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,16 @@ import org.mcstats.Metrics;
  * @version 1.0.0
  */
 public class CodelanxLib extends JavaPlugin {
+    
+    public CodelanxLib() {
+        SerializationFactory.registerClasses(
+                SerializationFactory.getNativeSerializables());
+    }
+
+    @Override
+    public void onLoad() {
+        SerializationFactory.registerToBukkit();
+    }
 
     /**
      * Reports metrics to http://mcstats.org/

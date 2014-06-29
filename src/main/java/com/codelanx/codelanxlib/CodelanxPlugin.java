@@ -27,6 +27,7 @@ import com.codelanx.codelanxlib.implementers.Configurable;
 import com.codelanx.codelanxlib.implementers.Listening;
 import com.codelanx.codelanxlib.lang.InternalLang;
 import com.codelanx.codelanxlib.listener.ListenerManager;
+import com.codelanx.codelanxlib.serialize.*;
 import com.codelanx.codelanxlib.util.DebugUtil;
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,9 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     public <T extends Enum<T> & ConfigMarker<T>> CodelanxPlugin(String command, Class<T> config) {
         this.cmd = command;
         this.cnfg = config;
+
+        SerializationFactory.registerClasses(
+                SerializationFactory.getNativeSerializables());
     }
 
     @Override
@@ -62,6 +66,8 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
         } catch (IOException ex) {
             DebugUtil.error("Error loading internal lang system, expect errors!", ex);
         }
+
+        SerializationFactory.registerToBukkit();
     }
 
     @Override

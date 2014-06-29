@@ -19,10 +19,7 @@
  */
 package com.codelanx.codelanxlib.serialize;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -46,19 +43,29 @@ public class SPlayerInventory implements ConfigurationSerializable {
     protected final SInventory inv;
 
     public SPlayerInventory(PlayerInventory inv) {
-        this.helmet = inv.getHelmet();
-        this.chest = inv.getChestplate();
-        this.legs = inv.getLeggings();
-        this.boots = inv.getBoots();
-        this.inv = new SInventory(inv.getContents());
+        if (inv == null) {
+            this.helmet = this.chest = this.legs = this.boots = null;
+            this.inv = null;
+        } else {
+            this.helmet = inv.getHelmet();
+            this.chest = inv.getChestplate();
+            this.legs = inv.getLeggings();
+            this.boots = inv.getBoots();
+            this.inv = new SInventory(inv.getContents());
+        }
     }
 
     public SPlayerInventory(Map<String, Object> map) {
-        this.helmet = (ItemStack) map.get("helmet");
-        this.chest = (ItemStack) map.get("chest");
-        this.legs = (ItemStack) map.get("legs");
-        this.boots = (ItemStack) map.get("boots");
-        this.inv = (SInventory) map.get("contents");
+        if (map.isEmpty()) {
+            this.helmet = this.chest = this.legs = this.boots = null;
+            this.inv = null;
+        } else {
+            this.helmet = (ItemStack) map.get("helmet");
+            this.chest = (ItemStack) map.get("chest");
+            this.legs = (ItemStack) map.get("legs");
+            this.boots = (ItemStack) map.get("boots");
+            this.inv = (SInventory) map.get("contents");
+        }
     }
 
     public ItemStack getHelmet() {
