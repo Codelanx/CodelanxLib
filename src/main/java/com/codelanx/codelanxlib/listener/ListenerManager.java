@@ -129,7 +129,7 @@ public class ListenerManager<E extends Plugin> {
     }
     
     /**
-     * Unregisters all the listeners attached to {@link Nations}
+     * Unregisters all the listeners attached to this {@link ListenerManager}
      * 
      * @since 1.0.0
      * @version 1.0.0

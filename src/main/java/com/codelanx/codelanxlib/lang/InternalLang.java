@@ -41,7 +41,9 @@ public enum InternalLang {
     COMMAND_HELP_BARCHAR("command.help.barchar", "-"),
     COMMAND_HELP_BARCOLOR("command.help.barcolor", "&f"),
     COMMAND_HELP_TITLECOLOR("command.help.titlecolor", "&c"),
-    /** Accept a bar color first, title color second, then the title itself third */
+    /**
+     * Accept a bar color first, title color second, then the title itself third
+     */
     COMMAND_HELP_TITLECONTAINER("command.help.title-container", "%1$s[ %2$s%3$s %1$s]"),
     COMMAND_HELP_TITLEFORMAT("command.help.format.title", "/%s help"),
     COMMAND_HELP_PAGEFORMAT("command.help.format.page", "Page (%d/%d)"),
@@ -85,7 +87,7 @@ public enum InternalLang {
 
     /**
      * Will format a string with "PLURAL" or "PLURALA" tokens in them.
-     * <br /><br /><ul>
+     * <br><br><ul>
      * <li> <em>PLURALA</em>: Token that will evaluate gramatically. An int
      * value of 1 will return "is &lt;amount&gt; 'word'", otherwise it will be
      * "are &lt;amount&gt; 'word'".
@@ -98,7 +100,7 @@ public enum InternalLang {
      *
      * @param amount The amount representative of the data token
      * @param args The arguments to replace any other tokens with.
-     * @return
+     * @return The formatting string value for plurals
      */
     public String pluralFormat(int amount, Object... args) {
         String repl = yaml.getString(this.path);
@@ -162,11 +164,12 @@ public enum InternalLang {
     }
 
     /**
-     * Sends a formatted string and prepends the {@link Lang.FORMAT} to it.
+     * Sends a formatted string and prepends the {@link InternalLang#FORMAT} to
+     * it.
      *
      * @since 1.0.0
      * @version 1.0.0
-     * 
+     *
      * @deprecated
      *
      * @param target The target to send to
@@ -183,8 +186,9 @@ public enum InternalLang {
      * @since 1.0.0
      * @version 1.0.0
      *
-     * @deprecated
-     * 
+     * @deprecated Use
+     * {@link InternalLang#sendRawMessage(CommandSender, InternalLang, Object...)}
+     *
      * @param target The target to send to
      * @param message The message to colorize and send
      */
@@ -193,12 +197,13 @@ public enum InternalLang {
     }
 
     /**
-     * Sends a formatted string and prepends the {@link InternalLang.FORMAT} to it.
+     * Sends a formatted string and prepends the {@link InternalLang#FORMAT} to
+     * it.
      *
      * @since 1.0.0
      * @version 1.0.0
      *
-     * 
+     *
      * @param target The target to send to
      * @param message The message to colorize and send
      * @param args Arguments to supply to the {@link InternalLang} message
@@ -220,7 +225,7 @@ public enum InternalLang {
      * @since 1.0.0
      * @version 1.0.0
      *
-     * 
+     *
      * @param target The target to send to
      * @param message The message to colorize and send
      * @param args Arguments to supply to the {@link InternalLang} message
@@ -258,5 +263,5 @@ public enum InternalLang {
     private String getDefault() {
         return this.def;
     }
-    
+
 }

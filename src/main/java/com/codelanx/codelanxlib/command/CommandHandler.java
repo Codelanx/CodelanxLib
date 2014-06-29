@@ -31,13 +31,13 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Manages commands abstractly for the plugin
+ * Manages commands abstractly for the {@link Plugin}
  *
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
  * 
- * @param <E> The specific plugin to use
+ * @param <E> The specific {@link Plugin} to use
  */
 public class CommandHandler<E extends Plugin & Commandable> implements CommandExecutor {
 
@@ -54,7 +54,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
      * @since 1.0.0
      * @version 1.0.0
      * 
-     * @param plugin The main {@link Nations} instance
+     * @param plugin The main {@link Plugin} instance
      * @param command The command to write subcommands under
      */
     public CommandHandler(E plugin, String command) {
@@ -109,13 +109,13 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
     }
     
     /**
-     * Returns a subcommand, or <code>null</code> if none exists.
+     * Returns a subcommand, or {@code null} if none exists.
      * 
      * @since 1.0.0
      * @version 1.0.0
      * 
      * @param name The name of the subcommand
-     * @return A relevant {@link Succommand}, or null if it does not exist
+     * @return A relevant {@link SubCommand}, or null if it does not exist
      */
     public final SubCommand<E> getCommand(String name) {
         return this.commands.get(name);

@@ -47,7 +47,7 @@ public class CodelanxLib extends JavaPlugin {
 
     /**
      * Reports metrics to http://mcstats.org/
-     * <br /><br />
+     * <br><br>
      * {@inheritDoc}
      * 
      * @since 1.0.0

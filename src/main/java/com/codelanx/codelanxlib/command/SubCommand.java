@@ -24,7 +24,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Skeleton class representing the structure of a command for use in {@link PhanaticWalls}.
+ * Skeleton class representing the structure of a sub-command for
+ * {@link CommandHandler}
  *
  * @since 1.0.0
  * @author 1Rogue
@@ -35,7 +36,7 @@ import org.bukkit.plugin.Plugin;
  */
 public abstract class SubCommand<T extends Plugin & Commandable> {
 
-    /** The main {@link PhanaticWalls} instance */
+    /** The main {@link Plugin} instance */
     protected final T plugin;
 
     /**
@@ -64,8 +65,9 @@ public abstract class SubCommand<T extends Plugin & Commandable> {
     public abstract boolean execute(CommandSender sender, String[] args);
 
     /**
-     * Returns the name of the command, used for storing a hashmap of the
-     * commands as well as the subcommand argument
+     * Returns the name of the command, used for storing a
+     * {@link java.util.HashMap} of the commands as well as the subcommand
+     * argument
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -76,8 +78,6 @@ public abstract class SubCommand<T extends Plugin & Commandable> {
 
     /**
      * Returns the command usage
-     * <br /><br />
-     * TODO: Make this better/dynamic
      *
      * @since 1.0.0
      * @version 1.0.0

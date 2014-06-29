@@ -49,9 +49,9 @@ public class SQLite implements AutoCloseable {
      * @since 1.0.0
      * @version 1.0.0
      * 
-     * @param plugin The plugin with the data folder to use
+     * @param plugin The {@link Plugin} with the data folder to use
      * @return The Connection object
-     * @throws SQLException
+     * @throws SQLException If the connection fails to open
      */
     public Connection open(Plugin plugin) throws SQLException {
         return this.open(plugin, "database");
@@ -65,10 +65,10 @@ public class SQLite implements AutoCloseable {
      * @since 1.0.0
      * @version 1.0.0
      *
-     * @param plugin The plugin with the data folder to use
+     * @param plugin The {@link Plugin} with the data folder to use
      * @param name The name of the database file
      * @return The Connection object
-     * @throws SQLException
+     * @throws SQLException If the connection fails to open
      */
     public Connection open(Plugin plugin, String name) throws SQLException {
         try {
@@ -89,7 +89,7 @@ public class SQLite implements AutoCloseable {
      *
      * @param tablename Name of the table to check for
      * @return true if exists, false otherwise
-     * @throws SQLException
+     * @throws SQLException The query on the database fails
      */
     public boolean checkTable(String tablename) throws SQLException {
         byte i;
@@ -113,7 +113,7 @@ public class SQLite implements AutoCloseable {
      *
      * @param query The string query to execute
      * @return A ResultSet from the query
-     * @throws SQLException
+     * @throws SQLException The connection cannot be established
      */
     public ResultSet query(String query) throws SQLException {
         Statement stmt = this.con.createStatement();
@@ -129,7 +129,7 @@ public class SQLite implements AutoCloseable {
      *
      * @param query The string query to execute
      * @return 0 for no returned results, or the number of returned rows
-     * @throws SQLException
+     * @throws SQLException The connection cannot be established
      */
     public synchronized int update(String query) throws SQLException {
         Statement stmt = this.con.createStatement();
@@ -144,8 +144,8 @@ public class SQLite implements AutoCloseable {
      * @version 1.0.0
      * 
      * @param stmt The string to prepare
-     * @return A {@link PreparedStatment} from the passed string
-     * @throws SQLException 
+     * @return A {@link PreparedStatement} from the passed string
+     * @throws SQLException The connection cannot be established
      */
     public PreparedStatement prepare(String stmt) throws SQLException {
         return this.con.prepareStatement(stmt);
@@ -157,6 +157,7 @@ public class SQLite implements AutoCloseable {
      * @since 1.0.0
      * @version 1.0.0
      */
+    @Override
     public void close() {
         try {
             this.con.close();

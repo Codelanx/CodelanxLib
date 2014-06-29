@@ -76,7 +76,7 @@ public class MySQL implements AutoCloseable {
      * @version 1.0.0
      *
      * @return The Connection object
-     * @throws SQLException
+     * @throws SQLException If the connection fails to open
      */
     public Connection open() throws SQLException {
         Properties connectionProps = new Properties();
@@ -96,7 +96,7 @@ public class MySQL implements AutoCloseable {
      *
      * @param tablename Name of the table to check for
      * @return true if exists, false otherwise
-     * @throws SQLException
+     * @throws SQLException The query on the database fails
      */
     public boolean checkTable(String tablename) throws SQLException {
         byte i;
@@ -120,7 +120,7 @@ public class MySQL implements AutoCloseable {
      *
      * @param query The string query to execute
      * @return A ResultSet from the query
-     * @throws SQLException
+     * @throws SQLException The connection cannot be established
      */
     public ResultSet query(String query) throws SQLException {
         Statement stmt = this.con.createStatement();
@@ -135,7 +135,7 @@ public class MySQL implements AutoCloseable {
      *
      * @param query The string query to execute
      * @return 0 for no returned results, or the number of returned rows
-     * @throws SQLException
+     * @throws SQLException The connection cannot be established
      */
     public int update(String query) throws SQLException {
         Statement stmt = this.con.createStatement();
@@ -150,8 +150,8 @@ public class MySQL implements AutoCloseable {
      * @version 1.0.0
      * 
      * @param stmt The string to prepare
-     * @return A {@link PreparedStatment} from the passed string
-     * @throws SQLException 
+     * @return A {@link PreparedStatement} from the passed string
+     * @throws SQLException The connection cannot be established
      */
     public PreparedStatement prepare(String stmt) throws SQLException {
         return this.con.prepareStatement(stmt);
@@ -163,12 +163,13 @@ public class MySQL implements AutoCloseable {
      * @since 1.0.0
      * @version 1.0.0
      */
+    @Override
     public void close() {
         try {
             this.con.close();
-            DebugUtil.print("Open SQLite connections: %d", --connections);
+            DebugUtil.print("Open MySQL connections: %d", --connections);
         } catch (SQLException ex) {
-            DebugUtil.error("Error closing SQLite connection!", ex);
+            DebugUtil.error("Error closing MySQL connection!", ex);
         }
     }
 
@@ -179,12 +180,13 @@ public class MySQL implements AutoCloseable {
      * @version 1.0.0
      *
      * @return true if connected, false otherwise
-     * @throws SQLException
      */
-    public boolean checkConnection() throws SQLException {
+    public boolean checkConnection() {
         boolean give;
         try (ResultSet count = query("SELECT count(*) FROM information_schema.SCHEMATA")) {
             give = count.first();
+        } catch (SQLException ex) {
+            give = false;
         }
         return give;
     }

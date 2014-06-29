@@ -45,7 +45,7 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
 
     /**
      * {@link HelpCommand} constructor. Initializes the
-     * {@link HelpCommand<E>#BAR} field.
+     * {@link HelpCommand#BAR} field.
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -70,7 +70,7 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
 
     /**
      * Displays help information about the various commands registered to and
-     * available from the {@link CommandHander} instance that instantiated this
+     * available from the {@link CommandHandler} instance that instantiated this
      * class.
      *
      * @since 1.0.0
@@ -247,7 +247,7 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
 
     /**
      * Subcommand name: "help"
-     * <br /><br /> {@inheritDoc}
+     * <br><br> {@inheritDoc}
      *
      * @since 1.0.0
      * @version 1.0.0

@@ -71,7 +71,7 @@ public class ReloadCommand extends SubCommand {
 
     /**
      * Subcommand name: "reload"
-     * <br /><br /> {@inheritDoc}
+     * <br><br> {@inheritDoc}
      *
      * @since 1.0.0
      * @version 1.0.0

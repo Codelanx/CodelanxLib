@@ -56,8 +56,8 @@ public interface ConfigMarker<E extends Enum<E> & ConfigMarker<E>> {
     /**
      * Allows you to dynamically set the values of a passed enum class to a
      * {@link FileConfiguration}.
-     * <br /><br />
-     * How to call this method:<br />
+     * <br><br>
+     * How to call this method:<br>
      * {@code ConfigMarker.setDefaults(#FileConfiguration, YourEnum.class);}
      *
      * @since 1.0.0
