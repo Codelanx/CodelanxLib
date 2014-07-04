@@ -67,8 +67,8 @@ public interface ConfigMarker<E extends Enum<E> & ConfigMarker<E>> {
      * @param file A {@link FileConfiguration} to write to
      * @param clazz A reference to the enum {@link Class}
      */
-    public static <T extends Enum<T> & ConfigMarker> void setDefaults(FileConfiguration file, Class<T> clazz) {
-        for (ConfigMarker conf : clazz.getEnumConstants()) {
+    public static <T extends Enum<T> & ConfigMarker<T>> void setDefaults(FileConfiguration file, Class<T> clazz) {
+        for (ConfigMarker<T> conf : clazz.getEnumConstants()) {
             if (!file.isSet(conf.getPath())) {
                 file.set(conf.getPath(), conf.getDefault());
             }
