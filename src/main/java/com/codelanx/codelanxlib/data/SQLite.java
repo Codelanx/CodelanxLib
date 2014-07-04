@@ -71,7 +71,7 @@ public class SQLite implements AutoCloseable {
      * @throws SQLException If the connection fails to open
      */
     public Connection open(Plugin plugin, String name) throws SQLException {
-        return this.open(new File(plugin.getDataFolder() + File.separator), name);
+        return this.open(plugin.getDataFolder(), name);
     }
 
     /**
