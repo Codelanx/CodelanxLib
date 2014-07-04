@@ -54,7 +54,7 @@ public final class CoverageUtil {
         int value();
     }
 
-    private static class PluginMarker {
+    private final static class PluginMarker {
 
         private final String name;
         private final Plugin plugin;
@@ -64,16 +64,14 @@ public final class CoverageUtil {
             this.name = plugin.getName();
             this.plugin = plugin;
             for (Class<?> clazz : classes) {
-                this.classes.put(clazz.getName(), new ClassMarker(clazz));
+                this.addMarks(new ClassMarker(clazz));
             }
         }
 
         public PluginMarker(String name, ClassMarker... marks) {
             this.name = name;
             this.plugin = Bukkit.getPluginManager().getPlugin(name);
-            for (ClassMarker clazz : marks) {
-                this.classes.put(clazz.getName(), clazz);
-            }
+            this.addMarks(marks);
         }
 
         public PluginMarker addMarks(ClassMarker... classes) {
@@ -85,11 +83,11 @@ public final class CoverageUtil {
                     cm.addMarks(clazz.getMethodMarkers().toArray(new MethodMarker[clazz.getMethodMarkers().size()]));
                 }
             }
-
             return this;
         }
 
         public void addValue(String clazz, String method, int line, boolean hit) {
+            DebugUtil.print("PluginMarker#addValue: %s", clazz);
             ClassMarker cm = this.classes.get(clazz);
             if (cm == null) {
                 DebugUtil.print(Level.WARNING, "Plugin '%s' called CoverageUtil#marker(Plugin) with an unregistered class", this.plugin.getName());
@@ -107,7 +105,7 @@ public final class CoverageUtil {
         }
     }
 
-    private static class ClassMarker {
+    private final static class ClassMarker {
 
         private final String name;
         private final Map<String, MethodMarker> methods = new HashMap<>();
@@ -116,16 +114,14 @@ public final class CoverageUtil {
             this.name = clazz.getName();
             for (Method m : clazz.getMethods()) {
                 if (m.isAnnotationPresent(Coverage.class)) {
-                    this.methods.put(m.getName(), new MethodMarker(m));
+                    this.addMarks(new MethodMarker(m));
                 }
             }
         }
 
         public ClassMarker(String name, MethodMarker... marks) {
             this.name = name;
-            for (MethodMarker m : marks) {
-                this.methods.put(m.getName(), m);
-            }
+            this.addMarks(marks);
         }
 
         public ClassMarker addMarks(MethodMarker... marks) {
@@ -141,6 +137,7 @@ public final class CoverageUtil {
         }
 
         public void addValue(String method, int line, boolean hit) {
+            DebugUtil.print("ClassMarker#addValue: %s", method);
             MethodMarker m = this.methods.get(method);
             if (m == null) {
                 DebugUtil.print(Level.WARNING, "CoverageUtil#marker(Plugin) called with an unregistered method ('%s')", method);
@@ -158,7 +155,7 @@ public final class CoverageUtil {
         }
     }
 
-    private static class MethodMarker {
+    private final static class MethodMarker {
 
         private final String name;
         private final int number;
@@ -177,9 +174,7 @@ public final class CoverageUtil {
         public MethodMarker(String name, int number, Marker... marks) {
             this.name = name;
             this.number = number;
-            for (Marker mark : marks) {
-                this.markers.put(mark.getLine(), mark);
-            }
+            this.addMarks(marks);
         }
 
         public boolean isHit(Marker m) {
@@ -199,6 +194,7 @@ public final class CoverageUtil {
         }
 
         public void addValue(int line, boolean hit) {
+            DebugUtil.print("Adding value (line: %d, val: %B", line, hit);
             this.markers.put(line, new Marker(line).setHit(hit));
         }
 
@@ -224,7 +220,7 @@ public final class CoverageUtil {
         }
     }
 
-    private static class Marker {
+    private final static class Marker {
         private final int line;
         private boolean hit = false;
         
@@ -277,13 +273,17 @@ public final class CoverageUtil {
         if (pm != null) {
             StackTraceElement elem = Thread.currentThread().getStackTrace()[2];
             pm.addValue(elem.getClassName(), elem.getMethodName(), elem.getLineNumber(), true);
-        } else {
-            DebugUtil.print(Level.WARNING, "Plugin '%s' called CoverageUtil#marker(Plugin) when it wasn't registered", p.getName());
         }
     }
 
     public static void registerClasses(Plugin p, Class<?>... classes) {
-        CoverageUtil.marks.put(p, new PluginMarker(p, classes));
+        PluginMarker pm = CoverageUtil.marks.get(p);
+        if (pm != null) {
+            Collection<ClassMarker> o = new PluginMarker(p, classes).getClassMarkers();
+            pm.addMarks(o.toArray(new ClassMarker[o.size()]));
+        } else {
+            CoverageUtil.marks.put(p, new PluginMarker(p, classes));
+        }
     } 
 
     public static void load(Plugin p) {
@@ -298,6 +298,9 @@ public final class CoverageUtil {
                 } else {
                     curr.addMarks(pm.getClassMarkers().toArray(new ClassMarker[pm.getClassMarkers().size()]));
                 }
+                /*CoverageUtil.marks.get(p).getClassMarkers().forEach((c) -> {
+                    c.getMethodMarkers()
+                });*/
             } catch (IOException ex) {
                 DebugUtil.error(String.format("Error reading latest coverage log for plugin '%s'!", p.getName()), ex);
             }
@@ -306,6 +309,19 @@ public final class CoverageUtil {
         }
     }
 
+    public static void reportAll() {
+        DebugUtil.print("Current coverage report:");
+        CoverageUtil.marks.values().forEach((pm) -> {
+            pm.getClassMarkers().forEach((c) -> {
+                c.getMethodMarkers().forEach((m) -> {
+                    m.getMarkers().forEach((mk) -> {
+                        DebugUtil.print("Plugin: %s\n\tClass: %s\n\tMethod: %s\n\tLine: %d\n\tValue: %B\n", pm.name, c.getName(), m.getName(), mk.getLine(), mk.isHit());
+                    });
+                });
+            });
+        });
+    }
+    
     private static String serialize(PluginMarker mark) {
         StringBuilder sb = new StringBuilder("====================");
         for (int i = mark.getPlugin().getName().length(); i > 0; i--) {
@@ -342,12 +358,12 @@ public final class CoverageUtil {
         });
         mb.append('\n');
         mb.append("=== BELOW THIS LINE IS FOR DESERIALIZATION - DO NOT MODIFY ===\n");
-        mb.append("Parsables [ plugin;class;method;line;is_hit|missed_count ]:\n");
+        mb.append("Parsables [ plugin;class;method;line;is_hit|missed_count ]:");
         mark.getClassMarkers().forEach((c) -> {
             c.getMethodMarkers().forEach((m) -> {
-                mb.append(String.format("%s;%s;%s;%d;%d\n", mark.getPlugin().getName(), c.getName(), m.getName(), -1, m.getNumber()));
+                mb.append(String.format("\n%s;%s;%s;%d;%d", mark.getPlugin().getName(), c.getName(), m.getName(), -1, m.getNumber()));
                 m.getMarkers().stream().forEach((mk) -> {
-                    mb.append(String.format("%s;%s;%s;%d;%B\n", mark.getPlugin().getName(), c.getName(), m.getName(), mk.getLine(), mk.isHit()));
+                    mb.append(String.format("\n%s;%s;%s;%d;%B", mark.getPlugin().getName(), c.getName(), m.getName(), mk.getLine(), mk.isHit()));
                 });
             });
         });
@@ -370,14 +386,21 @@ public final class CoverageUtil {
         PluginMarker pm = null;
         while ((line = br.readLine()) != null) {
             String[] tokens = line.split(";");
+            if (line.isEmpty() || tokens.length < 5) {
+                DebugUtil.print(Level.WARNING, "Bad coverage value found, skipping!");
+                continue;
+            }
+            DebugUtil.print("Found value '%s'", line);
             if (pm == null) {
                 pm = new PluginMarker(tokens[0]);
             }
             try {
                 int li = Integer.parseInt(tokens[3]);
                 if (li <= 0) {
+                    DebugUtil.print("Calling addMarks!");
                     pm.addMarks(new ClassMarker(tokens[1]).addMarks(new MethodMarker(tokens[2], Integer.parseInt(tokens[4]))));
                 } else {
+                    DebugUtil.print("Calling addValue!");
                     pm.addValue(tokens[1], tokens[2], li, Boolean.valueOf(tokens[4]));
                 }
             } catch (NumberFormatException ex) {
