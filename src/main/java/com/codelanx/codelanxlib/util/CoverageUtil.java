@@ -253,9 +253,7 @@ public final class CoverageUtil {
 
             @Override
             public void run() {
-                System.out.println("Beginning coverage writing...");
                 CoverageUtil.marks.entrySet().forEach((ent) -> {
-                    System.out.println("Writing report for plugin '" + ent.getKey().getName() + "'...");
                     try {
                         File data = new File(ent.getKey().getDataFolder(), "coverage" + File.separator);
                         data.mkdirs();
@@ -267,10 +265,7 @@ public final class CoverageUtil {
                         try(FileWriter f = new FileWriter(log)) {
                             f.write(CoverageUtil.serialize(ent.getValue()));
                         }
-                    } catch (IOException ex) {
-                        System.out.println(String.format("Error saving coverage report for plugin '%s'!", ent.getKey().getName()));
-                        ex.printStackTrace();
-                    }
+                    } catch (IOException ex) {}
                 });
             }
 
