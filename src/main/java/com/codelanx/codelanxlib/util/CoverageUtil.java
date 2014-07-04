@@ -30,6 +30,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,7 +50,7 @@ import org.bukkit.plugin.Plugin;
 public final class CoverageUtil {
 
     @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
+    @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
     public static @interface Coverage {
         int value();
     }
@@ -117,6 +118,11 @@ public final class CoverageUtil {
                     this.addMarks(new MethodMarker(m));
                 }
             }
+            for (Constructor<?> m : clazz.getConstructors()) {
+                if (m.isAnnotationPresent(Coverage.class)) {
+                    this.addMarks(new MethodMarker(m));
+                }
+            }
         }
 
         public ClassMarker(String name, MethodMarker... marks) {
@@ -163,6 +169,16 @@ public final class CoverageUtil {
 
         public MethodMarker(Method m) {
             this.name = m.getName();
+            Coverage c = m.getDeclaredAnnotation(Coverage.class);
+            if (c != null) {
+                this.number = c.value();
+            } else {
+                this.number = 0;
+            }
+        }
+
+        public MethodMarker(Constructor<?> m) {
+            this.name = "<init>";
             Coverage c = m.getDeclaredAnnotation(Coverage.class);
             if (c != null) {
                 this.number = c.value();
