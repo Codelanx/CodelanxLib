@@ -55,4 +55,29 @@ public class PlayerUtil {
         return back;
     }
 
+    /**
+     * Gets any players within range of a specific player, exclusive of the
+     * player themselves.
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     *
+     * @param range The range in which to look for players
+     * @param origin The {@link Player} representing the center of the circle
+     * @return Any players within the radius range of the origin, mapped to
+     *         the distance away they are
+     */
+    public static Map<Player, Double> getPlayersInRange(int range, Player origin) {
+        Map<Player, Double> back = new HashMap<>();
+        origin.getWorld().getPlayers().stream()
+                .filter((p) -> !p.equals(origin))
+                .forEach((p) -> {
+                    double d = p.getLocation().distanceSquared(origin.getLocation());
+                    if (d <= range) {
+                        back.put(p, d);
+                    }
+                });
+        return back;
+    }
+
 }
