@@ -47,9 +47,7 @@ public class PlayerUtil {
      */
     private Map<Player, Double> getPlayersInRange(int range, Location origin) {
         Map<Player, Double> back = new HashMap<>();
-        Bukkit.getServer().getOnlinePlayers().stream()
-                .filter((p) -> p.getWorld().equals(origin.getWorld()))
-                .forEach((p) -> {
+        origin.getWorld().getPlayers().forEach((p) -> {
                     double d = p.getLocation().distanceSquared(origin);
                     if (d <= range) {
                         back.put(p, d);
