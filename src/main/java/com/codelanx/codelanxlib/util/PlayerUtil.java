@@ -80,4 +80,20 @@ public class PlayerUtil {
         return back;
     }
 
+    public static Player getClosestPlayer(Player p) {
+        Location loc = p.getLocation();
+        return p.getWorld().getPlayers().stream()
+                .filter((o) -> !p.equals(o))
+                .min((p1, p2) -> {
+                    return Double.compare(p1.getLocation().distanceSquared(loc), p2.getLocation().distanceSquared(loc));
+                })
+                .orElse(null);
+    }
+
+    public static Player getClosestPlayer(Location loc) {
+        return loc.getWorld().getPlayers().stream().min((o1, o2) -> {
+            return Double.compare(o1.getLocation().distanceSquared(loc), o2.getLocation().distanceSquared(loc));
+        }).orElse(null);
+    }
+
 }
