@@ -253,9 +253,12 @@ public final class CoverageUtil {
 
             @Override
             public void run() {
+                System.out.println("Beginning coverage writing...");
                 CoverageUtil.marks.entrySet().forEach((ent) -> {
+                    System.out.println("Writing report for plugin '" + ent.getKey().getName() + "'...");
                     try {
                         File data = new File(ent.getKey().getDataFolder(), "coverage" + File.separator);
+                        data.mkdirs();
                         File log = new File(data, "coverage-latest.log");
                         if (log.exists()) {
                             //rename to creation date
@@ -265,7 +268,8 @@ public final class CoverageUtil {
                             f.write(CoverageUtil.serialize(ent.getValue()));
                         }
                     } catch (IOException ex) {
-                        DebugUtil.error(String.format("Error saving coverage report for plugin '%s'!", ent.getKey().getName()), ex);
+                        System.out.println(String.format("Error saving coverage report for plugin '%s'!", ent.getKey().getName()));
+                        ex.printStackTrace();
                     }
                 });
             }
@@ -315,6 +319,7 @@ public final class CoverageUtil {
         sb.append('\n');
         sb.append("COVERAGE REPORT FOR ");
         sb.append(mark.getPlugin().getName());
+        sb.append('\n');
         sb.append("====================");
         for (int i = mark.getPlugin().getName().length(); i > 0; i--) {
             sb.append('=');
@@ -340,11 +345,12 @@ public final class CoverageUtil {
                 missed.setValue(missed.getValue() + m.getMissed());
             });
         });
+        mb.append('\n');
         mb.append("=== BELOW THIS LINE IS FOR DESERIALIZATION - DO NOT MODIFY ===\n");
         mb.append("Parsables [ plugin;class;method;line;is_hit|missed_count ]:\n");
         mark.getClassMarkers().forEach((c) -> {
             c.getMethodMarkers().forEach((m) -> {
-                mb.append(String.format("%s;%s;%s;%d;%d", mark.getPlugin().getName(), c.getName(), m.getName(), -1, m.getNumber()));
+                mb.append(String.format("%s;%s;%s;%d;%d\n", mark.getPlugin().getName(), c.getName(), m.getName(), -1, m.getNumber()));
                 m.getMarkers().stream().forEach((mk) -> {
                     mb.append(String.format("%s;%s;%s;%d;%B\n", mark.getPlugin().getName(), c.getName(), m.getName(), mk.getLine(), mk.isHit()));
                 });
@@ -352,8 +358,8 @@ public final class CoverageUtil {
         });
         sb.append("Hit markers: ").append(hit.getValue()).append('\n');
         sb.append("Missed markers: ").append(missed.getValue()).append('\n');
-        sb.append("Coverage percent: ").append(((double) hit.getValue())
-                / ((double) (hit.getValue() + missed.getValue()))).append("%\n");
+        sb.append("Coverage percent: ").append(String.format("%.2f", ((double) hit.getValue())
+                / ((double) (hit.getValue() + missed.getValue())) * 100)).append("%\n");
         sb.append('\n');
         sb.append(mb);
         return sb.toString();

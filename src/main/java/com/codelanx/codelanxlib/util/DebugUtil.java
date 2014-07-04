@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 
 /**
  * Class description for {@link DebugUtil}
+ * 
+ * TODO: Make class support multiple plugins
  *
  * @since 1.0.0
  * @author 1Rogue
