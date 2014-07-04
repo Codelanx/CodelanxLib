@@ -74,8 +74,8 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
     /**
      * Executes the proper {@link SubCommand}
      *
-     * @since 1.3.0
-     * @version 1.4.2
+     * @since 1.0.0
+     * @version 1.0.0
      *
      * @param sender The command executor
      * @param cmd The command instance
