@@ -19,8 +19,8 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -42,14 +42,16 @@ public class PlayerUtil {
      *
      * @param range The range in which to look for players
      * @param origin The {@link Location} representing the center of the circle
-     * @return Any players within the radius range of the origin
+     * @return Any players within the radius range of the origin, mapped to
+     *         the distance away they are
      */
-    private Set<Player> getPlayersInRange(int range, Location origin) {
-        Set<Player> back = new HashSet<>();
+    private Map<Player, Double> getPlayersInRange(int range, Location origin) {
+        Map<Player, Double> back = new HashMap<>();
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (p.getWorld().equals(origin.getWorld())) {
-                if (p.getLocation().distanceSquared(origin) <= range) {
-                    back.add(p);
+                double d = p.getLocation().distanceSquared(origin);
+                if (d <= range) {
+                    back.put(p, d);
                 }
             }
         }
