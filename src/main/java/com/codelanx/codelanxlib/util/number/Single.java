@@ -17,31 +17,29 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.util;
+package com.codelanx.codelanxlib.util.number;
 
 /**
- * Class description for {@link Tuple}
+ * Class description for {@link Single}
  *
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
  */
-public class Tuple<E, T> {
+public class Single<E> {
+
+    private E val;
     
-    private final E one;
-    private final T two;
-
-    public Tuple(E one, T two) {
-        this.one = one;
-        this.two = two;
+    public Single(E val) {
+        this.val = val;
     }
 
-    public E getFirst() {
-        return this.one;
+    public E getValue() {
+        return this.val;
     }
 
-    public T getSecond() {
-        return this.two;
+    public void setValue(E val) {
+        this.val = val;
     }
 
 }
