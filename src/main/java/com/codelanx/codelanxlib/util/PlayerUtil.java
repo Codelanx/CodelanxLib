@@ -21,7 +21,6 @@ package com.codelanx.codelanxlib.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -45,7 +44,7 @@ public class PlayerUtil {
      * @return Any players within the radius range of the origin, mapped to
      *         the distance away they are
      */
-    private Map<Player, Double> getPlayersInRange(int range, Location origin) {
+    public static Map<Player, Double> getPlayersInRange(int range, Location origin) {
         Map<Player, Double> back = new HashMap<>();
         origin.getWorld().getPlayers().forEach((p) -> {
                     double d = p.getLocation().distanceSquared(origin);
