@@ -71,12 +71,32 @@ public class SQLite implements AutoCloseable {
      * @throws SQLException If the connection fails to open
      */
     public Connection open(Plugin plugin, String name) throws SQLException {
+        return this.open(new File(plugin.getDataFolder() + File.separator), name);
+    }
+
+    /**
+     * Opens a connection to the SQLite database. Make sure to call
+     * SQLite.close() after you are finished working with the database for your
+     * segment of your code.
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     *
+     * @param folder A {@link File} pointing to a data folder for the database
+     * @param name The name of the database file
+     * @return The Connection object
+     * @throws SQLException If the connection fails to open
+     */
+    public Connection open(File folder, String name) throws SQLException {
+        if (folder == null || !folder.isDirectory() || folder.exists()) {
+            throw new IllegalArgumentException("Folder must be a non-null, existing directory!");
+        }
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException ex) {
             DebugUtil.error("Error loading SQLite drivers!", ex);
         }
-        this.con = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + File.separator + name + ".db");
+        this.con = DriverManager.getConnection("jdbc:sqlite:" + folder.getAbsolutePath() + name + ".db");
         DebugUtil.print("Open SQLite connections: %d", ++connections);
         return this.con;
     }
