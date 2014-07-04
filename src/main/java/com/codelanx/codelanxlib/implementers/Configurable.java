@@ -28,6 +28,7 @@ import com.codelanx.codelanxlib.config.ConfigurationLoader;
  * @author 1Rogue
  * @version 1.0.0
  */
+@FunctionalInterface
 public interface Configurable {
 
     /**

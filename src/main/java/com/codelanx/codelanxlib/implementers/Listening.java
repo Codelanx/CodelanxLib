@@ -29,6 +29,7 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 1.0.0
  */
+@FunctionalInterface
 public interface Listening<E extends Plugin> {
 
     /**

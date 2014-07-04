@@ -28,6 +28,7 @@ import com.codelanx.codelanxlib.econ.CEconomy;
  * @author 1Rogue
  * @version 1.0.0
  */
+@FunctionalInterface
 public interface Economics {
 
      /**
