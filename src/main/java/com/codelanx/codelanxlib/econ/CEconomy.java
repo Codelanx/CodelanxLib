@@ -35,7 +35,14 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  * @version 1.0.0
  */
 public class CEconomy extends Observable {
-    
+
+    /**
+     * Represents the status of a charge
+     * 
+     * @since 1.0.0
+     * @author 1Rogue
+     * @version 1.0.0
+     */
     public static class ChargeStatus {
         
         private final boolean status;

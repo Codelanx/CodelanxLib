@@ -24,13 +24,14 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Class description for {@link ReloadEvent}
+ * Event fired upon the use of a
+ * {@link com.codelanx.codelanxlib.command.ReloadCommand}
  *
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
  * 
- * @param <E> The plugin being reloaded
+ * @param <E> The {@link Plugin} being reloaded
  */
 public class ReloadEvent<E extends Plugin> extends Event {
 
