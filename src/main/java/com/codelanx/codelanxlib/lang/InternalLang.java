@@ -205,15 +205,37 @@ public enum InternalLang {
      *
      *
      * @param target The target to send to
-     * @param plugin The plugin name
+     * @param format The format provided
      * @param message The message to colorize and send
      * @param args Arguments to supply to the {@link InternalLang} message
      */
-    public static void sendMessage(CommandSender target, String plugin, InternalLang message, Object... args) {
+    public static void sendMessage(CommandSender target, String format, InternalLang message, Object... args) {
         if (message == null) {
             return;
         }
-        String s = InternalLang.FORMAT.format(plugin, message.format(args));
+        String s = __(format + message.format(args));
+        if (!s.isEmpty()) {
+            target.sendMessage(s);
+        }
+    }
+
+    /**
+     * Sends a formatted string and prepends the {@link InternalLang#FORMAT} to
+     * it.
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     *
+     *
+     * @param target The target to send to
+     * @param message The message to colorize and send
+     * @param args Arguments to supply to the {@link InternalLang} message
+     */
+    public static void sendMessage(CommandSender target, InternalLang message, Object... args) {
+        if (message == null) {
+            return;
+        }
+        String s = InternalLang.FORMAT.format(message.format(args));
         if (!s.isEmpty()) {
             target.sendMessage(s);
         }
