@@ -213,7 +213,7 @@ public enum InternalLang {
         if (message == null) {
             return;
         }
-        String s = __(format + message.format(args));
+        String s = __(String.format(format, message.format(args)));
         if (!s.isEmpty()) {
             target.sendMessage(s);
         }
