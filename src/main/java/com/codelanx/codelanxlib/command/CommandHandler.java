@@ -109,7 +109,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
                 return true;
             } else {
                 InternalLang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
-                InternalLang.sendMessage(sender, scommand.info());
+                InternalLang.sendMessage(sender, this.name, scommand.info());
             }
         } else {
             InternalLang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_UNKNOWN);

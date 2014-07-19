@@ -52,7 +52,7 @@ public enum InternalLang {
     ECONOMY_INSUFF("economy.insufficient", "You do not have enough money for this! (Required: %.2f)"),
     ECONOMY_REFUND("economy.refund", "Refunded amount &7.2f&9"),
     ECONOMY_FAILED("economy.trans-failed", "&cError:&7 Failed to charge your account!"),
-    FORMAT("format", "&f[&9%s&f] %s");
+    FORMAT("format", "&f[&9CL-Lib&f] %s");
 
     private static FileConfiguration yaml;
     private final String def;
@@ -177,6 +177,23 @@ public enum InternalLang {
      */
     public static void sendMessage(CommandSender target, String message) {
         target.sendMessage(InternalLang.FORMAT.format(message));
+    }
+
+    /**
+     * Sends a formatted string and prepends the {@link InternalLang#FORMAT} to
+     * it.
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     *
+     * @deprecated
+     *
+     * @param target The target to send to
+     * @param format The format to use
+     * @param message The message to format and send
+     */
+    public static void sendMessage(CommandSender target, String format, String message) {
+        target.sendMessage(__(String.format(format, message)));
     }
 
     /**
