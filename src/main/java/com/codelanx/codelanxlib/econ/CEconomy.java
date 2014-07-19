@@ -82,6 +82,7 @@ public class CEconomy extends Observable {
 
     }
     
+    protected final String name;
     protected final net.milkbowl.vault.economy.Economy econ;
     
     public CEconomy(Plugin plugin) {
@@ -98,7 +99,7 @@ public class CEconomy extends Observable {
             this.econ = null;
             plugin.getLogger().log(Level.WARNING, "No vault found, will not charge players!");
         }
-        
+        this.name = plugin.getName();
     }
 
     public ChargeStatus canCharge(Player p, ConfigMarker value, ConfigurationLoader config) {
@@ -110,7 +111,7 @@ public class CEconomy extends Observable {
             return new ChargeStatus(true, 0);
         }
         if (cost < 0) {
-            InternalLang.sendMessage(p, InternalLang.ECONOMY_FAILED);
+            InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_FAILED);
             return new ChargeStatus(false, -1);
         }
         return new ChargeStatus(this.econ.has(p.getName(), cost), cost);
@@ -125,13 +126,13 @@ public class CEconomy extends Observable {
             return true;
         }
         if (cost < 0) {
-           InternalLang.sendMessage(p, InternalLang.ECONOMY_FAILED);
+           InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_FAILED);
             return false;
         }
         net.milkbowl.vault.economy.EconomyResponse r = this.econ.withdrawPlayer(p.getName(), cost);
         boolean bad = r.type == net.milkbowl.vault.economy.EconomyResponse.ResponseType.FAILURE;
         if (bad) {
-           InternalLang.sendMessage(p, InternalLang.ECONOMY_INSUFF, cost);
+           InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_INSUFF, cost);
         }
         this.setChanged();
         this.notifyObservers(new EconomyChangePacket(p, this.getBalance(p)));

@@ -39,7 +39,7 @@ import org.bukkit.plugin.Plugin;
  * 
  * @param <E> The specific {@link Plugin} to use
  */
-public class CommandHandler<E extends Plugin & Commandable> implements CommandExecutor {
+public class CommandHandler<E extends Plugin & Commandable<E>> implements CommandExecutor {
 
     /** Private {@link Plugin} instance */
     protected final E plugin;
@@ -62,7 +62,7 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
         
         this.command = command;
         
-        final CommandHandler chand = this;
+        final CommandHandler<E> chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
         if (cmd == null) {
             throw new NullPointerException("Attempted to register a non-existant command!");
@@ -89,21 +89,20 @@ public class CommandHandler<E extends Plugin & Commandable> implements CommandEx
         if (args.length < 1 || (args.length == 1 && "help".equalsIgnoreCase(args[0]))) {
             args = new String[]{"help", "1"};
         }
-        SubCommand command = this.getCommand(args[0]);
-        if (command != null) {
+        SubCommand<E> scommand = this.getCommand(args[0]);
+        if (scommand != null) {
             String[] newArgs = new String[args.length - 1];
             for (int i = 0; i < newArgs.length; i++) {
                 newArgs[i] = args[i + 1];
             }
-            if (command.execute(sender, newArgs)) {
+            if (scommand.execute(sender, newArgs)) {
                 return true;
             } else {
-                InternalLang.sendMessage(sender, InternalLang.COMMAND_HANDLER_USAGE, command.getUsage());
-                InternalLang.sendMessage(sender, command.info());
+                InternalLang.sendMessage(sender, this.plugin.getName(), InternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
+                InternalLang.sendMessage(sender, scommand.info());
             }
         } else {
-            InternalLang.sendMessage(sender, InternalLang.COMMAND_HANDLER_UNKNOWN);
-            sender.sendMessage("[" + this.plugin.getName() + "] Unknown Command");
+            InternalLang.sendMessage(sender, this.plugin.getName(), InternalLang.COMMAND_HANDLER_UNKNOWN);
         }
         return false;
     }

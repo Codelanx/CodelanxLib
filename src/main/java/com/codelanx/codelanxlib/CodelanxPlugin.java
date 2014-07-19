@@ -43,9 +43,9 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * @param <E> The implementing plugin instance
  */
-public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable, Configurable, Listening {
+public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable<E>, Configurable, Listening<E> {
 
-    private Class cnfg;
+    private Class cnfg; //Purposefully raw-typed
     private String cmd;
     protected CommandHandler<E> commands;
     protected ConfigurationLoader config;

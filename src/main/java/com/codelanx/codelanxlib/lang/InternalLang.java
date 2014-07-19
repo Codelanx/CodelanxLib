@@ -52,7 +52,7 @@ public enum InternalLang {
     ECONOMY_INSUFF("economy.insufficient", "You do not have enough money for this! (Required: %.2f)"),
     ECONOMY_REFUND("economy.refund", "Refunded amount &7.2f&9"),
     ECONOMY_FAILED("economy.trans-failed", "&cError:&7 Failed to charge your account!"),
-    FORMAT("format", "&f[&9CL-Lib&f] %s");
+    FORMAT("format", "&f[&9%s&f] %s");
 
     private static FileConfiguration yaml;
     private final String def;
@@ -205,14 +205,15 @@ public enum InternalLang {
      *
      *
      * @param target The target to send to
+     * @param plugin The plugin name
      * @param message The message to colorize and send
      * @param args Arguments to supply to the {@link InternalLang} message
      */
-    public static void sendMessage(CommandSender target, InternalLang message, Object... args) {
+    public static void sendMessage(CommandSender target, String plugin, InternalLang message, Object... args) {
         if (message == null) {
             return;
         }
-        String s = InternalLang.FORMAT.format(message.format(args));
+        String s = InternalLang.FORMAT.format(plugin, message.format(args));
         if (!s.isEmpty()) {
             target.sendMessage(s);
         }
