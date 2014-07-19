@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
+import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,6 +42,8 @@ import org.bukkit.plugin.Plugin;
  */
 public class CommandHandler<E extends Plugin & Commandable<E>> implements CommandExecutor {
 
+    /** The plugin name for formatting */
+    protected final String name;
     /** Private {@link Plugin} instance */
     protected final E plugin;
     /** Private {@link HashMap} of subcommands */
@@ -59,8 +62,13 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
      */
     public CommandHandler(E plugin, String command) {
         this.plugin = plugin;
-        
         this.command = command;
+        
+        if (this.plugin instanceof Formatted) {
+            this.name = ((Formatted) this.plugin).getFormat();
+        } else {
+            this.name = this.plugin.getName();
+        }
         
         final CommandHandler<E> chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
@@ -100,11 +108,11 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
             if (scommand.execute(sender, newArgs)) {
                 return true;
             } else {
-                InternalLang.sendMessage(sender, this.plugin.getName(), InternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
+                InternalLang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
                 InternalLang.sendMessage(sender, scommand.info());
             }
         } else {
-            InternalLang.sendMessage(sender, this.plugin.getName(), InternalLang.COMMAND_HANDLER_UNKNOWN);
+            InternalLang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_UNKNOWN);
         }
         return false;
     }
@@ -146,7 +154,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
      * @return {@code true} if they have permission, false otherwise
      */
     public boolean hasPermission(CommandSender sender, SubCommand<E> cmd) {
-        return sender.hasPermission(this.plugin.getName() + ".cmd." + cmd.getName());
+        return sender.hasPermission(this.plugin.getName().toLowerCase() + ".cmd." + cmd.getName());
     }
 
     /**

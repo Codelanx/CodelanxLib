@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.Observable;
 import java.util.logging.Level;
@@ -99,10 +100,14 @@ public class CEconomy extends Observable {
             this.econ = null;
             plugin.getLogger().log(Level.WARNING, "No vault found, will not charge players!");
         }
-        this.name = plugin.getName();
+        if (plugin instanceof Formatted) {
+            this.name = ((Formatted) plugin).getFormat();
+        } else {
+            this.name = plugin.getName(); 
+        }
     }
 
-    public ChargeStatus canCharge(Player p, ConfigMarker value, ConfigurationLoader config) {
+    public ChargeStatus canCharge(Player p, ConfigMarker<?> value, ConfigurationLoader config) {
         return this.canCharge(p, config.getDouble(value));
     }
     
@@ -117,7 +122,7 @@ public class CEconomy extends Observable {
         return new ChargeStatus(this.econ.has(p.getName(), cost), cost);
     }
 
-    public boolean charge(Player p, ConfigMarker value, ConfigurationLoader config) {
+    public boolean charge(Player p, ConfigMarker<?> value, ConfigurationLoader config) {
         return this.charge(p, config.getDouble(value));
     }
 
