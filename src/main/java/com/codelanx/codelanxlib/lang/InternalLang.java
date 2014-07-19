@@ -37,7 +37,7 @@ import org.bukkit.plugin.Plugin;
 public enum InternalLang {
 
     COMMAND_HANDLER_UNKNOWN("command.handler.unknown", "Unknown command"),
-    COMMAND_HANDLER_USAGE("command.handler.info", "Usage: "),
+    COMMAND_HANDLER_USAGE("command.handler.usage", "Usage: %s"),
     COMMAND_HELP_BARCHAR("command.help.barchar", "-"),
     COMMAND_HELP_BARCOLOR("command.help.barcolor", "&f"),
     COMMAND_HELP_TITLECOLOR("command.help.titlecolor", "&c"),

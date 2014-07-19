@@ -64,11 +64,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
         this.plugin = plugin;
         this.command = command;
         
-        if (this.plugin instanceof Formatted) {
-            this.name = ((Formatted) this.plugin).getFormat();
-        } else {
-            this.name = this.plugin.getName();
-        }
+        this.name = this.plugin instanceof Formatted ? ((Formatted) this.plugin).getFormat() : this.plugin.getName();
         
         final CommandHandler<E> chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);

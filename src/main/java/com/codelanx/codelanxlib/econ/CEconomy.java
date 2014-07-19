@@ -25,6 +25,8 @@ import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.Observable;
 import java.util.logging.Level;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -37,73 +39,22 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  */
 public class CEconomy extends Observable {
 
-    /**
-     * Represents the status of a charge
-     * 
-     * @since 1.0.0
-     * @author 1Rogue
-     * @version 1.0.0
-     */
-    public static class ChargeStatus {
-        
-        private final boolean status;
-        private final double amount;
-        
-        protected ChargeStatus(boolean status, double amount) {
-            this.status = status;
-            this.amount = amount;
-        }
-        
-        public boolean getStatus() {
-            return this.status;
-        }
-        
-        public double getAmount() {
-            return this.amount;
-        }
-    }
-
-    public class EconomyChangePacket {
-        
-        private final Player p;
-        private final double amount;
-        
-        public EconomyChangePacket(Player p, double amount) {
-            this.p = p;
-            this.amount = amount;
-        }
-        
-        public Player getPlayer() {
-            return this.p;
-        }
-        
-        public double getAmount() {
-            return this.amount;
-        }
-
-    }
-    
     protected final String name;
-    protected final net.milkbowl.vault.economy.Economy econ;
+    protected final Economy econ;
     
     public CEconomy(Plugin plugin) {
+        this.name = plugin instanceof Formatted ? ((Formatted) plugin).getFormat() : plugin.getName();
         if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
-            RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> economyProvider =
-                    plugin.getServer().getServicesManager().getRegistration(
-                            net.milkbowl.vault.economy.Economy.class
-                    );
-            this.econ = economyProvider.getProvider();
-            if (this.econ == null) {
+            RegisteredServiceProvider<Economy> economyProvider =
+                    plugin.getServer().getServicesManager().getRegistration(Economy.class);
+            if (economyProvider.getProvider() == null) {
                 plugin.getLogger().log(Level.WARNING, "No economy found, will not charge players!");
             }
+            final CEconomy ce = this;
+            this.econ = VaultProxy.proxyVault(ce);
         } else {
             this.econ = null;
             plugin.getLogger().log(Level.WARNING, "No vault found, will not charge players!");
-        }
-        if (plugin instanceof Formatted) {
-            this.name = ((Formatted) plugin).getFormat();
-        } else {
-            this.name = plugin.getName(); 
         }
     }
 
@@ -134,7 +85,7 @@ public class CEconomy extends Observable {
            InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_FAILED);
             return false;
         }
-        net.milkbowl.vault.economy.EconomyResponse r = this.econ.withdrawPlayer(p.getName(), cost);
+        EconomyResponse r = this.econ.withdrawPlayer(p.getName(), cost);
         boolean bad = r.type == net.milkbowl.vault.economy.EconomyResponse.ResponseType.FAILURE;
         if (bad) {
            InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_INSUFF, cost);
@@ -148,10 +99,15 @@ public class CEconomy extends Observable {
         if (this.econ == null) {
             return true;
         }
-        net.milkbowl.vault.economy.EconomyResponse r = this.econ.depositPlayer(p.getName(), amount);
+        EconomyResponse r = this.econ.depositPlayer(p.getName(), amount);
         this.setChanged();
         this.notifyObservers(new EconomyChangePacket(p, this.getBalance(p)));
-        return r.type != net.milkbowl.vault.economy.EconomyResponse.ResponseType.FAILURE;
+        return r.type != EconomyResponse.ResponseType.FAILURE;
+    }
+
+    @Override
+    protected void setChanged() {
+        super.setChanged();
     }
 
     public double getBalance(Player p) {
