@@ -88,7 +88,7 @@ public class SQLite implements AutoCloseable {
      * @throws SQLException If the connection fails to open
      */
     public Connection open(File folder, String name) throws SQLException {
-        if (folder == null || !folder.isDirectory() || folder.exists()) {
+        if (folder == null || !folder.exists() || !folder.isDirectory()) {
             throw new IllegalArgumentException("Folder must be a non-null, existing directory!");
         }
         try {
