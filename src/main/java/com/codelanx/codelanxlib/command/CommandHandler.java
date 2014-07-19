@@ -69,6 +69,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
         } else {
             cmd.setExecutor(chand);
         }
+        
+        this.registerSubCommands(new HelpCommand<>(this.plugin), new ReloadCommand<>(this.plugin));
     }
 
     /**
@@ -143,7 +145,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
      * @param cmd The {@link SubCommand} being executed
      * @return {@code true} if they have permission, false otherwise
      */
-    public boolean hasPermission(CommandSender sender, SubCommand cmd) {
+    public boolean hasPermission(CommandSender sender, SubCommand<E> cmd) {
         return sender.hasPermission(this.plugin.getName() + ".cmd." + cmd.getName());
     }
 
@@ -181,9 +183,9 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
      */
     public final <T extends SubCommand<E>> void registerSubCommands(T... commands) throws CommandInUseException {
         CommandInUseException ex = null;
-        for (T command : commands) {
+        for (T scommand : commands) {
             try {
-                this.registerSubCommand(command);
+                this.registerSubCommand(scommand);
             } catch (CommandInUseException e) {
                 if (ex == null) { ex = e; }
             }

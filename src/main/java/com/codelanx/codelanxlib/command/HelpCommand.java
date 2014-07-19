@@ -38,7 +38,7 @@ import org.bukkit.plugin.Plugin;
  * @param <E> Represents a {@link Plugin} that implements the
  * {@link Commandable} interface
  */
-public final class HelpCommand<E extends Plugin & Commandable> extends SubCommand<E> {
+public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCommand<E> {
 
     /** The bar to use for encapsulating help info */
     private final String BAR;
@@ -125,10 +125,10 @@ public final class HelpCommand<E extends Plugin & Commandable> extends SubComman
      * @return A list of {@link HelpItem} objects for commands
      */
     private List<HelpItem> getOrderedCommands(CommandSender sender,
-            Collection<SubCommand> cmds) {
+            Collection<SubCommand<E>> cmds) {
         List<HelpItem> back = new ArrayList<>();
-        List<SubCommand> vals = new ArrayList<>(cmds);
-        Collections.sort(vals, (SubCommand o1, SubCommand o2) -> o1.getName().compareTo(o2.getName()));
+        List<SubCommand<E>> vals = new ArrayList<>(cmds);
+        Collections.sort(vals, (SubCommand<E> o1, SubCommand<E> o2) -> o1.getName().compareTo(o2.getName()));
         List<String> temp = new ArrayList<>();
         vals.stream().filter((cmd)
                 -> (this.plugin.getCommandHandler().hasPermission(sender, cmd))).forEach((cmd) -> {

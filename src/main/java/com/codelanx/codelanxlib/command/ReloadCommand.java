@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.events.ReloadEvent;
+import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.implementers.Reloadable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -31,8 +32,10 @@ import org.bukkit.plugin.Plugin;
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
+ * 
+ * @param <E> The plugin type
  */
-public class ReloadCommand extends SubCommand {
+public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand<E> {
 
     /**
      * {@link ReloadCommand constructor}
@@ -42,7 +45,7 @@ public class ReloadCommand extends SubCommand {
      * 
      * @param plugin {@inheritDoc} 
      */
-    public ReloadCommand(Plugin plugin) {
+    public ReloadCommand(E plugin) {
         super(plugin);
     }
 
@@ -59,7 +62,7 @@ public class ReloadCommand extends SubCommand {
      */
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        this.plugin.getServer().getPluginManager().callEvent(new ReloadEvent(this.plugin));
+        this.plugin.getServer().getPluginManager().callEvent(new ReloadEvent<>(this.plugin));
         if (this.plugin instanceof Reloadable) {
             ((Reloadable) this.plugin).reload();
             sender.sendMessage(this.plugin.getName() + " v" + this.plugin.getDescription().getVersion() + " reloaded!");
