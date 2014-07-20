@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -46,6 +47,25 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class VaultProxy implements InvocationHandler {
 
     private final static Set<CEconomy> econs = new LinkedHashSet<>();
+    private final static Set<String> blackListed = new LinkedHashSet<String>() {{
+        addAll(Arrays.asList(
+                "getBalance",
+                "bankBalance",
+                "bankHas",
+                "currencyNameSingular",
+                "currencyNamePlural",
+                "format",
+                "fractionalDigits",
+                "getBanks",
+                "getName",
+                "has",
+                "hasAccount",
+                "hasBankSupport",
+                "isBankMember",
+                "isBankOwner",
+                "isEnabled"
+        ));
+    }};
     private final Economy econ;
 
     private VaultProxy(Economy econ) {
@@ -55,7 +75,7 @@ public final class VaultProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
         Object back = m.invoke(this.econ, args);
-        if (args.length > 0) {
+        if (args.length > 0 && !VaultProxy.blackListed.contains(m.getName())) {
             OfflinePlayer o;
             if (args[0] instanceof String) {
                 String s = (String) args[0];
