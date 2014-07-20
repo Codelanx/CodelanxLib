@@ -24,12 +24,16 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -41,15 +45,16 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class VaultProxy implements InvocationHandler {
 
-    private final CEconomy econ;
+    private final static Set<CEconomy> econs = new LinkedHashSet<>();
+    private final Economy econ;
 
-    private VaultProxy(CEconomy econ) {
+    private VaultProxy(Economy econ) {
         this.econ = econ;
     }
 
     @Override
-    public Object invoke(Object econ, Method m, Object[] args) throws Throwable {
-        Object back = m.invoke(econ, args);
+    public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
+        Object back = m.invoke(this.econ, args);
         if (args.length > 0) {
             OfflinePlayer o;
             if (args[0] instanceof String) {
@@ -62,35 +67,50 @@ public final class VaultProxy implements InvocationHandler {
             }
             if (o.isOnline()) {
                 Player p = (Player) o;
-                this.econ.setChanged();
-                this.econ.notifyObservers(new EconomyChangePacket(p, this.econ.getBalance(p)));
+                VaultProxy.econs.forEach(e -> {
+                    e.setChanged();
+                    e.notifyObservers(new EconomyChangePacket(p, e.getBalance(p)));
+                });
             }
         }
         return back;
     }
 
-    public static Economy proxyVault(CEconomy econ) {
+    public static void proxyVault() {
         try {
+            Server server = Bukkit.getServer();
+            Economy e = server.getServicesManager().getRegistration(Economy.class).getProvider();
+            if (e == null || Proxy.isProxyClass(e.getClass())) {
+                return;
+            }
             ClassLoader l;
             l = Economy.class.getClassLoader();
+            Vault v = JavaPlugin.getPlugin(Vault.class);
             if (l == null) {
-                Vault v = JavaPlugin.getPlugin(Vault.class);
                 Method m = v.getClass().getMethod("getClassLoader");
                 m.setAccessible(true);
                 l = (ClassLoader) m.invoke(v);
                 if (l == null) {
                     DebugUtil.print(Level.SEVERE, "Unable to retrieve economy classloader!");
-                    return null;
+                    return;
                 }
             }
-            return (Economy) Proxy.newProxyInstance(l, new Class[]{Economy.class}, new VaultProxy(econ));
+            server.getServicesManager().unregister(Economy.class);
+            server.getServicesManager().register(Economy.class,
+                    (Economy) Proxy.newProxyInstance(l, new Class[]{Economy.class}, new VaultProxy(e)),
+                    v,
+                    ServicePriority.Normal);
         } catch (NoSuchMethodException
                 | SecurityException
                 | IllegalAccessException
                 | IllegalArgumentException
                 | InvocationTargetException ex) {
-            return null;
+            DebugUtil.error("Error proxying vault economy class!", ex);
         }
+    }
+
+    public static <T extends CEconomy> boolean register(T econ) {
+        return VaultProxy.econs.add(econ);
     }
 
 }

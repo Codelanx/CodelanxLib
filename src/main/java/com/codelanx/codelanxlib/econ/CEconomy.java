@@ -23,6 +23,9 @@ import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.InternalLang;
+import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.logging.Level;
 import net.milkbowl.vault.economy.Economy;
@@ -37,23 +40,25 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  * @author 1Rogue
  * @version 1.0.0
  */
-public class CEconomy extends Observable {
+public final class CEconomy extends Observable {
 
     protected final String name;
-    protected final Economy econ;
+    private Economy econ;
     
     public CEconomy(Plugin plugin) {
         this.name = plugin instanceof Formatted ? ((Formatted) plugin).getFormat() : plugin.getName();
+        VaultProxy.proxyVault();
+        VaultProxy.register(this);
         if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
             RegisteredServiceProvider<Economy> economyProvider =
                     plugin.getServer().getServicesManager().getRegistration(Economy.class);
-            if (economyProvider.getProvider() == null) {
+            this.econ = economyProvider.getProvider();
+            if (this.econ == null) {
                 plugin.getLogger().log(Level.WARNING, "No economy found, will not charge players!");
             }
             final CEconomy ce = this;
-            this.econ = VaultProxy.proxyVault(ce);
+            VaultProxy.register(ce);
         } else {
-            this.econ = null;
             plugin.getLogger().log(Level.WARNING, "No vault found, will not charge players!");
         }
     }
@@ -119,6 +124,10 @@ public class CEconomy extends Observable {
 
     public boolean isEnabled() {
         return this.econ != null;
+    }
+
+    protected Economy getEconomy() {
+        return this.econ;
     }
 
 }
