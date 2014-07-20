@@ -23,9 +23,6 @@ import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.InternalLang;
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Observable;
 import java.util.logging.Level;
 import net.milkbowl.vault.economy.Economy;
@@ -48,7 +45,6 @@ public final class CEconomy extends Observable {
     public CEconomy(Plugin plugin) {
         this.name = plugin instanceof Formatted ? ((Formatted) plugin).getFormat() : plugin.getName();
         VaultProxy.proxyVault();
-        VaultProxy.register(this);
         if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
             RegisteredServiceProvider<Economy> economyProvider =
                     plugin.getServer().getServicesManager().getRegistration(Economy.class);
@@ -91,7 +87,7 @@ public final class CEconomy extends Observable {
             return false;
         }
         EconomyResponse r = this.econ.withdrawPlayer(p.getName(), cost);
-        boolean bad = r.type == net.milkbowl.vault.economy.EconomyResponse.ResponseType.FAILURE;
+        boolean bad = r.type == EconomyResponse.ResponseType.FAILURE;
         if (bad) {
            InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_INSUFF, cost);
         }
