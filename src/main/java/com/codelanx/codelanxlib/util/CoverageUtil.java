@@ -88,10 +88,8 @@ public final class CoverageUtil {
         }
 
         public void addValue(String clazz, String method, int line, boolean hit) {
-            DebugUtil.print("PluginMarker#addValue: %s", clazz);
             ClassMarker cm = this.classes.get(clazz);
             if (cm == null) {
-                DebugUtil.print(Level.WARNING, "Plugin '%s' called CoverageUtil#marker(Plugin) with an unregistered class", this.plugin.getName());
                 return;
             }
             cm.addValue(method, line, hit);
@@ -143,10 +141,8 @@ public final class CoverageUtil {
         }
 
         public void addValue(String method, int line, boolean hit) {
-            DebugUtil.print("ClassMarker#addValue: %s", method);
             MethodMarker m = this.methods.get(method);
             if (m == null) {
-                DebugUtil.print(Level.WARNING, "CoverageUtil#marker(Plugin) called with an unregistered method ('%s')", method);
                 return;
             }
             m.addValue(line, hit);
@@ -210,7 +206,6 @@ public final class CoverageUtil {
         }
 
         public void addValue(int line, boolean hit) {
-            DebugUtil.print("Adding value (line: %d, val: %B", line, hit);
             this.markers.put(line, new Marker(line).setHit(hit));
         }
 
@@ -321,7 +316,7 @@ public final class CoverageUtil {
                 DebugUtil.error(String.format("Error reading latest coverage log for plugin '%s'!", p.getName()), ex);
             }
         } else {
-            DebugUtil.print(Level.INFO, "Plugin '%s' called CoverageUtil#load(Plugin), but no logfile was found", p.getName());
+            DebugUtil.print(Level.WARNING, "Plugin '%s' called CoverageUtil#load(Plugin), but no logfile was found", p.getName());
         }
     }
 
@@ -406,17 +401,14 @@ public final class CoverageUtil {
                 DebugUtil.print(Level.WARNING, "Bad coverage value found, skipping!");
                 continue;
             }
-            DebugUtil.print("Found value '%s'", line);
             if (pm == null) {
                 pm = new PluginMarker(tokens[0]);
             }
             try {
                 int li = Integer.parseInt(tokens[3]);
                 if (li <= 0) {
-                    DebugUtil.print("Calling addMarks!");
                     pm.addMarks(new ClassMarker(tokens[1]).addMarks(new MethodMarker(tokens[2], Integer.parseInt(tokens[4]))));
                 } else {
-                    DebugUtil.print("Calling addValue!");
                     pm.addValue(tokens[1], tokens[2], li, Boolean.valueOf(tokens[4]));
                 }
             } catch (NumberFormatException ex) {
