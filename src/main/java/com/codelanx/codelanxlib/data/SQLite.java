@@ -96,7 +96,7 @@ public class SQLite implements AutoCloseable {
         } catch (ClassNotFoundException ex) {
             DebugUtil.error("Error loading SQLite drivers!", ex);
         }
-        this.con = DriverManager.getConnection("jdbc:sqlite:" + folder.getAbsolutePath() + name + ".db");
+        this.con = DriverManager.getConnection("jdbc:sqlite:" + folder.getAbsolutePath() + File.separatorChar + name + ".db");
         DebugUtil.print("Open SQLite connections: %d", ++connections);
         return this.con;
     }
