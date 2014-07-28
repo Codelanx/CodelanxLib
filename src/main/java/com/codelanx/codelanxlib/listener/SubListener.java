@@ -43,4 +43,6 @@ public abstract class SubListener<T extends Plugin> implements Listener {
         return this.getClass().getName();
     }
 
+    public void onDisable() {}
+
 }

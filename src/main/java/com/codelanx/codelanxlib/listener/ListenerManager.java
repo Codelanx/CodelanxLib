@@ -135,6 +135,6 @@ public class ListenerManager<E extends Plugin> {
      * @version 1.0.0
      */
     public void cleanup() {
-        this.listeners.values().forEach((l) -> { HandlerList.unregisterAll(l); });
+        this.listeners.values().forEach((l) -> { l.onDisable(); HandlerList.unregisterAll(l); });
     }
 }
