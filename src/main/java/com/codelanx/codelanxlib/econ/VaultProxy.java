@@ -75,7 +75,7 @@ public final class VaultProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
         Object back = m.invoke(this.econ, args);
-        if (args.length > 0 && !VaultProxy.blackListed.contains(m.getName())) {
+        if (args != null && args.length > 0 && !VaultProxy.blackListed.contains(m.getName())) {
             OfflinePlayer o;
             if (args[0] instanceof String) {
                 String s = (String) args[0];
