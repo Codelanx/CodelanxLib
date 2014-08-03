@@ -37,7 +37,7 @@ import java.util.Properties;
  * @author 1Rogue
  * @version 1.0.0
  */
-public class MySQL implements AutoCloseable {
+public class MySQL implements SQLDataType {
 
     private static byte connections = 0;
     private static String HOST = "";
@@ -68,9 +68,9 @@ public class MySQL implements AutoCloseable {
     }
 
     /**
-     * Opens a connection to the MySQL database. Make sure to call MySQL.close()
-     * after you are finished working with the database for your segment of your
-     * code.
+     * Opens a connection to the SQL database. Make sure to call
+     * {@link SQLDataType#close()} or wrap in try-with-resources after you are
+     * finished working with the database for your segment of your code.
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -89,15 +89,16 @@ public class MySQL implements AutoCloseable {
     }
 
     /**
-     * Checks if a table exists within the set database
+     * {@inheritDoc}
      *
      * @since 1.0.0
      * @version 1.0.0
      *
-     * @param tablename Name of the table to check for
-     * @return true if exists, false otherwise
-     * @throws SQLException The query on the database fails
+     * @param tablename {@inheritDoc}
+     * @return {@inheritDoc}
+     * @throws SQLException {@inheritDoc}
      */
+    @Override
     public boolean checkTable(String tablename) throws SQLException {
         byte i;
         PreparedStatement stmt = this.prepare("SELECT count(*) FROM information_schema.TABLES WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = ?)");
@@ -113,46 +114,48 @@ public class MySQL implements AutoCloseable {
     }
 
     /**
-     * Executes a query, but does not update any information
+     * {@inheritDoc}
      *
      * @since 1.0.0
      * @version 1.0.0
      *
-     * @param query The string query to execute
-     * @return A ResultSet from the query
-     * @throws SQLException The connection cannot be established
+     * @param query {@inheritDoc}
+     * @return {@inheritDoc}
+     * @throws SQLException {@inheritDoc}
      */
+    @Override
     public ResultSet query(String query) throws SQLException {
         Statement stmt = this.con.createStatement();
         return stmt.executeQuery(query);
     }
 
     /**
-     * Executes a query that can change values
+     * {@inheritDoc}
      *
      * @since 1.0.0
      * @version 1.0.0
      *
-     * @param query The string query to execute
-     * @return 0 for no returned results, or the number of returned rows
-     * @throws SQLException The connection cannot be established
+     * @param query {@inheritDoc}
+     * @return {@inheritDoc}
+     * @throws SQLException {@inheritDoc}
      */
+    @Override
     public int update(String query) throws SQLException {
         Statement stmt = this.con.createStatement();
         return stmt.executeUpdate(query);
     }
 
     /**
-     * Returns a {@link PreparedStatement} in which you can easily protect
-     * against SQL injection attacks.
+     * {@inheritDoc}
      * 
      * @since 1.0.0
      * @version 1.0.0
      * 
-     * @param stmt The string to prepare
-     * @return A {@link PreparedStatement} from the passed string
-     * @throws SQLException The connection cannot be established
+     * @param stmt {@inheritDoc}
+     * @return A {@inheritDoc}
+     * @throws SQLException {@inheritDoc}
      */
+    @Override
     public PreparedStatement prepare(String stmt) throws SQLException {
         return this.con.prepareStatement(stmt);
     }
@@ -191,24 +194,28 @@ public class MySQL implements AutoCloseable {
         return give;
     }
 
+    @Override
     public void setAutoCommit(boolean set) throws SQLException {
         if (this.con != null) {
             this.con.setAutoCommit(set);
         }
     }
 
+    @Override
     public void commit() throws SQLException {
         if (this.con != null) {
             this.con.commit();
         }
     }
 
+    @Override
     public void rollback() throws SQLException {
         if (this.con != null) {
             this.con.commit();
         }
     }
 
+    @Override
     public Connection getConnection() {
         return this.con;
     }

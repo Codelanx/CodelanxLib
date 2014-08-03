@@ -36,7 +36,7 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 1.0.0
  */
-public class SQLite implements AutoCloseable {
+public class SQLite implements SQLDataType {
 
     protected static byte connections = 0;
     protected Connection con = null;
@@ -111,6 +111,7 @@ public class SQLite implements AutoCloseable {
      * @return true if exists, false otherwise
      * @throws SQLException The query on the database fails
      */
+    @Override
     public boolean checkTable(String tablename) throws SQLException {
         byte i;
         PreparedStatement stmt = this.prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?");
@@ -135,6 +136,7 @@ public class SQLite implements AutoCloseable {
      * @return A ResultSet from the query
      * @throws SQLException The connection cannot be established
      */
+    @Override
     public ResultSet query(String query) throws SQLException {
         Statement stmt = this.con.createStatement();
         return stmt.executeQuery(query);
@@ -151,6 +153,7 @@ public class SQLite implements AutoCloseable {
      * @return 0 for no returned results, or the number of returned rows
      * @throws SQLException The connection cannot be established
      */
+    @Override
     public synchronized int update(String query) throws SQLException {
         Statement stmt = this.con.createStatement();
         return stmt.executeUpdate(query);
@@ -167,6 +170,7 @@ public class SQLite implements AutoCloseable {
      * @return A {@link PreparedStatement} from the passed string
      * @throws SQLException The connection cannot be established
      */
+    @Override
     public PreparedStatement prepare(String stmt) throws SQLException {
         return this.con.prepareStatement(stmt);
     }
@@ -187,24 +191,28 @@ public class SQLite implements AutoCloseable {
         }
     }
 
+    @Override
     public void setAutoCommit(boolean set) throws SQLException {
         if (this.con != null) {
             this.con.setAutoCommit(set);
         }
     }
 
+    @Override
     public void commit() throws SQLException {
         if (this.con != null) {
             this.con.commit();
         }
     }
 
+    @Override
     public void rollback() throws SQLException {
         if (this.con != null) {
             this.con.commit();
         }
     }
 
+    @Override
     public Connection getConnection() {
         return this.con;
     }
