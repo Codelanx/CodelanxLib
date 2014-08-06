@@ -193,7 +193,7 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
         item.getOutputs().stream().forEach((s) -> {
             sb.append(s).append('\n');
         });
-        sb.append(this.formatFooter("&f"));
+        sb.append(this.formatFooter(InternalLang.COMMAND_HELP_BARCOLOR.format()));
         sb.append('\n');
         return sb.toString();
     }
