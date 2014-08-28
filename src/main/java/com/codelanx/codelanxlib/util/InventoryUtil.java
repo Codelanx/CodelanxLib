@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import org.bukkit.inventory.Inventory;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 /**
  * Class description for {@link InventoryUtil}
@@ -33,5 +33,9 @@ public class InventoryUtil {
     /*public static Inventory getSpacedInventory() {
         return null;
     }*/
+    
+    public boolean hasClickedTop(InventoryClickEvent event) {
+        return event.getRawSlot() == event.getSlot();
+    }
 
 }
