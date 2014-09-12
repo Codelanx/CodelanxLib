@@ -35,13 +35,16 @@ public class SerializationFactory {
 
     private static List<Class<? extends ConfigurationSerializable>> sers = new ArrayList<>();
 
-    public static void registerClass(Class<? extends ConfigurationSerializable> clazz) {
+    public static void registerClass(boolean toBukkit, Class<? extends ConfigurationSerializable> clazz) {
         SerializationFactory.sers.add(clazz);
+        if (toBukkit) {
+            ConfigurationSerialization.registerClass(clazz);
+        }
     }
 
-    public static void registerClasses(Class<? extends ConfigurationSerializable>... clazz) {
+    public static void registerClasses(boolean toBukkit, Class<? extends ConfigurationSerializable>... clazz) {
         for (Class<? extends ConfigurationSerializable> c : clazz) {
-            SerializationFactory.registerClass(c);
+            SerializationFactory.registerClass(toBukkit, c);
         }
     }
 
@@ -52,7 +55,8 @@ public class SerializationFactory {
     public static Class[] getNativeSerializables() {
         return new Class[] {
             SInventory.class,
-            SPlayerInventory.class
+            SPlayerInventory.class,
+            SLocation.class
         };
     }
 }

@@ -36,7 +36,7 @@ import org.mcstats.Metrics;
 public class CodelanxLib extends JavaPlugin {
     
     public CodelanxLib() {
-        SerializationFactory.registerClasses(
+        SerializationFactory.registerClasses(false,
                 SerializationFactory.getNativeSerializables());
     }
 

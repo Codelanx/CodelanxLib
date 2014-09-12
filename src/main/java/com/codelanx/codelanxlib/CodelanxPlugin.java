@@ -55,7 +55,7 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
         this.cmd = command;
         this.cnfg = config;
 
-        SerializationFactory.registerClasses(
+        SerializationFactory.registerClasses(false,
                 SerializationFactory.getNativeSerializables());
     }
 
