@@ -44,9 +44,9 @@ public class SLocation implements ConfigurationSerializable {
     private final UUID uuid;
     private World world;
 
-    public SLocation(Block block) {
-        this.loc = block.getLocation().toVector();
-        this.uuid = block.getWorld().getUID();
+    public SLocation(Location loc) {
+        this.loc = loc.toVector();
+        this.uuid = loc.getWorld().getUID();
     }
 
     public SLocation(Map<String, Object> config) {
