@@ -5,4 +5,5 @@ load: STARTUP
 author: 1Rogue
 website: http://codelanx.com/
 main: ${project.groupId}.${project.artifactId}.${project.name}
+soft-depend: [Vault]
 prefix: CL-Lib
