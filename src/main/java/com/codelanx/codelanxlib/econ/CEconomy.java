@@ -23,6 +23,7 @@ import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.InternalLang;
+import com.codelanx.codelanxlib.util.DebugUtil;
 import java.util.Observable;
 import java.util.logging.Level;
 import net.milkbowl.vault.economy.Economy;
@@ -44,11 +45,15 @@ public final class CEconomy extends Observable {
     
     public CEconomy(Plugin plugin) {
         this.name = plugin instanceof Formatted ? ((Formatted) plugin).getFormat() : plugin.getName();
-        VaultProxy.proxyVault();
         if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
+            VaultProxy.proxyVault();
             RegisteredServiceProvider<Economy> economyProvider =
                     plugin.getServer().getServicesManager().getRegistration(Economy.class);
-            this.econ = economyProvider.getProvider();
+            if (economyProvider == null) {
+                plugin.getLogger().log(Level.WARNING, "No economy provider found, will not charge players!");
+            } else {
+                this.econ = economyProvider.getProvider();
+            }
             if (this.econ == null) {
                 plugin.getLogger().log(Level.WARNING, "No economy found, will not charge players!");
             }

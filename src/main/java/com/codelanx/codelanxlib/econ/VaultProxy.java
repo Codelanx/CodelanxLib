@@ -34,6 +34,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -99,8 +100,14 @@ public final class VaultProxy implements InvocationHandler {
     public static void proxyVault() {
         try {
             Server server = Bukkit.getServer();
-            Economy e = server.getServicesManager().getRegistration(Economy.class).getProvider();
+            RegisteredServiceProvider<Economy> rsp = server.getServicesManager().getRegistration(Economy.class);
+            if (rsp == null) {
+                DebugUtil.print(Level.SEVERE, "No economy found, will not proxy Vault!");
+                return;
+            }
+            Economy e = rsp.getProvider();
             if (e == null || Proxy.isProxyClass(e.getClass())) {
+                DebugUtil.print(Level.SEVERE, "Error proxying vault economy! No responsive updating");
                 return;
             }
             ClassLoader l;
