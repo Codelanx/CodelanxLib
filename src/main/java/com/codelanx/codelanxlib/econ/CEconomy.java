@@ -23,11 +23,11 @@ import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.InternalLang;
-import com.codelanx.codelanxlib.util.DebugUtil;
 import java.util.Observable;
 import java.util.logging.Level;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -40,11 +40,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  */
 public final class CEconomy extends Observable {
 
-    protected final String name;
+    protected final String format;
     private Economy econ;
     
     public CEconomy(Plugin plugin) {
-        this.name = plugin instanceof Formatted ? ((Formatted) plugin).getFormat() : plugin.getName();
+        this.format = plugin instanceof Formatted
+                ? ((Formatted) plugin).getFormat()
+                : ChatColor.translateAlternateColorCodes('&', "&f[&9" + plugin.getName() + "&f] ");
         if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
             VaultProxy.proxyVault();
             RegisteredServiceProvider<Economy> economyProvider =
@@ -73,7 +75,7 @@ public final class CEconomy extends Observable {
             return new ChargeStatus(true, 0);
         }
         if (cost < 0) {
-            InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_FAILED);
+            InternalLang.sendMessage(p, this.format, InternalLang.ECONOMY_FAILED);
             return new ChargeStatus(false, -1);
         }
         return new ChargeStatus(this.econ.has(p.getName(), cost), cost);
@@ -88,13 +90,13 @@ public final class CEconomy extends Observable {
             return true;
         }
         if (cost < 0) {
-           InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_FAILED);
+            InternalLang.sendMessage(p, this.format, InternalLang.ECONOMY_FAILED);
             return false;
         }
         EconomyResponse r = this.econ.withdrawPlayer(p.getName(), cost);
         boolean bad = r.type == EconomyResponse.ResponseType.FAILURE;
         if (bad) {
-           InternalLang.sendMessage(p, this.name, InternalLang.ECONOMY_INSUFF, cost);
+           InternalLang.sendMessage(p, this.format, InternalLang.ECONOMY_INSUFF, cost);
         }
         this.setChanged();
         this.notifyObservers(new EconomyChangePacket(p, this.getBalance(p)));
