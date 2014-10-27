@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib;
 
+import com.codelanx.codelanxlib.lang.InternalLang;
 import com.codelanx.codelanxlib.serialize.*;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -42,6 +43,12 @@ public class CodelanxLib extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        try {
+            InternalLang.init(this);
+        } catch (IOException ex) {
+            Logger.getLogger(CodelanxLib.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         SerializationFactory.registerToBukkit();
     }
 
