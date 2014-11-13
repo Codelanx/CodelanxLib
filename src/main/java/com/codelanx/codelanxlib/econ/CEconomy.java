@@ -46,7 +46,7 @@ public final class CEconomy extends Observable {
     public CEconomy(Plugin plugin) {
         this.format = plugin instanceof Formatted
                 ? ((Formatted) plugin).getFormat()
-                : ChatColor.translateAlternateColorCodes('&', "&f[&9" + plugin.getName() + "&f] ");
+                : ChatColor.translateAlternateColorCodes('&', "&f[&9" + plugin.getName() + "&f] %s");
         if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
             VaultProxy.proxyVault();
             RegisteredServiceProvider<Economy> economyProvider =
