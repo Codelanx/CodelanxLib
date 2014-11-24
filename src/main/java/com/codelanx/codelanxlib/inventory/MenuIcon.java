@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.Function;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -39,9 +41,9 @@ public class MenuIcon {
     protected Map<String, Object> options;
     protected final long seed;
     protected final ItemStack item;
-    protected Runnable onExec;
+    protected Execution onExec;
 
-    MenuIcon(ItemStack item, Runnable onExec, Map<String, Object> options) {
+    MenuIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
         if (item == null || options == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!");
         }
@@ -55,7 +57,7 @@ public class MenuIcon {
         return this.item;
     }
 
-    public void setExecutable(Runnable onExec) {
+    public void setExecutable(Execution onExec) {
         this.onExec = onExec;
     }
 
@@ -85,9 +87,9 @@ public class MenuIcon {
         return true;
     }
 
-    void execute() {
+    void execute(Player p, InventoryInterface ii) {
         if (this.onExec != null) {
-            this.onExec.run();
+            this.onExec.onExec(p, ii, this);
         }
     }
 

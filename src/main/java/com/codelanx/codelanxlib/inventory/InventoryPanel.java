@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -58,7 +59,7 @@ public final class InventoryPanel {
         this.inv = Bukkit.getServer().createInventory(null, rows * 9, this.name + this.seed + this.ii.getSeed());
     }
 
-    public MenuIcon newIcon(ItemStack item, Runnable onExec, Map<String, Object> options) {
+    public MenuIcon newIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
         MenuIcon icon = new MenuIcon(item, onExec, options);
         this.placeIcon(icon);
         return icon;
@@ -77,7 +78,7 @@ public final class InventoryPanel {
         this.ii.linkPanel(icon, this);
     }
 
-    public void setAllExecutions(Runnable onExec) {
+    public void setAllExecutions(Execution onExec) {
         this.locations.values().forEach(i -> i.setExecutable(onExec));
     }
 
@@ -89,13 +90,13 @@ public final class InventoryPanel {
         return this.seed;
     }
 
-    public void click(int slot) {
+    public void click(Player p, int slot) {
         MenuIcon icon = this.locations.get(slot);
         if (icon != null) {
             if (this.ii.isLinked(icon)) {
                 // move link
             } else {
-                icon.execute();
+                icon.execute(p, this.ii);
             }
         }
     }
