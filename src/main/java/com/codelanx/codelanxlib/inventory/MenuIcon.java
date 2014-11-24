@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.inventory;
 
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -67,6 +68,10 @@ public class MenuIcon {
         hash = 53 * hash + (int) (this.seed ^ (this.seed >>> 32));
         hash = 53 * hash + Objects.hashCode(this.item);
         return hash;
+    }
+
+    public Map<String, Object> getOptions() {
+        return Collections.unmodifiableMap(this.options);
     }
 
     @Override
