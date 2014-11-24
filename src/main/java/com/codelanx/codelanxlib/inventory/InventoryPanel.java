@@ -77,6 +77,10 @@ public final class InventoryPanel {
         this.ii.linkPanel(icon, this);
     }
 
+    public void setAllExecutions(Runnable onExec) {
+        this.locations.values().forEach(i -> i.setExecutable(onExec));
+    }
+
     public Inventory getMenu() {
         return this.inv;
     }

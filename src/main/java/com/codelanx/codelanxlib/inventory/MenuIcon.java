@@ -39,8 +39,7 @@ public class MenuIcon {
     protected Map<String, Object> options;
     protected final long seed;
     protected final ItemStack item;
-    protected final Runnable onExec;
-    protected int location = -1;
+    protected Runnable onExec;
 
     MenuIcon(ItemStack item, Runnable onExec, Map<String, Object> options) {
         if (item == null || options == null) {
@@ -54,6 +53,10 @@ public class MenuIcon {
 
     public ItemStack getItem() {
         return this.item;
+    }
+
+    public void setExecutable(Runnable onExec) {
+        this.onExec = onExec;
     }
 
     @Override
@@ -86,14 +89,6 @@ public class MenuIcon {
         if (this.onExec != null) {
             this.onExec.run();
         }
-    }
-
-    int getLocation() {
-        return this.location;
-    }
-
-    void setLocation(int location) {
-        this.location = location;
     }
 
     static MenuIcon valueOf(Object o) {
