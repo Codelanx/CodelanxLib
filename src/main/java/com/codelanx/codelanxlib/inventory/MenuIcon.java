@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -100,7 +103,7 @@ public class MenuIcon {
         }
     }
 
-    static MenuIcon valueOf(Object o) {
+    static MenuIcon valueOf(InventoryInterface ii, Object o) {
         Map<String, Object> map = ConfigurationLoader.getConfigSectionValue(o);
         if (map == null || map.isEmpty()) {
             return null;
@@ -108,10 +111,22 @@ public class MenuIcon {
         ItemStack item = (ItemStack) map.get("item");
         Map<String, Object> opts = ConfigurationLoader.getConfigSectionValue(map.get("options"));
         List<String> perm = (List<String>) map.get("permissions");
+        String link = String.valueOf(map.get("link"));
         if (item != null && opts != null) {
             MenuIcon back = new MenuIcon(item, null, opts);
             if (perm != null && !perm.isEmpty()) {
                 back.perms.addAll(perm);
+            }
+            if (link != null) {
+                new Timer().schedule(new TimerTask() {          
+                    @Override
+                    public void run() {
+                        InventoryPanel ip = ii.getPanelByName(link);
+                        if (ip != null) {
+                            ip.linkIcon(back);
+                        }
+                    }
+                }, 3000);
             }
             return back;
         } else {
@@ -119,12 +134,15 @@ public class MenuIcon {
         }
     }
 
-    Map<String, Object> toMap() {
+    Map<String, Object> toMap(InventoryInterface ii) {
         Map<String, Object> back = new HashMap<>();
         back.put("item", this.item);
         back.put("options", this.options);
         if (!this.perms.isEmpty()) {
             back.put("permissions", this.perms);
+        }
+        if (ii.isLinked(this)) {
+            back.put("link", ii.getLinkedPanel(this).getName());
         }
         return back;
     }

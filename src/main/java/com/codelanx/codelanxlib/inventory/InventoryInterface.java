@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
@@ -83,6 +84,14 @@ public final class InventoryInterface {
 
     public Collection<? extends InventoryPanel> getPanels() {
         return Collections.unmodifiableCollection(this.panels.values());
+    }
+
+    public InventoryPanel getPanelByName(String name) {
+        Optional<InventoryPanel> pan = this.panels.values().stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (pan.isPresent()) {
+            return pan.get();
+        }
+        return null;
     }
 
     public void setRootPanel(InventoryPanel panel) {

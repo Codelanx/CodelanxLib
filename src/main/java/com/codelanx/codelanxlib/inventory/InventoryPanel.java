@@ -103,7 +103,8 @@ public final class InventoryPanel {
         Boolean root = Boolean.valueOf(String.valueOf(map.get("root")));
         String name = String.valueOf(map.get("name"));
         if (objs != null && root != null) {
-            List<MenuIcon> icons = objs.stream().map(MenuIcon::valueOf)
+            List<MenuIcon> icons = objs.stream()
+                    .map(obj -> MenuIcon.valueOf(ii, obj))
                     .filter(i -> i != null)
                     .collect(Collectors.toList());
             int rows;
@@ -134,12 +135,15 @@ public final class InventoryPanel {
 
     Map<String, Object> toMap() {
         Map<String, Object> back = new HashMap<>();
-        List<MenuIcon> icons = new ArrayList<>(this.locations.values());
-        back.put("icons", icons.stream().map(MenuIcon::toMap).collect(Collectors.toList()));
+        back.put("icons", this.icons.stream().map(i -> i.toMap(this.ii)).collect(Collectors.toList()));
         back.put("root", this.ii.isRoot(this));
         back.put("name", this.name);
         back.put("rows", this.rows);
         return back;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
 }
