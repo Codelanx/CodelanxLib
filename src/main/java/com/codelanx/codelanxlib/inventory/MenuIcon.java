@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.function.Function;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

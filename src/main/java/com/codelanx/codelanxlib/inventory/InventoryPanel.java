@@ -110,7 +110,9 @@ public final class InventoryPanel {
         Boolean root = Boolean.valueOf(String.valueOf(map.get("root")));
         String name = String.valueOf(map.get("name"));
         if (objs != null && root != null) {
-            List<MenuIcon> icons = objs.stream().map(MenuIcon::valueOf).collect(Collectors.toList());
+            List<MenuIcon> icons = objs.stream().map(MenuIcon::valueOf)
+                    .filter(i -> i != null)
+                    .collect(Collectors.toList());
             int rows;
             if (map.get("rows") == null) {
                 rows = rows = (icons.size() / 9) + 1;

@@ -128,13 +128,16 @@ public final class InventoryInterface {
         if (f == null) {
             throw new IllegalArgumentException("File cannot be null!");
         }
+        if (!f.exists()) {
+            throw new IllegalArgumentException("File must exist!");
+        }
         InventoryInterface ii = new InventoryInterface(p);
         if (f.exists()) {
             FileConfiguration yml = YamlConfiguration.loadConfiguration(f);
-            for (Object o : yml.getList("panels")) {
-                InventoryPanel ip = InventoryPanel.valueOf(ii, o);
-                ii.panels.put(ip.getSeed(), ip);
-            }
+            yml.getList("panels").stream()
+                    .map(o -> InventoryPanel.valueOf(ii, o))
+                    .filter(ip -> ip != null)
+                    .forEach(ip -> ii.panels.put(ip.getSeed(), ip));
         }
         return ii;
     }
