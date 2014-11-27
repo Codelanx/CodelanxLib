@@ -90,6 +90,7 @@ public final class InventoryPanel {
                 }
             } else {
                 icon.execute(p, this.ii);
+                p.closeInventory();
             }
         }
     }
