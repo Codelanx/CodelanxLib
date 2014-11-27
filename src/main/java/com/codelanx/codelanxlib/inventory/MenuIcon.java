@@ -20,8 +20,10 @@
 package com.codelanx.codelanxlib.inventory;
 
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -42,6 +44,7 @@ public class MenuIcon {
     protected final long seed;
     protected final ItemStack item;
     protected Execution onExec;
+    protected final List<String> perms = new ArrayList<>();
 
     MenuIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
         if (item == null || options == null) {
@@ -104,8 +107,13 @@ public class MenuIcon {
         }
         ItemStack item = (ItemStack) map.get("item");
         Map<String, Object> opts = ConfigurationLoader.getConfigSectionValue(map.get("options"));
+        List<String> perm = (List<String>) map.get("permissions");
         if (item != null && opts != null) {
-            return new MenuIcon(item, null, opts);
+            MenuIcon back = new MenuIcon(item, null, opts);
+            if (perm != null && !perm.isEmpty()) {
+                back.perms.addAll(perm);
+            }
+            return back;
         } else {
             return null;
         }
@@ -115,6 +123,22 @@ public class MenuIcon {
         Map<String, Object> back = new HashMap<>();
         back.put("item", this.item);
         back.put("options", this.options);
+        if (!this.perms.isEmpty()) {
+            back.put("permissions", this.perms);
+        }
         return back;
     }
+
+    public void addPermission(String permission) {
+        this.perms.add(permission);
+    }
+
+    public boolean requiresPerms() {
+        return !this.perms.isEmpty();
+    }
+
+    public boolean hasPermission(Player p) {
+        return this.perms.stream().anyMatch(p::hasPermission);
+    }
+
 }

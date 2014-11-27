@@ -68,7 +68,7 @@ public final class InventoryInterface {
         if (this.getOpeningPanel() == null) {
             throw new NullPointerException("No root panel set in interface!");
         }
-        p.openInventory(this.getOpeningPanel().getMenu());
+        this.getOpeningPanel().open(p);
     }
 
     public InventoryPanel createPanel(String name, int rows) {

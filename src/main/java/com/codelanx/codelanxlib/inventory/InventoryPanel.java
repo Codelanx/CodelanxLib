@@ -40,10 +40,12 @@ import org.bukkit.inventory.ItemStack;
 public final class InventoryPanel {
 
     static final int SEED_LENGTH = 6;
-    private final Inventory inv;
+    private int index = 0;
     private final String seed;
     private final String name;
     private final InventoryInterface ii;
+    private final int rows;
+    private final List<MenuIcon> icons = new ArrayList<>();
     private final Map<Integer, MenuIcon> locations = new HashMap<>();
 
     InventoryPanel(InventoryInterface ii, String name, int rows) {
@@ -56,23 +58,15 @@ public final class InventoryPanel {
         this.ii = ii;
         this.name = name;
         this.seed = this.ii.generateSeed(InventoryPanel.SEED_LENGTH);
-        this.inv = Bukkit.getServer().createInventory(null, rows * 9, this.name + this.seed + this.ii.getSeed());
+        this.rows = rows;
     }
 
     public MenuIcon newIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
         MenuIcon icon = new MenuIcon(item, onExec, options);
-        this.placeIcon(icon);
+        this.locations.put(this.index++, icon);
         return icon;
     }
 
-    protected final void placeIcon(MenuIcon icon) {
-        int loc = this.inv.firstEmpty();
-        if (loc < 0) {
-            //full inv
-        }
-        this.inv.setItem(loc, icon.getItem());
-        this.locations.put(loc, icon);
-    }
 
     public void linkIcon(MenuIcon icon) {
         this.ii.linkPanel(icon, this);
@@ -82,19 +76,18 @@ public final class InventoryPanel {
         this.locations.values().forEach(i -> i.setExecutable(onExec));
     }
 
-    public Inventory getMenu() {
-        return this.inv;
-    }
-
     public String getSeed() {
         return this.seed;
     }
 
     public void click(Player p, int slot) {
         MenuIcon icon = this.locations.get(slot);
-        if (icon != null) {
+        if (icon != null && icon.hasPermission(p)) {
             if (this.ii.isLinked(icon)) {
-                // move link
+                InventoryPanel next = this.ii.getLinkedPanel(icon);
+                if (next != null) {
+                    next.open(p);
+                }
             } else {
                 icon.execute(p, this.ii);
             }
@@ -115,12 +108,13 @@ public final class InventoryPanel {
                     .collect(Collectors.toList());
             int rows;
             if (map.get("rows") == null) {
-                rows = rows = (icons.size() / 9) + 1;
+                rows = (icons.size() / 9) + 1;
             } else {
                 rows = Integer.valueOf(String.valueOf(map.get("rows")));
             }
             InventoryPanel ip = new InventoryPanel(ii, name, rows);
-            icons.forEach(ip::placeIcon);
+            ip.icons.addAll(icons);
+            ip.icons.forEach(i -> ip.locations.put(ip.index++, i));
             if (root) {
                 ii.setRootPanel(ip);
             }
@@ -130,13 +124,21 @@ public final class InventoryPanel {
         }
     }
 
+    public void open(Player p) {
+        Inventory back = Bukkit.getServer().createInventory(null, this.rows * 9, this.name + this.seed + this.ii.getSeed());
+        this.locations.entrySet().stream().filter(ent -> ent.getValue().hasPermission(p)).forEach(ent -> {
+            back.setItem(ent.getKey(), ent.getValue().getItem());
+        });
+        p.openInventory(back);
+    }
+
     Map<String, Object> toMap() {
         Map<String, Object> back = new HashMap<>();
         List<MenuIcon> icons = new ArrayList<>(this.locations.values());
         back.put("icons", icons.stream().map(MenuIcon::toMap).collect(Collectors.toList()));
         back.put("root", this.ii.isRoot(this));
         back.put("name", this.name);
-        back.put("rows", this.inv.getSize() / 9);
+        back.put("rows", this.rows);
         return back;
     }
 
