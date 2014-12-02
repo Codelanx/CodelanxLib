@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -61,15 +62,15 @@ public final class InventoryInterface {
         Bukkit.getServer().getPluginManager().registerEvents(new InterfaceListener(plugin, this), plugin);
     }
 
-    public InventoryPanel getOpeningPanel() {
+    public InventoryPanel getRootPanel() {
         return this.root;
     }
 
     public void openInterface(Player p) {
-        if (this.getOpeningPanel() == null) {
+        if (this.getRootPanel() == null) {
             throw new NullPointerException("No root panel set in interface!");
         }
-        this.getOpeningPanel().open(p);
+        this.getRootPanel().open(p);
     }
 
     public InventoryPanel createPanel(String name, int rows) {
@@ -143,10 +144,18 @@ public final class InventoryInterface {
         InventoryInterface ii = new InventoryInterface(p);
         if (f.exists()) {
             FileConfiguration yml = YamlConfiguration.loadConfiguration(f);
-            yml.getList("panels").stream()
+            List<?> pans = yml.getList("panels");
+            if (pans == null) {
+                p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'!", f.getName()));
+                return ii;
+            }
+            pans.stream()
                     .map(o -> InventoryPanel.valueOf(ii, o))
                     .filter(ip -> ip != null)
                     .forEach(ip -> ii.panels.put(ip.getSeed(), ip));
+            if (ii.getRootPanel() == null) {
+                p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'!", f.getName()));
+            }
         }
         return ii;
     }
