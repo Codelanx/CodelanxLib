@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.inventory;
 
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import com.codelanx.codelanxlib.util.DebugUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,7 +130,7 @@ public final class InventoryPanel {
 
     public void open(Player p) {
         String name = this.name;
-        int maxLength = 32 - (InventoryInterface.SEED_LENGTH * 2) + (InventoryPanel.SEED_LENGTH * 2);
+        int maxLength = 32 - (InventoryInterface.SEED_LENGTH * 2) - (InventoryPanel.SEED_LENGTH * 2);
         if (name.length() > maxLength) {
             name = name.substring(0, maxLength);
         }
