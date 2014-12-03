@@ -19,16 +19,17 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
+import com.codelanx.codelanxlib.config.ConfigurationLoader;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
@@ -59,7 +60,7 @@ public final class InventoryInterface {
         //generate seed
         this.seed = this.generateSeed(InventoryInterface.SEED_LENGTH);
         //register listener
-        Bukkit.getServer().getPluginManager().registerEvents(new InterfaceListener(plugin, this), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new InterfaceListener(this), plugin);
     }
 
     public InventoryPanel getRootPanel() {
@@ -87,12 +88,9 @@ public final class InventoryInterface {
         return Collections.unmodifiableCollection(this.panels.values());
     }
 
-    public InventoryPanel getPanelByName(String name) {
-        Optional<InventoryPanel> pan = this.panels.values().stream().filter(p -> p.getName().equals(name)).findFirst();
-        if (pan.isPresent()) {
-            return pan.get();
-        }
-        return null;
+    public InventoryPanel find(Predicate<? super InventoryPanel> filter) {
+        Optional<InventoryPanel> pan = this.panels.values().stream().filter(filter).findFirst();
+        return pan.isPresent() ? pan.get() : null;
     }
 
     public void setRootPanel(InventoryPanel panel) {
@@ -144,13 +142,13 @@ public final class InventoryInterface {
         InventoryInterface ii = new InventoryInterface(p);
         if (f.exists()) {
             FileConfiguration yml = YamlConfiguration.loadConfiguration(f);
-            List<?> pans = yml.getList("panels");
-            if (pans == null) {
+            Map<String, Object> panes = ConfigurationLoader.getConfigSectionValue(yml.get("panels"));
+            if (panes == null) {
                 p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'!", f.getName()));
                 return ii;
             }
-            pans.stream()
-                    .map(o -> InventoryPanel.valueOf(ii, o))
+            panes.entrySet().stream()
+                    .map((ent) -> InventoryPanel.valueOf(ii, ent.getValue()).setSerializedName(ent.getKey()))
                     .filter(ip -> ip != null)
                     .forEach(ip -> ii.panels.put(ip.getSeed(), ip));
             if (ii.getRootPanel() == null) {
@@ -165,8 +163,10 @@ public final class InventoryInterface {
             throw new IllegalArgumentException("File cannot be null!");
         }
         FileConfiguration f = YamlConfiguration.loadConfiguration(save);
-        List<InventoryPanel> panes = new ArrayList<>(ii.panels.values());
-        f.set("panels", panes.stream().map(InventoryPanel::toMap).collect(Collectors.toList()));
+        f.set("panels", ii.panels.values().stream().collect(Collectors.toMap(
+                p -> p.getSerializedName(),
+                Function.identity()
+        )));
         f.save(save);
     }
 

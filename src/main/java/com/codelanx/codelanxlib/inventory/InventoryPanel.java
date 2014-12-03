@@ -43,6 +43,7 @@ public final class InventoryPanel {
     private int index = 0;
     private final String seed;
     private final String name;
+    private String serializer;
     private final InventoryInterface ii;
     private final int rows;
     private final List<MenuIcon> icons = new ArrayList<>();
@@ -132,6 +133,15 @@ public final class InventoryPanel {
             back.setItem(ent.getKey(), ent.getValue().getItem());
         });
         p.openInventory(back);
+    }
+
+    public InventoryPanel setSerializedName(String name) {
+        this.serializer = name;
+        return this;
+    }
+
+    public String getSerializedName() {
+        return this.serializer;
     }
 
     Map<String, Object> toMap() {

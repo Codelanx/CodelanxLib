@@ -29,7 +29,6 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -121,7 +120,7 @@ public class MenuIcon {
                 new Timer().schedule(new TimerTask() {          
                     @Override
                     public void run() {
-                        InventoryPanel ip = ii.getPanelByName(link);
+                        InventoryPanel ip = ii.find(p -> link.equalsIgnoreCase(p.getSerializedName()));
                         if (ip != null) {
                             ip.linkIcon(back);
                         }
@@ -142,7 +141,7 @@ public class MenuIcon {
             back.put("permissions", this.perms);
         }
         if (ii.isLinked(this)) {
-            back.put("link", ii.getLinkedPanel(this).getName());
+            back.put("link", ii.getLinkedPanel(this).getSerializedName());
         }
         return back;
     }

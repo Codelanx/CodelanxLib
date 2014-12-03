@@ -25,7 +25,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Class description for {@link InterfaceListener}
@@ -41,11 +40,9 @@ import org.bukkit.plugin.Plugin;
  */
 public final class InterfaceListener implements Listener {
 
-    private final Plugin plugin;
     private final InventoryInterface ii;
 
-    public InterfaceListener(Plugin plugin, InventoryInterface ii) {
-        this.plugin = plugin;
+    public InterfaceListener(InventoryInterface ii) {
         this.ii = ii;
     }
 
