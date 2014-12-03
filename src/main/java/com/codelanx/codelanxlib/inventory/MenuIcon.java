@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.inventory;
 
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import com.codelanx.codelanxlib.util.DebugUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -155,7 +156,7 @@ public class MenuIcon {
     }
 
     public boolean hasPermission(Player p) {
-        return this.perms.stream().anyMatch(p::hasPermission);
+        return this.requiresPerms() ? this.perms.stream().anyMatch(p::hasPermission) : true;
     }
 
 }
