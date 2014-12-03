@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -41,7 +39,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public final class InventoryPanel {
 
-    static final int SEED_LENGTH = 6;
+    static final int SEED_LENGTH = 4;
     private int index = 0;
     private final String seed;
     private final String name;

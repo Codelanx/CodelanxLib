@@ -50,7 +50,7 @@ import org.bukkit.plugin.Plugin;
  */
 public final class InventoryInterface {
 
-    static final int SEED_LENGTH = 4;
+    static final int SEED_LENGTH = 3;
     private InventoryPanel root;
     private final String seed;
     private final Map<String, InventoryPanel> panels = new HashMap<>();
