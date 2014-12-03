@@ -128,7 +128,12 @@ public final class InventoryPanel {
     }
 
     public void open(Player p) {
-        Inventory back = Bukkit.getServer().createInventory(null, this.rows * 9, this.name + this.seed + this.ii.getSeed());
+        String name = this.name;
+        int maxLength = 32 - (InventoryInterface.SEED_LENGTH * 2) + (InventoryPanel.SEED_LENGTH * 2);
+        if (name.length() > maxLength) {
+            name = name.substring(0, maxLength);
+        }
+        Inventory back = Bukkit.getServer().createInventory(null, this.rows * 9, name + this.seed + this.ii.getSeed());
         this.locations.entrySet().stream().filter(ent -> ent.getValue().hasPermission(p)).forEach(ent -> {
             back.setItem(ent.getKey(), ent.getValue().getItem());
         });
