@@ -164,7 +164,7 @@ public final class InventoryInterface {
         }
         FileConfiguration f = YamlConfiguration.loadConfiguration(save);
         f.set("panels", ii.panels.values().stream().collect(Collectors.toMap(
-                p -> p.getSerializedName(),
+                InventoryPanel::getSerializedName,
                 Function.identity()
         )));
         f.save(save);
