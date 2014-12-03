@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -115,7 +117,7 @@ public final class InventoryPanel {
             } else {
                 rows = Integer.valueOf(String.valueOf(map.get("rows")));
             }
-            InventoryPanel ip = new InventoryPanel(ii, name, rows);
+            InventoryPanel ip = ii.createPanel(name, rows);
             ip.icons.addAll(icons);
             ip.icons.forEach(i -> ip.locations.put(ip.index++, i));
             if (root) {
