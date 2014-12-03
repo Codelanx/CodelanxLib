@@ -127,9 +127,9 @@ public final class InventoryInterface {
         ChatColor[] vals = ChatColor.values();
         Random rand = new Random();
         for (int i = 0; i < length; i++) {
-            sb.append('&').append(vals[rand.nextInt(vals.length)]);
+            sb.append(vals[rand.nextInt(vals.length)]);
         }
-        return ChatColor.translateAlternateColorCodes('&', sb.toString());
+        return sb.toString();
     }
 
     public static InventoryInterface deserialize(Plugin p, File f) {
