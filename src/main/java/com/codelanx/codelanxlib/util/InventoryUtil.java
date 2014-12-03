@@ -34,7 +34,7 @@ public class InventoryUtil {
         return null;
     }*/
     
-    public boolean hasClickedTop(InventoryClickEvent event) {
+    public static boolean hasClickedTop(InventoryClickEvent event) {
         return event.getRawSlot() == event.getSlot();
     }
 
