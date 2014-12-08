@@ -21,12 +21,14 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.config.ConfigMarker;
 import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import com.codelanx.codelanxlib.events.EconomyChangeEvent;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.Observable;
 import java.util.logging.Level;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -108,9 +110,27 @@ public final class CEconomy extends Observable {
             return true;
         }
         EconomyResponse r = this.econ.depositPlayer(p.getName(), amount);
-        this.setChanged();
         this.notifyObservers(new EconomyChangePacket(p, this.getBalance(p)));
         return r.type != EconomyResponse.ResponseType.FAILURE;
+    }
+
+    /**
+     * Modified to send a bukkit event and force notification of the change
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @param arg An {@link EconomyChangePacket}
+     */
+    @Override
+    public void notifyObservers(Object arg) {
+        this.setChanged();
+        if (!(arg instanceof EconomyChangePacket)) {
+            return;
+        }
+        EconomyChangePacket packet = (EconomyChangePacket) arg;
+        Bukkit.getServer().getPluginManager().callEvent(new EconomyChangeEvent(packet.getPlayer(), packet.getAmount()));
+        super.notifyObservers(arg);
     }
 
     @Override
