@@ -19,8 +19,8 @@
  */
 package com.codelanx.codelanxlib.serialize;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
@@ -33,11 +33,12 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
  */
 public class SerializationFactory {
 
-    private static List<Class<? extends ConfigurationSerializable>> sers = new ArrayList<>();
+    private static Set<Class<? extends ConfigurationSerializable>> notRegistered = new LinkedHashSet<>();
 
     public static void registerClass(boolean toBukkit, Class<? extends ConfigurationSerializable> clazz) {
-        SerializationFactory.sers.add(clazz);
-        if (toBukkit) {
+        if (!toBukkit) {
+            SerializationFactory.notRegistered.add(clazz);
+        } else {
             ConfigurationSerialization.registerClass(clazz);
         }
     }
@@ -48,8 +49,10 @@ public class SerializationFactory {
         }
     }
 
-    public static void registerToBukkit() {
-        sers.forEach(ConfigurationSerialization::registerClass);
+    //Static does not imply synchronization, wheeee
+    public static synchronized void registerToBukkit() {
+        notRegistered.forEach(ConfigurationSerialization::registerClass);
+        notRegistered.clear();
     }
 
     public static Class[] getNativeSerializables() {
