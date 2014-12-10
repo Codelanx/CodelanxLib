@@ -19,6 +19,8 @@
  */
 package com.codelanx.codelanxlib.implementers;
 
+import com.codelanx.codelanxlib.lang.Lang;
+
 /**
  * Describes a plugin with a message format
  *
@@ -28,6 +30,6 @@ package com.codelanx.codelanxlib.implementers;
  */
 public interface Formatted {
 
-    public String getFormat();
+    public Lang getFormat();
 
 }

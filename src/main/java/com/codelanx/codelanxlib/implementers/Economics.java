@@ -28,8 +28,7 @@ import com.codelanx.codelanxlib.econ.CEconomy;
  * @author 1Rogue
  * @version 1.0.0
  */
-@FunctionalInterface
-public interface Economics {
+public interface Economics extends Formatted {
 
      /**
      * Gets the {@link CEconomy} for the plugin, which represents a facade

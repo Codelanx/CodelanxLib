@@ -29,8 +29,7 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 1.0.0
  */
-@FunctionalInterface
-public interface Commandable<E extends Plugin & Commandable<E>> {
+public interface Commandable<E extends Plugin & Commandable<E>> extends Formatted {
 
     /**
      * Gets the {@link CommandHandler} for the plugin

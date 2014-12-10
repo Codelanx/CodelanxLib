@@ -26,7 +26,6 @@ package com.codelanx.codelanxlib.implementers;
  * @author 1Rogue
  * @version 1.0.0
  */
-@FunctionalInterface
 public interface Reloadable {
 
     public void reload();
