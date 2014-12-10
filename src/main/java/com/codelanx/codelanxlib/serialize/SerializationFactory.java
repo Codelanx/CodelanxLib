@@ -33,7 +33,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
  */
 public class SerializationFactory {
 
-    private static Set<Class<? extends ConfigurationSerializable>> notRegistered = new LinkedHashSet<>();
+    private final static Set<Class<? extends ConfigurationSerializable>> notRegistered = new LinkedHashSet<>();
 
     public static void registerClass(boolean toBukkit, Class<? extends ConfigurationSerializable> clazz) {
         if (!toBukkit) {
