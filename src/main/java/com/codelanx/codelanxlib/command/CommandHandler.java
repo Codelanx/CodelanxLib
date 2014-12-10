@@ -20,8 +20,8 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
-import com.codelanx.codelanxlib.implementers.Formatted;
-import com.codelanx.codelanxlib.lang.InternalLang;
+import com.codelanx.codelanxlib.lang.Lang;
+import com.codelanx.codelanxlib.lang.NewInternalLang;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +42,8 @@ import org.bukkit.plugin.Plugin;
  */
 public class CommandHandler<E extends Plugin & Commandable<E>> implements CommandExecutor {
 
-    /** The plugin name for formatting */
-    protected final String name;
+    /** The format for output */
+    protected final Lang name;
     /** Private {@link Plugin} instance */
     protected final E plugin;
     /** Private {@link HashMap} of subcommands */
@@ -63,8 +63,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     public CommandHandler(E plugin, String command) {
         this.plugin = plugin;
         this.command = command;
-        
-        this.name = this.plugin instanceof Formatted ? ((Formatted) this.plugin).getFormat() : this.plugin.getName();
+        this.name = Lang.getFormat(plugin);
         
         final CommandHandler<E> chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
@@ -104,11 +103,11 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
             if (scommand.execute(sender, newArgs)) {
                 return true;
             } else {
-                InternalLang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
-                InternalLang.sendMessage(sender, this.name, scommand.info());
+                Lang.sendMessage(sender, this.name, NewInternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
+                Lang.sendMessage(sender, this.name, scommand.info());
             }
         } else {
-            InternalLang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_UNKNOWN);
+            Lang.sendMessage(sender, this.name, NewInternalLang.COMMAND_HANDLER_UNKNOWN);
         }
         return false;
     }

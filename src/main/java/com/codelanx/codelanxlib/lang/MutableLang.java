@@ -19,17 +19,42 @@
  */
 package com.codelanx.codelanxlib.lang;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 /**
- * Class description for {@link LangMarker}
+ * Represents a dynamically created {@link Lang} value to replace the inability
+ * to declare anonymous enums and/or dynamic enumeration values.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
-public interface LangMarker<E extends Enum<E> & LangMarker<E>> {
+public final class MutableLang implements Lang {
 
-    public String getFormat();
+    private final String format;
 
-    //TODO: other methods
+    MutableLang(String format) {
+        this.format = format;
+    }
+
+    @Override
+    public Lang getFormat() {
+        return this;
+    }
+
+    @Override
+    public String getPath() {
+        return null;
+    }
+
+    @Override
+    public String getDefault() {
+        return this.format;
+    }
+
+    @Override
+    public FileConfiguration getLangConfig() {
+        throw new UnsupportedOperationException("MutableLang does not have FileConfigurations associated with it!");
+    }
 
 }

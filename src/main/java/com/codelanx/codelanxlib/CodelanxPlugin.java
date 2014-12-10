@@ -25,11 +25,11 @@ import com.codelanx.codelanxlib.config.ConfigurationLoader;
 import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.implementers.Configurable;
 import com.codelanx.codelanxlib.implementers.Listening;
-import com.codelanx.codelanxlib.lang.InternalLang;
+import com.codelanx.codelanxlib.lang.Lang;
+import com.codelanx.codelanxlib.lang.NewInternalLang;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.serialize.*;
 import com.codelanx.codelanxlib.util.DebugUtil;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,6 +44,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @param <E> The implementing plugin instance
  */
 public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable<E>, Configurable, Listening<E> {
+    
+    static {
+        SerializationFactory.registerClasses(false,
+                SerializationFactory.getNativeSerializables());
+    }
 
     private Class cnfg; //Purposefully raw-typed
     private String cmd;
@@ -54,15 +59,12 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     public <T extends Enum<T> & ConfigMarker<T>> CodelanxPlugin(String command, Class<T> config) {
         this.cmd = command;
         this.cnfg = config;
-
-        SerializationFactory.registerClasses(false,
-                SerializationFactory.getNativeSerializables());
     }
 
     @Override
     public void onLoad() {
         try {
-            InternalLang.init(new File(this.getDataFolder().getParentFile(), "CodelanxLib" + File.separator));
+            Lang.init(NewInternalLang.class);
         } catch (IOException ex) {
             DebugUtil.error("Error loading internal lang system, expect errors!", ex);
         }

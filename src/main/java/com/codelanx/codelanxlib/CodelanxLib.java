@@ -19,7 +19,8 @@
  */
 package com.codelanx.codelanxlib;
 
-import com.codelanx.codelanxlib.lang.InternalLang;
+import com.codelanx.codelanxlib.lang.Lang;
+import com.codelanx.codelanxlib.lang.NewInternalLang;
 import com.codelanx.codelanxlib.serialize.*;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -44,7 +45,7 @@ public class CodelanxLib extends JavaPlugin {
     @Override
     public void onLoad() {
         try {
-            InternalLang.init(this);
+            Lang.init(NewInternalLang.class);
         } catch (IOException ex) {
             Logger.getLogger(CodelanxLib.class.getName()).log(Level.SEVERE, null, ex);
         }

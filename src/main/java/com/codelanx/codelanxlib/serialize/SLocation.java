@@ -25,7 +25,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.Vector;
