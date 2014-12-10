@@ -19,9 +19,10 @@
  */
 package com.codelanx.codelanxlib.lang;
 
-import com.codelanx.codelanxlib.file.FileName;
-import com.codelanx.codelanxlib.file.PluginFolder;
+import com.codelanx.codelanxlib.annotation.PluginClass;
+import com.codelanx.codelanxlib.annotation.RelativePath;
 import com.codelanx.codelanxlib.implementers.Formatted;
+import com.codelanx.codelanxlib.util.DebugUtil;
 import java.io.File;
 import java.io.IOException;
 import org.bukkit.ChatColor;
@@ -29,6 +30,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Class description for {@link Lang}
@@ -201,26 +203,32 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
      *
      * @param <T> Represents the enum type that implements this interface
      * @param lang Represents a {@link Lang} enum initialize
-     * @throws IOException If the file cannot be read
      * @return The relevant {@link FileConfiguration} for all the lang info
      */
-    public static <T extends Enum<T> & Lang<T>> FileConfiguration init(Class<T> lang) throws IOException {
-        File folder = new File("lang", lang.getAnnotation(PluginFolder.class).value());
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        File ref = new File(folder, lang.getAnnotation(FileName.class).value());
-        if (!ref.exists()) {
-            ref.createNewFile();
-        }
-        FileConfiguration yaml = YamlConfiguration.loadConfiguration(ref);
-        for (Lang l : lang.getEnumConstants()) {
-            if (!yaml.isSet(l.getPath())) {
-                yaml.set(l.getPath(), l.getDefault());
+    public static <T extends Enum<T> & Lang<T>> FileConfiguration init(Class<T> lang) {
+        String path = null;
+        try {
+            File folder = JavaPlugin.getPlugin(lang.getAnnotation(PluginClass.class).value()).getDataFolder();
+            if (!folder.exists()) {
+                folder.mkdirs();
             }
+            File ref = new File(folder, lang.getAnnotation(RelativePath.class).value());
+            path = ref.getPath();
+            if (!ref.exists()) {
+                ref.createNewFile();
+            }
+            FileConfiguration yaml = YamlConfiguration.loadConfiguration(ref);
+            for (Lang l : lang.getEnumConstants()) {
+                if (!yaml.isSet(l.getPath())) {
+                    yaml.set(l.getPath(), l.getDefault());
+                }
+            }
+            yaml.save(ref);
+            return yaml;
+        } catch (IOException ex) {
+            DebugUtil.error(String.format("Error creating lang file '%s'!", path), ex);
+            return null;
         }
-        yaml.save(ref);
-        return yaml;
     }
 
     /**

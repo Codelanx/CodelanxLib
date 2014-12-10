@@ -17,20 +17,20 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.file;
+package com.codelanx.codelanxlib.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Class description for {@link PluginFolder}
+ * Class description for {@link RelativePath}
  *
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PluginFolder {
+public @interface RelativePath {
 
     String value();
 

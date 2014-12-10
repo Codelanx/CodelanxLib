@@ -19,10 +19,9 @@
  */
 package com.codelanx.codelanxlib.lang;
 
-import com.codelanx.codelanxlib.file.FileName;
-import com.codelanx.codelanxlib.file.PluginFolder;
-import com.codelanx.codelanxlib.util.DebugUtil;
-import java.io.IOException;
+import com.codelanx.codelanxlib.CodelanxLib;
+import com.codelanx.codelanxlib.annotation.PluginClass;
+import com.codelanx.codelanxlib.annotation.RelativePath;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -32,8 +31,8 @@ import org.bukkit.configuration.file.FileConfiguration;
  * @author 1Rogue
  * @version 0.1.0
  */
-@PluginFolder("CodelanxLib")
-@FileName("lang.yml")
+@PluginClass(CodelanxLib.class)
+@RelativePath("lang.yml")
 public enum InternalLang implements Lang<InternalLang> {
 
     COMMAND_HANDLER_UNKNOWN("command.handler.unknown", "Unknown command"),
@@ -90,14 +89,7 @@ public enum InternalLang implements Lang<InternalLang> {
     @Override
     public FileConfiguration getLangConfig() {
         if (InternalLang.yaml == null) {
-            try {
-                InternalLang.yaml = Lang.init(InternalLang.class);
-            } catch (IOException ex) {
-                DebugUtil.error(String.format("Error creating lang file '%s/%s'!",
-                        this.getClass().getAnnotation(PluginFolder.class).value(),
-                        this.getClass().getAnnotation(FileName.class).value()
-                        ), ex);
-            }
+            InternalLang.yaml = Lang.init(InternalLang.class);
         }
         return InternalLang.yaml;
     }

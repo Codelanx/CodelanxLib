@@ -17,21 +17,22 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.file;
+package com.codelanx.codelanxlib.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Class description for {@link FileName}
+ * Class description for {@link PluginClass}
  *
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FileName {
+public @interface PluginClass {
 
-    String value();
+    Class<? extends JavaPlugin> value();
 
 }
