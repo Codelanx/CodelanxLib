@@ -63,12 +63,6 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
 
     @Override
     public void onLoad() {
-        try {
-            Lang.init(InternalLang.class);
-        } catch (IOException ex) {
-            DebugUtil.error("Error loading internal lang system, expect errors!", ex);
-        }
-
         SerializationFactory.registerToBukkit();
     }
 

@@ -44,12 +44,6 @@ public class CodelanxLib extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        try {
-            Lang.init(InternalLang.class);
-        } catch (IOException ex) {
-            Logger.getLogger(CodelanxLib.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
         SerializationFactory.registerToBukkit();
     }
 
