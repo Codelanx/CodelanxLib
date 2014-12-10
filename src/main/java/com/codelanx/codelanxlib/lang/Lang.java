@@ -151,8 +151,8 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
      * Returns a Lang object representing the default formatting for all
      * CodelanxLib plugins. The {@code option} parameter can be supplemented
      * with {@code null} which will default to "CL-Lib". The returned format is:
-     * <br /> <br />
-     * <pre>"&f[&9" + option == null ? "CL-Lib" : option + "&f] %s"</pre>
+     * <br> <br>
+     * {@code "&amp;f[&amp;9" + option == null ? "CL-Lib" : option + "&amp;f] %amp;s"}
      * 
      * @since 0.1.0
      * @version 0.1.0
