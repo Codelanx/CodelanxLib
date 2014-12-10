@@ -21,7 +21,7 @@ package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.lang.Lang;
-import com.codelanx.codelanxlib.lang.NewInternalLang;
+import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -55,7 +55,7 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      */
     public HelpCommand(E plugin) {
         super(plugin);
-        String s = NewInternalLang.COMMAND_HELP_BARCHAR.format();
+        String s = InternalLang.COMMAND_HELP_BARCHAR.format();
         if (s.isEmpty()) {
             this.BAR = "------------------------------"
                     + "------------------------------";
@@ -133,7 +133,7 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
         List<String> temp = new ArrayList<>();
         vals.stream().filter((cmd)
                 -> (this.plugin.getCommandHandler().hasPermission(sender, cmd))).forEach((cmd) -> {
-                    temp.add(NewInternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info()));
+                    temp.add(InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info()));
                 });
         back.add(new HelpItem(temp, this.plugin.getCommandHandler().getMainCommand(), 0));
         return back;
@@ -185,16 +185,16 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      */
     private String showHelp(HelpItem item, int pages) {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.formatTitle(NewInternalLang.COMMAND_HELP_TITLEFORMAT.format(item.getTitle()),
-                NewInternalLang.COMMAND_HELP_BARCOLOR.format(),
-                NewInternalLang.COMMAND_HELP_TITLECOLOR.format()));
+        sb.append(this.formatTitle(InternalLang.COMMAND_HELP_TITLEFORMAT.format(item.getTitle()),
+                InternalLang.COMMAND_HELP_BARCOLOR.format(),
+                InternalLang.COMMAND_HELP_TITLECOLOR.format()));
         sb.append('\n');
-        sb.append(NewInternalLang.COMMAND_HELP_PAGEFORMAT.format(item.getPage(), pages));
+        sb.append(InternalLang.COMMAND_HELP_PAGEFORMAT.format(item.getPage(), pages));
         sb.append('\n');
         item.getOutputs().stream().forEach((s) -> {
             sb.append(s).append('\n');
         });
-        sb.append(this.formatFooter(NewInternalLang.COMMAND_HELP_BARCOLOR.format()));
+        sb.append(this.formatFooter(InternalLang.COMMAND_HELP_BARCOLOR.format()));
         sb.append('\n');
         return sb.toString();
     }
@@ -213,7 +213,7 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
     private String formatTitle(String title, String barcolor, String titlecolor) {
         String line = barcolor + this.BAR;
         int pivot = line.length() / 2;
-        String center = NewInternalLang.COMMAND_HELP_TITLECONTAINER.format(barcolor, titlecolor, title);
+        String center = InternalLang.COMMAND_HELP_TITLECONTAINER.format(barcolor, titlecolor, title);
         return Lang.__(line.substring(0, pivot - center.length() / 2)
                 + center
                 + line.substring(0, pivot - center.length() / 2));
@@ -270,7 +270,7 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      */
     @Override
     public String info() {
-        return NewInternalLang.COMMAND_HELP_INFO.format();
+        return InternalLang.COMMAND_HELP_INFO.format();
     }
 
 }

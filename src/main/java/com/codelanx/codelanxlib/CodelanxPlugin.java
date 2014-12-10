@@ -26,7 +26,7 @@ import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.implementers.Configurable;
 import com.codelanx.codelanxlib.implementers.Listening;
 import com.codelanx.codelanxlib.lang.Lang;
-import com.codelanx.codelanxlib.lang.NewInternalLang;
+import com.codelanx.codelanxlib.lang.InternalLang;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.serialize.*;
 import com.codelanx.codelanxlib.util.DebugUtil;
@@ -64,7 +64,7 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
     @Override
     public void onLoad() {
         try {
-            Lang.init(NewInternalLang.class);
+            Lang.init(InternalLang.class);
         } catch (IOException ex) {
             DebugUtil.error("Error loading internal lang system, expect errors!", ex);
         }

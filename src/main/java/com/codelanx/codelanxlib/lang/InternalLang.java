@@ -26,7 +26,7 @@ import java.io.IOException;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * Class description for {@link NewInternalLang}
+ * Class description for {@link InternalLang}
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -34,7 +34,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 @PluginFolder("CodelanxLib")
 @FileName("lang.yml")
-public enum NewInternalLang implements Lang<NewInternalLang> {
+public enum InternalLang implements Lang<InternalLang> {
 
     COMMAND_HANDLER_UNKNOWN("command.handler.unknown", "Unknown command"),
     COMMAND_HANDLER_USAGE("command.handler.usage", "Usage: %s"),
@@ -67,7 +67,7 @@ public enum NewInternalLang implements Lang<NewInternalLang> {
      * @param path The path to the value
      * @param def The default value
      */
-    private NewInternalLang(String path, String def) {
+    private InternalLang(String path, String def) {
         this.path = path;
         this.def = def;
     }
@@ -84,14 +84,14 @@ public enum NewInternalLang implements Lang<NewInternalLang> {
 
     @Override
     public Lang getFormat() {
-        return NewInternalLang.FORMAT;
+        return InternalLang.FORMAT;
     }
 
     @Override
     public FileConfiguration getLangConfig() {
-        if (NewInternalLang.yaml == null) {
+        if (InternalLang.yaml == null) {
             try {
-                NewInternalLang.yaml = Lang.init(NewInternalLang.class);
+                InternalLang.yaml = Lang.init(InternalLang.class);
             } catch (IOException ex) {
                 DebugUtil.error(String.format("Error creating lang file '%s/%s'!",
                         this.getClass().getAnnotation(PluginFolder.class).value(),
@@ -99,7 +99,7 @@ public enum NewInternalLang implements Lang<NewInternalLang> {
                         ), ex);
             }
         }
-        return NewInternalLang.yaml;
+        return InternalLang.yaml;
     }
 
 }

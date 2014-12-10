@@ -21,7 +21,7 @@ package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.lang.Lang;
-import com.codelanx.codelanxlib.lang.NewInternalLang;
+import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,11 +103,11 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
             if (scommand.execute(sender, newArgs)) {
                 return true;
             } else {
-                Lang.sendMessage(sender, this.name, NewInternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
+                Lang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
                 Lang.sendMessage(sender, this.name, scommand.info());
             }
         } else {
-            Lang.sendMessage(sender, this.name, NewInternalLang.COMMAND_HANDLER_UNKNOWN);
+            Lang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_UNKNOWN);
         }
         return false;
     }
