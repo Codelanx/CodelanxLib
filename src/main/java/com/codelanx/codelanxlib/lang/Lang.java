@@ -202,23 +202,22 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
      * @version 0.1.0
      *
      * @param <T> Represents the enum type that implements this interface
-     * @param lang Represents a {@link Lang} enum initialize
      * @return The relevant {@link FileConfiguration} for all the lang info
      */
-    public static <T extends Enum<T> & Lang<T>> FileConfiguration init(Class<T> lang) {
+    default public <T extends Enum<T> & Lang<T>> FileConfiguration init() {
         String path = null;
         try {
-            File folder = JavaPlugin.getPlugin(lang.getAnnotation(PluginClass.class).value()).getDataFolder();
+            File folder = JavaPlugin.getPlugin(this.getClass().getAnnotation(PluginClass.class).value()).getDataFolder();
             if (!folder.exists()) {
                 folder.mkdirs();
             }
-            File ref = new File(folder, lang.getAnnotation(RelativePath.class).value());
+            File ref = new File(folder, this.getClass().getAnnotation(RelativePath.class).value());
             path = ref.getPath();
             if (!ref.exists()) {
                 ref.createNewFile();
             }
             FileConfiguration yaml = YamlConfiguration.loadConfiguration(ref);
-            for (Lang l : lang.getEnumConstants()) {
+            for (Lang l : this.getClass().getEnumConstants()) {
                 if (!yaml.isSet(l.getPath())) {
                     yaml.set(l.getPath(), l.getDefault());
                 }
