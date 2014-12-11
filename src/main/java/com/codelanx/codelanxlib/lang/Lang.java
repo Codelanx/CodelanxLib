@@ -22,6 +22,7 @@ package com.codelanx.codelanxlib.lang;
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
 import com.codelanx.codelanxlib.implementers.Formatted;
+import com.codelanx.codelanxlib.util.AnnotationUtil;
 import com.codelanx.codelanxlib.util.DebugUtil;
 import java.io.File;
 import java.io.IOException;
@@ -201,13 +202,12 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param <T> Represents the enum type that implements this interface
      * @return The relevant {@link FileConfiguration} for all the lang info
      */
-    default public <T extends Enum<T> & Lang<T>> FileConfiguration init() {
+    default public FileConfiguration init() {
         String path = null;
         try {
-            File folder = JavaPlugin.getPlugin(this.getClass().getAnnotation(PluginClass.class).value()).getDataFolder();
+            File folder = AnnotationUtil.getPlugin(this.getClass()).getDataFolder();
             if (!folder.exists()) {
                 folder.mkdirs();
             }
