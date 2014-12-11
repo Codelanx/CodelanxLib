@@ -205,6 +205,10 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
      * @return The relevant {@link FileConfiguration} for all the lang info
      */
     default public FileConfiguration init() {
+        if (!(AnnotationUtil.hasAnnotation(this.getClass(), PluginClass.class)
+                && AnnotationUtil.hasAnnotation(this.getClass(), RelativePath.class))) {
+            throw new IllegalStateException("Lang enum is missing either PluginClass or RelativePath annotations!");
+        }
         String path = null;
         try {
             File folder = AnnotationUtil.getPlugin(this.getClass()).getDataFolder();
