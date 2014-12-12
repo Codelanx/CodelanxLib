@@ -36,7 +36,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author 1Rogue
  * @version 1.0.0
  * 
- * @param <E>
+ * @param <E> Represents the type of the implementing enum
  */
 public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
 
@@ -46,8 +46,10 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param clazz
-     * @return 
+     * @param clazz An implementing class with the {@link PluginClass} and
+     *              {@link RelativePath} annotations
+     * @return A {@link File} pointing to the location containing saved values
+     *           for this configuration type
      */
     public static File getFileLocation(Class<? extends PluginFile> clazz) {
         if (!(AnnotationUtil.hasAnnotation(clazz, PluginClass.class)

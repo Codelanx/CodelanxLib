@@ -129,8 +129,7 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
     }
 
     /**
-     * Gets the current object in memory relevant to the passed
-     * {@link ConfigMarker}
+     * Gets the current object in memory
      * 
      * @since 1.0.0
      * @version 1.0.0
