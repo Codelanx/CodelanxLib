@@ -46,21 +46,6 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
     public void save() throws IOException;
 
     /**
-     * Gets a {@code Map} representative of a section of the YAML file. This
-     * will always be a {@link Map} regardless of the Bukkit implementation in
-     * use.
-     * 
-     * @since 1.0.0
-     * @version 1.0.0
-     * 
-     * @param path The {@link ConfigMarker} representing the path to the section
-     * @return The {@link Map} representing this section
-     */
-    default public Map<String, Object> getSection(Config path) {
-        return Config.getConfigSectionValue(this.get());
-    }
-
-    /**
      * Attempts to return the {@link Config} value as a casted type. If the
      * value cannot be casted it will attempt to return the default value. If
      * the default value is inappropriate for the class, the method will
@@ -180,21 +165,3 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
     }
 
 }
-
-/*class ConfigHelper {
-    
-    private static final Set<Class<?>> types = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
-            Integer.class,
-            Boolean.class,
-            Long.class,
-            Short.class,
-            Integer.class,
-            Byte.class,
-            Double.class
-    )));
-
-    public static boolean isPrimitive(Object o) {
-        return ConfigHelper.types.contains(o.getClass());
-    }
-
-}*/
