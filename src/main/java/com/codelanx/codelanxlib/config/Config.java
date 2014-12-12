@@ -154,4 +154,19 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
         return map;
     }
 
+    /**
+     * Retrieves an {@link AnonymousConfig} value which can utilize a
+     * {@link Config} parameter to retrieve data from any source
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param yaml The {@link FileConfiguration} to use
+     * @param config The {@link Config} value to search with
+     * @return An {@link AnonymousConfig} wrapping the configuration and keys
+     */
+    public static Config<?> retrieve(FileConfiguration yaml, Config<?> config) {
+        return new AnonymousConfig(yaml, config.getPath(), config.getDefault());
+    }
+
 }
