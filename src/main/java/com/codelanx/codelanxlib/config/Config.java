@@ -43,7 +43,9 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * 
      * @throws IOException Failed to save to the file
      */
-    public void save() throws IOException;
+    default public void save() throws IOException {
+        this.getConfig().save(PluginFile.getFileLocation(this.getClass()));
+    }
 
     /**
      * Attempts to return the {@link Config} value as a casted type. If the

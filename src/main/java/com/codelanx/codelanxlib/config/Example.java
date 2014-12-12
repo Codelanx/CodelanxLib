@@ -66,9 +66,4 @@ public enum Example implements Config<Example> {
         return Example.yaml;
     }
 
-    @Override
-    public void save() throws IOException {
-        this.getConfig().save(PluginFile.getFileLocation(this.getClass()));
-    }
-
 }

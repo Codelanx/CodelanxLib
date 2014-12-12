@@ -196,6 +196,7 @@ public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
      *
      * @return The relevant {@link FileConfiguration} for all the lang info
      */
+    @Override
     default public FileConfiguration init() {
         if (!(AnnotationUtil.hasAnnotation(this.getClass(), PluginClass.class)
                 && AnnotationUtil.hasAnnotation(this.getClass(), RelativePath.class))) {
