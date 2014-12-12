@@ -36,18 +36,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
 
     /**
-     * Saves the current configuration from memory
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     * 
-     * @throws IOException Failed to save to the file
-     */
-    default public void save() throws IOException {
-        this.getConfig().save(PluginFile.getFileLocation(this.getClass()));
-    }
-
-    /**
      * Attempts to return the {@link Config} value as a casted type. If the
      * value cannot be casted it will attempt to return the default value. If
      * the default value is inappropriate for the class, the method will
