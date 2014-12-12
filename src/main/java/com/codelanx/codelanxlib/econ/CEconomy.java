@@ -21,8 +21,8 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
-import com.codelanx.codelanxlib.lang.Lang;
-import com.codelanx.codelanxlib.lang.InternalLang;
+import com.codelanx.codelanxlib.config.lang.Lang;
+import com.codelanx.codelanxlib.config.lang.InternalLang;
 import java.util.Observable;
 import java.util.logging.Level;
 import net.milkbowl.vault.economy.Economy;

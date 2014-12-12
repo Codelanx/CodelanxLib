@@ -19,8 +19,8 @@
  */
 package com.codelanx.codelanxlib;
 
-import com.codelanx.codelanxlib.lang.Lang;
-import com.codelanx.codelanxlib.lang.InternalLang;
+import com.codelanx.codelanxlib.config.lang.Lang;
+import com.codelanx.codelanxlib.config.lang.InternalLang;
 import com.codelanx.codelanxlib.serialize.*;
 import java.io.IOException;
 import java.util.logging.Level;

@@ -20,8 +20,8 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
-import com.codelanx.codelanxlib.lang.Lang;
-import com.codelanx.codelanxlib.lang.InternalLang;
+import com.codelanx.codelanxlib.config.lang.Lang;
+import com.codelanx.codelanxlib.config.lang.InternalLang;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
