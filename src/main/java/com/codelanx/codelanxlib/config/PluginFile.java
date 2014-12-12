@@ -21,7 +21,6 @@ package com.codelanx.codelanxlib.config;
 
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
-import com.codelanx.codelanxlib.config.lang.Lang;
 import com.codelanx.codelanxlib.util.AnnotationUtil;
 import com.codelanx.codelanxlib.util.DebugUtil;
 import java.io.File;

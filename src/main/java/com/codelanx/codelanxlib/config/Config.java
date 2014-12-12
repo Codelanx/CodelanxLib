@@ -19,7 +19,6 @@
  */
 package com.codelanx.codelanxlib.config;
 
-import java.io.IOException;
 import java.util.Map;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -122,9 +121,11 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * @version 1.0.0
      * 
      * @param val The value to set
+     * @return The previous {@link Config} value
      */
-    default public void set(Object val) {
+    default public Config<?> set(Object val) {
         this.getConfig().set(this.getPath(), val);
+        return this;
     }
 
     /**
