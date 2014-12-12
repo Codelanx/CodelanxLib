@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
-import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import com.codelanx.codelanxlib.config.Config;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -142,7 +142,7 @@ public final class InventoryInterface {
         InventoryInterface ii = new InventoryInterface(p);
         if (f.exists()) {
             FileConfiguration yml = YamlConfiguration.loadConfiguration(f);
-            Map<String, Object> panes = ConfigurationLoader.getConfigSectionValue(yml.get("panels"));
+            Map<String, Object> panes = Config.getConfigSectionValue(yml.get("panels"));
             if (panes == null) {
                 p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'!", f.getName()));
                 return ii;

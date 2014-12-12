@@ -19,8 +19,7 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
-import com.codelanx.codelanxlib.config.ConfigurationLoader;
-import com.codelanx.codelanxlib.util.DebugUtil;
+import com.codelanx.codelanxlib.config.Config;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -104,12 +103,12 @@ public class MenuIcon {
     }
 
     static MenuIcon valueOf(InventoryInterface ii, Object o) {
-        Map<String, Object> map = ConfigurationLoader.getConfigSectionValue(o);
+        Map<String, Object> map = Config.getConfigSectionValue(o);
         if (map == null || map.isEmpty()) {
             return null;
         }
         ItemStack item = (ItemStack) map.get("item");
-        Map<String, Object> opts = ConfigurationLoader.getConfigSectionValue(map.get("options"));
+        Map<String, Object> opts = Config.getConfigSectionValue(map.get("options"));
         List<String> perm = (List<String>) map.get("permissions");
         String link = String.valueOf(map.get("link"));
         if (item != null && opts != null) {

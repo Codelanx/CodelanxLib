@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.lang;
 
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
+import com.codelanx.codelanxlib.config.PluginFile;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.util.AnnotationUtil;
 import com.codelanx.codelanxlib.util.DebugUtil;
@@ -31,7 +32,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Class description for {@link Lang}
@@ -42,7 +42,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * @param <E> Represents the enum type that implements this interface
  */
-public interface Lang<E extends Enum<E> & Lang<E>> {
+public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
 
     /**
      * Returns the format specifier for this {@link Lang} file. This should be
@@ -57,16 +57,6 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
     public Lang getFormat();
 
     /**
-     * The YAML path to store this value in
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     *
-     * @return The path to the YAML value
-     */
-    public String getPath();
-
-    /**
      * The default value of this YAML string
      *
      * @since 0.1.0
@@ -74,6 +64,7 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
      *
      * @return The default value
      */
+    @Override
     public String getDefault();
 
     /**
@@ -89,7 +80,8 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
      * 
      * @return The internal {@link FileConfiguration} of this {@link Lang}
      */
-    public FileConfiguration getLangConfig();
+    @Override
+    public FileConfiguration getConfig();
 
     /**
      * Formats a {@link Lang} enum constant with the supplied arguments
@@ -104,7 +96,7 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
         if (this instanceof MutableLang) {
             return Lang.__(String.format(this.getDefault(), args));
         }
-        return Lang.__(String.format(this.getLangConfig().getString(this.getPath(), this.getDefault()), args));
+        return Lang.__(String.format(this.getConfig().getString(this.getPath(), this.getDefault()), args));
     }
 
     /**
@@ -129,7 +121,7 @@ public interface Lang<E extends Enum<E> & Lang<E>> {
         if (this instanceof MutableLang) {
             repl = this.getDefault();
         } else {
-            repl = this.getLangConfig().getString(this.getPath());
+            repl = this.getConfig().getString(this.getPath());
         }
         repl = repl.replaceAll("\\{PLURALA (.*)\\|(.*)\\}", amount == 1 ? "is " + amount + " $1" : "are " + amount + " $2");
         repl = repl.replaceAll("\\{PLURAL (.*)\\|(.*)\\}", amount == 1 ? "$1" : "$2");

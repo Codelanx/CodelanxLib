@@ -20,6 +20,8 @@
 package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.annotation.PluginClass;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -39,4 +41,7 @@ public class AnnotationUtil {
         return JavaPlugin.getPlugin(pc.value());
     }
 
+    public static boolean hasAnnotation(AnnotatedElement target, Class<? extends Annotation> check) {
+        return target.getAnnotation(check) != null;
+    }
 }

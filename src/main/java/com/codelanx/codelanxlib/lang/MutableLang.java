@@ -52,8 +52,11 @@ public final class MutableLang implements Lang {
         return this.format;
     }
 
+    /**
+     * @deprecated
+     */
     @Override
-    public FileConfiguration getLangConfig() {
+    public FileConfiguration getConfig() {
         throw new UnsupportedOperationException("MutableLang does not have FileConfigurations associated with it!");
     }
 

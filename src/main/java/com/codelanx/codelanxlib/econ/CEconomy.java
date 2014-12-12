@@ -19,10 +19,8 @@
  */
 package com.codelanx.codelanxlib.econ;
 
-import com.codelanx.codelanxlib.config.ConfigMarker;
-import com.codelanx.codelanxlib.config.ConfigurationLoader;
+import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
-import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.lang.Lang;
 import com.codelanx.codelanxlib.lang.InternalLang;
 import java.util.Observable;
@@ -66,8 +64,8 @@ public final class CEconomy extends Observable {
         }
     }
 
-    public ChargeStatus canCharge(Player p, ConfigMarker<?> value, ConfigurationLoader config) {
-        return this.canCharge(p, config.getDouble(value));
+    public ChargeStatus canCharge(Player p, Config<?> value) {
+        return this.canCharge(p, value.asPrimitive(Double.class));
     }
     
     public ChargeStatus canCharge(Player p, double cost) {
@@ -81,8 +79,8 @@ public final class CEconomy extends Observable {
         return new ChargeStatus(this.econ.has(p.getName(), cost), cost);
     }
 
-    public boolean charge(Player p, ConfigMarker<?> value, ConfigurationLoader config) {
-        return this.charge(p, config.getDouble(value));
+    public boolean charge(Player p, Config<?> value) {
+        return this.charge(p, value.as(Double.class));
     }
 
     public boolean charge(Player p, double cost) {

@@ -19,8 +19,7 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
-import com.codelanx.codelanxlib.config.ConfigurationLoader;
-import com.codelanx.codelanxlib.util.DebugUtil;
+import com.codelanx.codelanxlib.config.Config;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +97,7 @@ public final class InventoryPanel {
     }
 
     static InventoryPanel valueOf(InventoryInterface ii, Object o) {
-        Map<String, Object> map = ConfigurationLoader.getConfigSectionValue(o);
+        Map<String, Object> map = Config.getConfigSectionValue(o);
         if (map == null || map.isEmpty()) {
             return null;
         }
