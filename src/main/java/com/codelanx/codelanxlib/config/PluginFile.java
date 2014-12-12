@@ -52,7 +52,7 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
     public static File getFileLocation(Class<? extends PluginFile> clazz) {
         if (!(AnnotationUtil.hasAnnotation(clazz, PluginClass.class)
                 && AnnotationUtil.hasAnnotation(clazz, RelativePath.class))) {
-            throw new IllegalStateException("Config enum is missing either PluginClass or RelativePath annotations!");
+            throw new IllegalStateException("'" + clazz.getName() + "' is missing either PluginClass or RelativePath annotations!");
         }
         return new File(AnnotationUtil.getPlugin(clazz).getDataFolder(),
                 clazz.getAnnotation(RelativePath.class).value());
