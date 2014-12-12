@@ -137,7 +137,20 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
      * @throws IOException Failed to save to the file
      */
     default public void save() throws IOException {
-        this.getConfig().save(PluginFile.getFileLocation(this.getClass()));
+        this.save(PluginFile.getFileLocation(this.getClass()));
+    }
+
+    /**
+     * Saves the current configuration from memory to a specific {@link File}
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @param file The file to save to
+     * @throws IOException Failed to save to the file
+     */
+    default public void save(File file) throws IOException {
+        this.getConfig().save(file);
     }
 
 }
