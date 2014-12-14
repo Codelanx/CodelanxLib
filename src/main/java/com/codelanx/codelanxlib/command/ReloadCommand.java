@@ -19,6 +19,8 @@
  */
 package com.codelanx.codelanxlib.command;
 
+import com.codelanx.codelanxlib.config.lang.InternalLang;
+import com.codelanx.codelanxlib.config.lang.Lang;
 import com.codelanx.codelanxlib.events.ReloadEvent;
 import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.implementers.Reloadable;
@@ -61,15 +63,16 @@ public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand
      * @return {@inheritDoc}
      */
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    public CommandStatus execute(CommandSender sender, String[] args) {
         this.plugin.getServer().getPluginManager().callEvent(new ReloadEvent<>(this.plugin));
         if (this.plugin instanceof Reloadable) {
             ((Reloadable) this.plugin).reload();
-            sender.sendMessage(this.plugin.getName() + " v" + this.plugin.getDescription().getVersion() + " reloaded!");
+            Lang.sendMessage(sender, InternalLang.COMMAND_RELOAD_DONE,
+                    this.plugin.getName(), this.plugin.getDescription().getVersion());
         } else {
-            sender.sendMessage("This plugin does not support reloading!");
+            Lang.sendMessage(sender, InternalLang.COMMAND_RELOAD_UNSUPPORTED);
         }
-        return true;
+        return CommandStatus.SUCCESS;
     }
 
     /**
@@ -95,8 +98,8 @@ public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand
      * @return {@inheritDoc}
      */
     @Override
-    public String info() {
-        return "Reloads the plugin";
+    public Lang info() {
+        return InternalLang.COMMAND_RELOAD_INFO;
     }
 
 }

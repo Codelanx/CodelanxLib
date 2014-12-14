@@ -82,15 +82,15 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * @return {@inheritDoc}
      */
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    public CommandStatus execute(CommandSender sender, String[] args) {
         if (args.length != 1) {
-            return false;
+            return CommandStatus.BAD_ARGS;
         }
         int select;
         try {
             select = Integer.parseInt(args[0]);
         } catch (NumberFormatException ex) {
-            return false;
+            return CommandStatus.BAD_ARGS;
         }
 
         int factor = 5;
@@ -110,7 +110,7 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
         sender.sendMessage(Lang.__(this.showHelp(
                 this.getView(help, select, factor), pages)));
 
-        return true;
+        return CommandStatus.SUCCESS;
     }
 
     /**
@@ -132,7 +132,7 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
         Collections.sort(vals, (SubCommand<E> o1, SubCommand<E> o2) -> o1.getName().compareTo(o2.getName()));
         List<String> temp = new ArrayList<>();
         vals.stream().filter((cmd)
-                -> (this.plugin.getCommandHandler().hasPermission(sender, cmd))).forEach((cmd) -> {
+                -> cmd.hasPermission(sender)).forEach((cmd) -> {
                     temp.add(InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info()));
                 });
         back.add(new HelpItem(temp, this.plugin.getCommandHandler().getMainCommand(), 0));
@@ -269,8 +269,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * @return {@inheritDoc}
      */
     @Override
-    public String info() {
-        return InternalLang.COMMAND_HELP_INFO.format();
+    public Lang info() {
+        return InternalLang.COMMAND_HELP_INFO;
     }
 
 }

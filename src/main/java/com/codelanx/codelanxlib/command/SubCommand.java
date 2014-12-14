@@ -19,7 +19,11 @@
  */
 package com.codelanx.codelanxlib.command;
 
+import com.codelanx.codelanxlib.config.lang.Lang;
 import com.codelanx.codelanxlib.implementers.Commandable;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
@@ -34,7 +38,7 @@ import org.bukkit.plugin.Plugin;
  * @param <T> Represents a {@link Plugin} that implements the
  *            {@link Commandable} interface
  */
-public abstract class SubCommand<T extends Plugin & Commandable> {
+public abstract class SubCommand<T extends Plugin & Commandable<T>> {
 
     /** The main {@link Plugin} instance */
     protected final T plugin;
@@ -60,9 +64,9 @@ public abstract class SubCommand<T extends Plugin & Commandable> {
      * @param sender The command executor
      * @param args The command arguments, starting after the command name
      *
-     * @return true on success, false if failed
+     * @return The {@link CommandStatus} representing the result of the command
      */
-    public abstract boolean execute(CommandSender sender, String[] args);
+    public abstract CommandStatus execute(CommandSender sender, String... args);
 
     /**
      * Returns the name of the command, used for storing a
@@ -96,6 +100,28 @@ public abstract class SubCommand<T extends Plugin & Commandable> {
      *
      * @return A small string about the command
      */
-    public abstract String info();
+    public abstract Lang info();
+
+    /**
+     * Returns a permissions check for
+     * {@code <plugin-name>.cmd.<subcommand-name>}, can be nested into further
+     * permissions by passing tokens to append to the end of the permission
+     * string
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     * 
+     * @param sender The {@link CommandSender} executing this command
+     * @param tokens Any additional tokens to append to the end of the string
+     * @return {@code true} if they have permission, {@code false} otherwise
+     */
+    public boolean hasPermission(CommandSender sender, String... tokens) {
+        List<String> lis = new LinkedList<>();
+        lis.add(this.plugin.getName().toLowerCase());
+        lis.add("cmd");
+        lis.add(this.getName());
+        lis.addAll(Arrays.asList(tokens));
+        return sender.hasPermission(String.join(".", lis));
+    }
 
 }

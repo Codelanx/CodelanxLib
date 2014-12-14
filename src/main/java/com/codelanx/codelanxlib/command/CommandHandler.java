@@ -48,6 +48,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     protected final E plugin;
     /** Private {@link HashMap} of subcommands */
     protected final Map<String, SubCommand<E>> commands = new HashMap<>();
+    /** Represents the root {@link Token} used for this {@link CommandHandler} */
+    //protected final Token<E> root;
     /** The primary command to access this {@link CommandHandler} in-game */
     protected String command;
 
@@ -64,7 +66,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
         this.plugin = plugin;
         this.command = command;
         this.name = Lang.getFormat(plugin);
-        
+        //this.root = new RootToken<>(plugin, this.command);
         final CommandHandler<E> chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
         if (cmd == null) {
@@ -72,8 +74,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
         } else {
             cmd.setExecutor(chand);
         }
-        
-        this.registerSubCommands(new HelpCommand<>(this.plugin), new ReloadCommand<>(this.plugin));
+        this.registerSubCommands(new HelpCommand<E>(this.plugin), new ReloadCommand<E>(this.plugin));
     }
 
     /**
@@ -100,18 +101,13 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
             for (int i = 0; i < newArgs.length; i++) {
                 newArgs[i] = args[i + 1];
             }
-            if (scommand.execute(sender, newArgs)) {
-                return true;
-            } else {
-                Lang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_USAGE, scommand.getUsage());
-                Lang.sendMessage(sender, this.name, scommand.info());
-            }
+            scommand.execute(sender, newArgs).handle(sender, this.name, scommand);
         } else {
-            Lang.sendMessage(sender, this.name, InternalLang.COMMAND_HANDLER_UNKNOWN);
+            Lang.sendMessage(sender, this.name, InternalLang.COMMAND_STATUS_UNKNOWN);
         }
         return false;
     }
-    
+
     /**
      * Returns a subcommand, or {@code null} if none exists.
      * 
@@ -124,7 +120,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     public final SubCommand<E> getCommand(String name) {
         return this.commands.get(name);
     }
-    
+
     /**
      * Returns all subcommands as a {@link Collection}.
      * 
