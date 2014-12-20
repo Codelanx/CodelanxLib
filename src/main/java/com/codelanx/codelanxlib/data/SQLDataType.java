@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib.data;
 
+import com.codelanx.codelanxlib.util.DebugUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,17 +28,17 @@ import java.sql.SQLException;
 /**
  * Class description for {@link SQLDataType}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public interface SQLDataType extends DataType, AutoCloseable {
 
     /**
      * Checks if a table exists within the set database
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      *
      * @param tablename Name of the table to check for
      * @return true if exists, false otherwise
@@ -48,54 +49,113 @@ public interface SQLDataType extends DataType, AutoCloseable {
     /**
      * Executes a query, but does not update any information
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      *
      * @param query The string query to execute
      * @return A ResultSet from the query
      * @throws SQLException The connection cannot be established
      */
-    public ResultSet query(String query) throws SQLException;
+    default public ResultSet query(String query) throws SQLException {
+        return this.getConnection().createStatement().executeQuery(query);
+    }
 
     /**
      * Executes a query that can change values
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      *
      * @param query The string query to execute
      * @return 0 for no returned results, or the number of returned rows
      * @throws SQLException The connection cannot be established
      */
-    public int update(String query) throws SQLException;
+    default public int update(String query) throws SQLException {
+        return this.getConnection().createStatement().executeUpdate(query);
+    }
 
     /**
      * Returns a {@link PreparedStatement} in which you can easily protect
      * against SQL injection attacks.
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      * 
      * @param stmt The string to prepare
      * @return A {@link PreparedStatement} from the passed string
      * @throws SQLException The connection cannot be established
      */
-    public PreparedStatement prepare(String stmt) throws SQLException;
-    
-    public void setAutoCommit(boolean set) throws SQLException;
+    default public PreparedStatement prepare(String stmt) throws SQLException {
+        return this.getConnection().prepareStatement(stmt);
+    }
 
-    public void commit() throws SQLException;
-    
-    public void rollback() throws SQLException;
+    /**
+     * Sets whether or not to automatically commit changes to the database. If
+     * disabled, transactions will be grouped and not executed except from a
+     * manual call to {@link SQLDataType#commit()} or
+     * {@link SQLDataType#rollback()}.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param set {@code true} to enable, {@code false} to disable
+     * @throws SQLException The connection cannot be established,
+     *                      or an access error occurred
+     */
+    default public void setAutoCommit(boolean set) throws SQLException {
+        if (this.getConnection() != null) {
+            this.getConnection().setAutoCommit(set);
+        }
+    }
+
+    /**
+     * Pushes any queued transactions to the database
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @throws SQLException The connection cannot be established, an access
+     *                      error occurred, or auto-commit is enabled
+     */
+    default public void commit() throws SQLException {
+        if (this.getConnection() != null) {
+            this.getConnection().commit();
+        }
+    }
+
+    /**
+     * Cancel any queued transactions
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @throws SQLException The connection cannot be established, an access
+     *                      error occurred, or auto-commit is enabled
+     */
+    default public void rollback() throws SQLException {
+        if (this.getConnection() != null) {
+            this.getConnection().rollback();
+        }
+    }
 
     /**
      * Returns the {@link Connection} object for ease of use in exposing more
      * internal API
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      * 
      * @return The {@link Connection} object in use by this {@link SQLDataType}
      */
     public Connection getConnection();
+
+    @Override
+    default public void close() {
+        try {
+            this.getConnection().close();
+        } catch (SQLException ex) {
+            DebugUtil.error("Error closing SQL connection!", ex);
+        }
+    }
+
 }

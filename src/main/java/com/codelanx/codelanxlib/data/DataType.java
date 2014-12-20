@@ -20,11 +20,12 @@
 package com.codelanx.codelanxlib.data;
 
 /**
- * Class description for {@link DataType}
+ * Overall interface representing objects that handle and manage data in
+ * relevance to files or databases.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public interface DataType {
 
