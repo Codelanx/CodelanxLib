@@ -36,6 +36,8 @@ public enum CommandStatus {
     SUCCESS,
     FAILED,
     BAD_ARGS,
+    PLAYER_ONLY,
+    CONSOLE_ONLY,
     /** Use if your {@link Token} is not meant to be an endpoint */
     UNSUPPORTED,
     NO_PERMISSION;
@@ -48,6 +50,11 @@ public enum CommandStatus {
             case BAD_ARGS:
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_USAGE, tok.getUsage());
                 Lang.sendMessage(sender, format, tok.info());
+                break;
+            case PLAYER_ONLY:
+            case CONSOLE_ONLY:
+                Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_RESTRICTED,
+                        this == CommandStatus.PLAYER_ONLY ? "players" : "the console");
                 break;
             case NO_PERMISSION:
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_NOPERM);

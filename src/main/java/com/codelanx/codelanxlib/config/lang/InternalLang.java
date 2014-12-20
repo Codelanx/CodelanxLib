@@ -41,6 +41,7 @@ public enum InternalLang implements Lang<InternalLang> {
     COMMAND_STATUS_NOPERM("command.status.noperm", "&cYou do not have permission for this!"),
     COMMAND_STATUS_FAILED("command.status.failed", "Command execution failed :("),
     COMMAND_STATUS_UNSUPPORTED("command.status.unsupported", "Unknown commmand."),
+    COMMAND_STATUS_RESTRICTED("command.status.restricted", "This command should only be used by %s!"),
     COMMAND_HELP_BARCHAR("command.help.barchar", "-"),
     COMMAND_HELP_BARCOLOR("command.help.barcolor", "&f"),
     COMMAND_HELP_TITLECOLOR("command.help.titlecolor", "&c"),
