@@ -21,19 +21,18 @@ package com.codelanx.codelanxlib.config;
 
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
+import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.util.AnnotationUtil;
 import com.codelanx.codelanxlib.util.DebugUtil;
 import java.io.File;
 import java.io.IOException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Class description for {@link PluginFile}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  * 
  * @param <E> Represents the type of the implementing enum
  */
@@ -72,22 +71,22 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
     /**
      * Returns the default value of the key
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      *
      * @return The key's default value
      */
     public Object getDefault();
 
     /**
-     * Returns the relevant {@link FileConfiguration} for this config.
+     * Returns the relevant {@link FileDataType} for this config.
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @return The internal {@link FileConfiguration} of this {@link Config}
+     * @return The internal {@link FileDataType} of this {@link Config}
      */
-    public FileConfiguration getConfig();
+    public FileDataType getConfig();
 
     /**
      * Loads the lang values from the configuration file. Safe to use for
@@ -96,9 +95,11 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @return The relevant {@link FileConfiguration} for all the lang info
+     * @param <T> The type of {@link FileDataType} to return
+     * @param clazz The {@link Class} of the returned {@link FileDataType}
+     * @return The relevant {@link FileDataType} for all the config info
      */
-    default public FileConfiguration init() {
+    default public <T extends FileDataType> T init(Class<T> clazz) {
         if (!(AnnotationUtil.hasAnnotation(this.getClass(), PluginClass.class)
                 && AnnotationUtil.hasAnnotation(this.getClass(), RelativePath.class))) {
             throw new IllegalStateException("'" + this.getClass().getName() + "' is missing either PluginClass or RelativePath annotations!");
@@ -114,14 +115,14 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
             if (!ref.exists()) {
                 ref.createNewFile();
             }
-            FileConfiguration yaml = YamlConfiguration.loadConfiguration(ref);
+            FileDataType use = FileDataType.newInstance(clazz, ref);
             for (PluginFile l : this.getClass().getEnumConstants()) {
-                if (!yaml.isSet(l.getPath())) {
-                    yaml.set(l.getPath(), l.getDefault());
+                if (!use.isSet(l.getPath())) {
+                    use.set(l.getPath(), l.getDefault());
                 }
             }
-            yaml.save(ref);
-            return yaml;
+            use.save();
+            return (T) use;
         } catch (IOException ex) {
             DebugUtil.error(String.format("Error creating lang file '%s'!", path), ex);
             return null;
@@ -131,8 +132,8 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
     /**
      * Saves the current configuration from memory
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      * 
      * @throws IOException Failed to save to the file
      */
@@ -143,14 +144,14 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
     /**
      * Saves the current configuration from memory to a specific {@link File}
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      * 
      * @param file The file to save to
      * @throws IOException Failed to save to the file
      */
     default public void save(File file) throws IOException {
-        this.getConfig().save(file);
+        this.getConfig().save();
     }
 
 }

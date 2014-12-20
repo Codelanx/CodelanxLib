@@ -19,23 +19,23 @@
  */
 package com.codelanx.codelanxlib.config;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import com.codelanx.codelanxlib.data.FileDataType;
 
 /**
  * Class description for {@link AnonymousConfig}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public class AnonymousConfig implements Config {
 
     private final String path;
     private final Object def;
-    private final FileConfiguration yaml;
+    private final FileDataType file;
 
-    public AnonymousConfig(FileConfiguration yaml, String path, Object def) {
-        this.yaml = yaml;
+    public AnonymousConfig(FileDataType file, String path, Object def) {
+        this.file = file;
         this.path = path;
         this.def = def;
     }
@@ -51,8 +51,8 @@ public class AnonymousConfig implements Config {
     }
 
     @Override
-    public FileConfiguration getConfig() {
-        return this.yaml;
+    public FileDataType getConfig() {
+        return this.file;
     }
 
 }

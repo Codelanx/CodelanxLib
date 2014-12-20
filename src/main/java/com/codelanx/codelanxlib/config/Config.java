@@ -19,16 +19,16 @@
  */
 package com.codelanx.codelanxlib.config;
 
+import com.codelanx.codelanxlib.data.FileDataType;
 import java.util.Map;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * Class description for {@link Config}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  * 
  * @param <E> Represents the enum type that implements this interface
  */
@@ -105,8 +105,8 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
     /**
      * Gets the current object in memory
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      * 
      * @return The Object found at the relevant location
      */
@@ -115,10 +115,10 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
     }
 
     /**
-     * Sets a value in the {@link FileConfiguration}
+     * Sets a value in the {@link FileDataType}
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      * 
      * @param val The value to set
      * @return The previous {@link Config} value
@@ -134,8 +134,8 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * section (whether it be {@link MemorySection} or just a {@link Map}), and
      * returns the appropriate value.
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.1.0
+     * @version 0.1.0
      * 
      * @param o The object to interpret
      * @return A {@link Map} representing the section
@@ -162,12 +162,12 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param yaml The {@link FileConfiguration} to use
+     * @param file The {@link FileDataType} to use
      * @param config The {@link Config} value to search with
      * @return An {@link AnonymousConfig} wrapping the configuration and keys
      */
-    public static Config<?> retrieve(FileConfiguration yaml, Config<?> config) {
-        return new AnonymousConfig(yaml, config.getPath(), config.getDefault());
+    public static Config<?> retrieve(FileDataType file, Config<?> config) {
+        return new AnonymousConfig(file, config.getPath(), config.getDefault());
     }
 
 }

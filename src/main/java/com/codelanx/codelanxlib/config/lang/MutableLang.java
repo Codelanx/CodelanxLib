@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.config.lang;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import com.codelanx.codelanxlib.data.FileDataType;
 
 /**
  * Represents a dynamically created {@link Lang} value to replace the inability
@@ -56,8 +56,8 @@ public final class MutableLang implements Lang {
      * @deprecated
      */
     @Override
-    public FileConfiguration getConfig() {
-        throw new UnsupportedOperationException("MutableLang does not have FileConfigurations associated with it!");
+    public FileDataType getConfig() {
+        throw new UnsupportedOperationException("MutableLang does not have a FileDataType associated with it!");
     }
 
 }

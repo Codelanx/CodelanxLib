@@ -19,18 +19,10 @@
  */
 package com.codelanx.codelanxlib.config.lang;
 
-import com.codelanx.codelanxlib.annotation.PluginClass;
-import com.codelanx.codelanxlib.annotation.RelativePath;
 import com.codelanx.codelanxlib.config.PluginFile;
 import com.codelanx.codelanxlib.implementers.Formatted;
-import com.codelanx.codelanxlib.util.AnnotationUtil;
-import com.codelanx.codelanxlib.util.DebugUtil;
-import java.io.File;
-import java.io.IOException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -68,22 +60,6 @@ public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
     public String getDefault();
 
     /**
-     * Returns the relevant {@link FileConfiguration} for this lang file. In
-     * later Java releases when privatized interface methods will be implemented
-     * this will no longer be visible. You should not be using this outside of
-     * the Lang files themselves.
-     * 
-     * @since 0.1.0
-     * @version 0.1.0
-     * 
-     * @deprecated
-     * 
-     * @return The internal {@link FileConfiguration} of this {@link Lang}
-     */
-    @Override
-    public FileConfiguration getConfig();
-
-    /**
      * Formats a {@link Lang} enum constant with the supplied arguments
      *
      * @since 0.1.0
@@ -96,7 +72,7 @@ public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
         if (this instanceof MutableLang) {
             return Lang.__(String.format(this.getDefault(), args));
         }
-        return Lang.__(String.format(this.getConfig().getString(this.getPath(), this.getDefault()), args));
+        return Lang.__(String.format(String.valueOf(this.getConfig().get(this.getPath(), this.getDefault())), args));
     }
 
     /**
@@ -121,7 +97,7 @@ public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
         if (this instanceof MutableLang) {
             repl = this.getDefault();
         } else {
-            repl = this.getConfig().getString(this.getPath());
+            repl = String.valueOf(this.getConfig().get(this.getPath(), this.getDefault()));
         }
         repl = repl.replaceAll("\\{PLURALA (.*)\\|(.*)\\}", amount == 1 ? "is " + amount + " $1" : "are " + amount + " $2");
         repl = repl.replaceAll("\\{PLURAL (.*)\\|(.*)\\}", amount == 1 ? "$1" : "$2");
@@ -185,46 +161,6 @@ public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
      */
     public static String __(String color) {
         return ChatColor.translateAlternateColorCodes('&', color);
-    }
-
-    /**
-     * Loads the lang values from the configuration file. Safe to use for
-     * reloading.
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     *
-     * @return The relevant {@link FileConfiguration} for all the lang info
-     */
-    @Override
-    default public FileConfiguration init() {
-        if (!(AnnotationUtil.hasAnnotation(this.getClass(), PluginClass.class)
-                && AnnotationUtil.hasAnnotation(this.getClass(), RelativePath.class))) {
-            throw new IllegalStateException("Lang enum is missing either PluginClass or RelativePath annotations!");
-        }
-        String path = null;
-        try {
-            File folder = AnnotationUtil.getPlugin(this.getClass()).getDataFolder();
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-            File ref = new File(folder, this.getClass().getAnnotation(RelativePath.class).value());
-            path = ref.getPath();
-            if (!ref.exists()) {
-                ref.createNewFile();
-            }
-            FileConfiguration yaml = YamlConfiguration.loadConfiguration(ref);
-            for (Lang l : this.getClass().getEnumConstants()) {
-                if (!yaml.isSet(l.getPath())) {
-                    yaml.set(l.getPath(), l.getDefault());
-                }
-            }
-            yaml.save(ref);
-            return yaml;
-        } catch (IOException ex) {
-            DebugUtil.error(String.format("Error creating lang file '%s'!", path), ex);
-            return null;
-        }
     }
 
     /**

@@ -22,7 +22,8 @@ package com.codelanx.codelanxlib.config.lang;
 import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
-import org.bukkit.configuration.file.FileConfiguration;
+import com.codelanx.codelanxlib.data.FileDataType;
+import com.codelanx.codelanxlib.data.types.Yaml;
 
 /**
  * Class description for {@link InternalLang}
@@ -59,7 +60,7 @@ public enum InternalLang implements Lang<InternalLang> {
     ECONOMY_FAILED("economy.trans-failed", "&cError:&7 Failed to charge your account!"),
     FORMAT("format", "&f[&9CL-Lib&f] %s");
 
-    private static FileConfiguration yaml;
+    private static Yaml yaml;
     private final String def;
     private final String path;
 
@@ -93,9 +94,9 @@ public enum InternalLang implements Lang<InternalLang> {
     }
 
     @Override
-    public FileConfiguration getConfig() {
+    public FileDataType getConfig() {
         if (InternalLang.yaml == null) {
-            InternalLang.yaml = this.init();
+            InternalLang.yaml = this.init(Yaml.class);
         }
         return InternalLang.yaml;
     }
