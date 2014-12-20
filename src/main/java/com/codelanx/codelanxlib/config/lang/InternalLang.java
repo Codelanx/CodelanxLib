@@ -95,7 +95,7 @@ public enum InternalLang implements Lang<InternalLang> {
     }
 
     @Override
-    public FileDataType getConfig() {
+    public Yaml getConfig() {
         if (InternalLang.yaml == null) {
             InternalLang.yaml = this.init(Yaml.class);
         }
