@@ -103,7 +103,7 @@ public interface FileDataType extends DataType {
      * @param <T> Represents the type that implements {@link FileDataType}
      * @param clazz The class object to be used for a new instance
      * @param location The location of the file to parse and use
-     * @return 
+     * @return The new instance of the requested {@link FileDataType}
      */
     public static <T extends FileDataType> T newInstance(Class<T> clazz, File location) {
         try {

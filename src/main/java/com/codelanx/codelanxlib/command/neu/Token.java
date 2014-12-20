@@ -93,7 +93,8 @@ public abstract class Token<T extends Plugin & Commandable> {
     }
 
     /**
-     * Executes a relevant command grabbed from the {@link CommandHandler}.
+     * Executes a relevant command grabbed from the
+     * {@link com.codelanx.codelanxlib.command.CommandHandler}.
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -155,7 +156,7 @@ public abstract class Token<T extends Plugin & Commandable> {
      * @since 1.0.0
      * @version 1.0.0
      *
-     * @return Usage for this {@link SubCommand}
+     * @return Usage for this {@link Token}
      */
     public String getUsage() {
         return "/" + this.plugin.getCommandHandler().getMainCommand() + " " + this.getName();
