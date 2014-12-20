@@ -117,7 +117,21 @@ public class Yaml implements FileDataType {
      */
     @Override
     public void save() throws IOException {
-        this.yaml.save(this.location);
+        this.save(this.location);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param target {@inheritDoc}
+     * @throws IOException {@inheritDoc}
+     */
+    @Override
+    public void save(File target) throws IOException {
+        this.yaml.save(target);
     }
 
     /**

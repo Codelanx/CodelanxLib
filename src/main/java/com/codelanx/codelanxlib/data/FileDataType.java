@@ -94,6 +94,17 @@ public interface FileDataType extends DataType {
     public void save() throws IOException;
 
     /**
+     * Saves any information in memory to the file specified.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param target The file to save to
+     * @throws IOException Any read/write locks or permission errors on the file
+     */
+    public void save(File target) throws IOException;
+
+    /**
      * Returns a new instance of a {@link FileDataType} based on the passed
      * class instance.
      * 
