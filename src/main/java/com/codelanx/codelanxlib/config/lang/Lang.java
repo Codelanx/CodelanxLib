@@ -114,7 +114,7 @@ public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
      * @param format The string to wrap in a {@link Lang} object
      * @return A {@link Lang} object that will 
      */
-    public static Lang createLangFormat(String format) {
+    public static Lang createLang(String format) {
         return new MutableLang(format);
     }
 
@@ -132,7 +132,7 @@ public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
      * @return A {@link Lang} object representing the default format
      */
     public static Lang defaultFormat(String option) {
-        return Lang.createLangFormat("&f[&9" + option == null ? "CL-Lib" : option + "&f] %s");
+        return Lang.createLang("&f[&9" + option == null ? "CL-Lib" : option + "&f] %s");
     }
 
     /**
