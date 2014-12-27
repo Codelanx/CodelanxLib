@@ -26,6 +26,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Façade utility class for simplifying scheduling tasks
@@ -97,6 +99,12 @@ public class Scheduler {
     public static void cancelAllTasks() {
         Scheduler.executives.forEach(s -> s.cancel(false));
         Scheduler.executives.clear();
+        try {
+            Scheduler.getService().awaitTermination(1, TimeUnit.SECONDS);
+            Scheduler.getService().shutdown();
+        } catch (InterruptedException ex) {
+            DebugUtil.error("Error halting scheduler service!", ex);
+        }
     }
 
     /**
