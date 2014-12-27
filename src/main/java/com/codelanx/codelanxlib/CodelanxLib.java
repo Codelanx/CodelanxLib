@@ -22,6 +22,7 @@ package com.codelanx.codelanxlib;
 import com.codelanx.codelanxlib.config.lang.Lang;
 import com.codelanx.codelanxlib.config.lang.InternalLang;
 import com.codelanx.codelanxlib.serialize.*;
+import com.codelanx.codelanxlib.util.Scheduler;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,4 +66,8 @@ public class CodelanxLib extends JavaPlugin {
         }
     }
 
+    @Override
+    public void onDisable() {
+        Scheduler.cancelAllTasks();
+    }
 }
