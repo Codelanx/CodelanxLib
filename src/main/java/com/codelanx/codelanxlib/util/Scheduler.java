@@ -26,8 +26,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Façade utility class for simplifying scheduling tasks
@@ -38,8 +36,8 @@ import java.util.logging.Logger;
  */
 public class Scheduler {
 
-    private static final ScheduledExecutorService es = Executors.newScheduledThreadPool(10); //Going to find an expanding solution to this soon
     private static final List<ScheduledFuture<?>> executives = new ArrayList<>();
+    private static ScheduledExecutorService es;
     
     /**
      * Runs a repeating asynchronous task
@@ -53,7 +51,7 @@ public class Scheduler {
      * @return The scheduled Task
      */
     public static ScheduledFuture<?> runAsyncTaskRepeat(Runnable r, long startAfter, long delay) {
-        ScheduledFuture<?> sch = Scheduler.es.scheduleWithFixedDelay(r, startAfter, delay, TimeUnit.SECONDS);
+        ScheduledFuture<?> sch = Scheduler.getService().scheduleWithFixedDelay(r, startAfter, delay, TimeUnit.SECONDS);
         Scheduler.executives.add(sch);
         return sch;
     }
@@ -69,7 +67,7 @@ public class Scheduler {
      * @return The scheduled Task
      */
     public static ScheduledFuture<?> runAsyncTask(Runnable r, long delay) {
-        ScheduledFuture<?> sch = Scheduler.es.schedule(r, delay, TimeUnit.SECONDS);
+        ScheduledFuture<?> sch = Scheduler.getService().schedule(r, delay, TimeUnit.SECONDS);
         Scheduler.executives.add(sch);
         return sch;
     }
@@ -85,7 +83,7 @@ public class Scheduler {
      * @return The scheduled Task
      */
     public static ScheduledFuture<?> runCallable(Callable<?> c, long delay) {
-        ScheduledFuture<?> sch = Scheduler.es.schedule(c, delay, TimeUnit.SECONDS);
+        ScheduledFuture<?> sch = Scheduler.getService().schedule(c, delay, TimeUnit.SECONDS);
         Scheduler.executives.add(sch);
         return sch;
     }
@@ -100,8 +98,7 @@ public class Scheduler {
         Scheduler.executives.forEach(s -> s.cancel(false));
         Scheduler.executives.clear();
         try {
-            Scheduler.getService().awaitTermination(1, TimeUnit.SECONDS);
-            Scheduler.getService().shutdown();
+            Scheduler.getService().awaitTermination(2, TimeUnit.SECONDS);
         } catch (InterruptedException ex) {
             DebugUtil.error("Error halting scheduler service!", ex);
         }
@@ -117,6 +114,9 @@ public class Scheduler {
      * @return The underlying {@link ScheduledExecutorService}
      */
     public static ScheduledExecutorService getService() {
+        if (Scheduler.es.isShutdown()) {
+            Scheduler.es = Executors.newScheduledThreadPool(10); //Going to find an expanding solution to this soon
+        }
         return Scheduler.es;
     }
 

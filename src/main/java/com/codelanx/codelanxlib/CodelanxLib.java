@@ -69,5 +69,6 @@ public class CodelanxLib extends JavaPlugin {
     @Override
     public void onDisable() {
         Scheduler.cancelAllTasks();
+        Scheduler.getService().shutdown();
     }
 }
