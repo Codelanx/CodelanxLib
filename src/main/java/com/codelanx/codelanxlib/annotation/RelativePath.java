@@ -25,9 +25,9 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Class description for {@link RelativePath}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RelativePath {

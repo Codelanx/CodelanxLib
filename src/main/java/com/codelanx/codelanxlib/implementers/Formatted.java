@@ -24,9 +24,9 @@ import com.codelanx.codelanxlib.config.lang.Lang;
 /**
  * Describes a plugin with a message format
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public interface Formatted {
 

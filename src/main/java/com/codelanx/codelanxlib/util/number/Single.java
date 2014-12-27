@@ -22,9 +22,9 @@ package com.codelanx.codelanxlib.util.number;
 /**
  * Class description for {@link Single}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public class Single<E> {
 

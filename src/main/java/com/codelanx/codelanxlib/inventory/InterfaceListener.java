@@ -35,9 +35,9 @@ import org.bukkit.inventory.Inventory;
  * Move listener to be a singleton listener that allows InventoryInterfaces to
  * register their seeds to them
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public final class InterfaceListener implements Listener {
 

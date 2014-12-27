@@ -31,9 +31,9 @@ import org.bukkit.plugin.Plugin;
  * Fires a {@link ReloadEvent} and, if applicable, calls
  * {@link Reloadable#reload()} of a relevant {@link Plugin} instance
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  * 
  * @param <E> The plugin type
  */
@@ -42,8 +42,8 @@ public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand
     /**
      * {@link ReloadCommand constructor}
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param plugin {@inheritDoc} 
      */
@@ -55,8 +55,8 @@ public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand
      * Fires the {@link ReloadEvent} and calls any relevant reload methods for
      * the {@link Plugin} instance passed
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param sender {@inheritDoc}
      * @param args {@inheritDoc}
@@ -79,8 +79,8 @@ public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand
      * Subcommand name: "reload"
      * <br><br> {@inheritDoc}
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return {@inheritDoc}
      */
@@ -92,8 +92,8 @@ public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand
     /**
      * {@inheritDoc}
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return {@inheritDoc}
      */

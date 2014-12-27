@@ -31,9 +31,9 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Class description for {@link SInventory}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 @SerializableAs("Inventory")
 public class SInventory implements ConfigurationSerializable {

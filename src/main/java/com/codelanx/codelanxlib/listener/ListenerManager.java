@@ -27,9 +27,9 @@ import org.bukkit.plugin.Plugin;
 /**
  * Handles listeners for the {@link Plugin}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  * 
  * @param <E> The specific {@link Plugin} to bound all {@link SubListener}
  *            classes to
@@ -42,8 +42,8 @@ public class ListenerManager<E extends Plugin> {
     /**
      * {@link ListenerManager} constructor
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param plugin The main {@link Plugin} instance
      */
@@ -55,8 +55,8 @@ public class ListenerManager<E extends Plugin> {
      * Gets a listener by its string name. Returns null if the listener is
      * disabled or not registered.
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param <T> The {@link SubListener} class to get
      * @param listener An instance of the class type to retrieve
@@ -69,8 +69,8 @@ public class ListenerManager<E extends Plugin> {
     /**
      * Returns whether or not a listener is registered under the relevant listener key
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param <T> The {@link SubListener} class to get
      * @param listener The listener class to look for
@@ -83,8 +83,8 @@ public class ListenerManager<E extends Plugin> {
     /**
      * Registers a listener through bukkit and {@link ListenerManager}
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param <T> The {@link SubListener} class to register
      * @param listener The listener to register
@@ -107,8 +107,8 @@ public class ListenerManager<E extends Plugin> {
      * passed listener. Any exception thrown will be re-thrown after all
      * listeners are registered
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param <T> The {@link SubListener} class to register
      * @param listeners The listeners to register
@@ -131,8 +131,8 @@ public class ListenerManager<E extends Plugin> {
     /**
      * Unregisters all the listeners attached to this {@link ListenerManager}
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      */
     public void cleanup() {
         this.listeners.values().forEach((l) -> { l.onDisable(); HandlerList.unregisterAll(l); });

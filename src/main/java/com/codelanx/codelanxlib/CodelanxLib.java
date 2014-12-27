@@ -31,9 +31,9 @@ import org.mcstats.Metrics;
 /**
  * Main class. Only used for reporting plugin metrics
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public class CodelanxLib extends JavaPlugin {
     
@@ -52,8 +52,8 @@ public class CodelanxLib extends JavaPlugin {
      * <br><br>
      * {@inheritDoc}
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      */
     @Override
     public void onEnable() {

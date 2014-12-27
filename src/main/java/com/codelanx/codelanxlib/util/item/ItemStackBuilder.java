@@ -33,9 +33,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * Class description for {@link ItemStackBuilder}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public class ItemStackBuilder {
 

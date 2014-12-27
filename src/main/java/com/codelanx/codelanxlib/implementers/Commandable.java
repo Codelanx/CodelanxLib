@@ -25,17 +25,17 @@ import org.bukkit.plugin.Plugin;
 /**
  * Interface for a plugin that makes use of a {@link CommandHandler}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public interface Commandable<E extends Plugin & Commandable<E>> extends Formatted {
 
     /**
      * Gets the {@link CommandHandler} for the plugin
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @return The {@link CommandHandler} instance
      */

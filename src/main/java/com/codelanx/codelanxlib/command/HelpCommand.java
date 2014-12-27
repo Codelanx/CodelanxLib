@@ -32,9 +32,9 @@ import org.bukkit.plugin.Plugin;
 /**
  * Displays help information
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  *
  * @param <E> Represents a {@link Plugin} that implements the
  * {@link Commandable} interface
@@ -48,8 +48,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * {@link HelpCommand} constructor. Initializes the
      * {@link HelpCommand#BAR} field.
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param plugin {@inheritDoc}
      */
@@ -74,8 +74,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * available from the {@link CommandHandler} instance that instantiated this
      * class.
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param sender {@inheritDoc}
      * @param args {@inheritDoc}
@@ -117,8 +117,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * Gets s list of the enabled {@link SubCommand} objects in natural sorting
      * order.
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param sender The executor of the {@link SubCommand}
      * @param cmds A {@link Collection} representing the registered
@@ -143,8 +143,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * Returns a relevant {@link HelpItem} for printing out based on the
      * requested page and amount of commands to display per "help page".
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param help All the {@link HelpItem} objects
      * @param pages The number of pages
@@ -176,8 +176,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
     /**
      * Formats and returns the requested help information
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param item The {@link HelpItem} to parse
      * @param pages The total number of pages
@@ -202,8 +202,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
     /**
      * Formats the title-bar for displaying help information
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param title The title to use
      * @param barcolor The color of the bar (ref: {@link ChatColor})
@@ -222,8 +222,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
     /**
      * Formats the footer-bar of the help information.
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param barcolor The color of the footer-bar
      * @return A formatted footer
@@ -236,8 +236,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
     /**
      * {@inheritDoc}
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return {@inheritDoc}
      */
@@ -250,8 +250,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * Subcommand name: "help"
      * <br><br> {@inheritDoc}
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return {@inheritDoc}
      */
@@ -263,8 +263,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
     /**
      * {@inheritDoc}
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return {@inheritDoc}
      */
@@ -279,9 +279,9 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
  * Helper class for representing data used in the help menus. Simply stores
  * data to be used later
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 class HelpItem {
 
@@ -292,8 +292,8 @@ class HelpItem {
     /**
      * {@link HelpItem} constructor
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param outputs The outputs relevant to this {@link HelpItem}
      * @param title The title to use, if relevant
@@ -309,8 +309,8 @@ class HelpItem {
      * Returns the {@link List} of {@link HelpItem} objects passed upon
      * construction
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @return A {@link List} of {@link HelpItem} objects
      */
@@ -322,8 +322,8 @@ class HelpItem {
      * Gets the page associated with this {@link HelpItem}. Will be 0 or -1 if
      * the page is irrelevant.
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @return The relevant page 
      */
@@ -335,8 +335,8 @@ class HelpItem {
      * Gets the title to use for the title-bar for this {@link HelpItem}. May
      * be null if no titlebar is associated with this item.
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @return The title to use for the title-bar relevant to this HelpItem 
      */

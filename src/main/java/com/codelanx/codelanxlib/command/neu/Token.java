@@ -33,9 +33,9 @@ import org.bukkit.plugin.Plugin;
 /**
  * Class description for {@link Token}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  * 
  * @param <T> The type of the {@link Plugin} for this {@link Token}
  */
@@ -96,8 +96,8 @@ public abstract class Token<T extends Plugin & Commandable> {
      * Executes a relevant command grabbed from the
      * {@link com.codelanx.codelanxlib.command.CommandHandler}.
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param sender The command executor
      * @param args The command arguments, starting after the command name
@@ -143,8 +143,8 @@ public abstract class Token<T extends Plugin & Commandable> {
      * {@link java.util.HashMap} of the commands as well as the subcommand
      * argument
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return The command's name
      */
@@ -153,8 +153,8 @@ public abstract class Token<T extends Plugin & Commandable> {
     /**
      * Returns the command usage
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return Usage for this {@link Token}
      */
@@ -165,8 +165,8 @@ public abstract class Token<T extends Plugin & Commandable> {
     /**
      * Information about this specific command. Should be kept concise
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return A small string about the command
      */

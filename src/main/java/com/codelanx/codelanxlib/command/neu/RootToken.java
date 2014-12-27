@@ -29,9 +29,9 @@ import org.bukkit.plugin.Plugin;
 /**
  * Class description for {@link RootToken}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  * 
  * @param <T> Represents a {@link Plugin} that implements the
  *            {@link Commandable} interface

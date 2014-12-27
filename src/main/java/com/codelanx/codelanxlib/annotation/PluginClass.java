@@ -26,9 +26,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Class description for {@link PluginClass}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PluginClass {

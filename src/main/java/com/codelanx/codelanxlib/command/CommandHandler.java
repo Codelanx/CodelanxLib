@@ -34,9 +34,9 @@ import org.bukkit.plugin.Plugin;
 /**
  * Manages commands abstractly for the {@link Plugin}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  * 
  * @param <E> The specific {@link Plugin} to use
  */
@@ -56,8 +56,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     /**
      * {@link CommandHandler} constructor
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param plugin The main {@link Plugin} instance
      * @param command The command to write subcommands under
@@ -80,8 +80,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     /**
      * Executes the proper {@link SubCommand}
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param sender The command executor
      * @param cmd The command instance
@@ -111,8 +111,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     /**
      * Returns a subcommand, or {@code null} if none exists.
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param name The name of the subcommand
      * @return A relevant {@link SubCommand}, or null if it does not exist
@@ -124,8 +124,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     /**
      * Returns all subcommands as a {@link Collection}.
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @return A {@link Collection} of all registered {@link SubCommand}
      */
@@ -137,8 +137,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
      * Returns a permissions check for
      * {@code <plugin-name>.cmd.<subcommand-name>}, can be nested further
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param sender The {@link CommandSender} executing the command
      * @param cmd The {@link SubCommand} being executed
@@ -151,8 +151,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     /**
      * Registers a {@link SubCommand} under the main supplied command name
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param <T> The subcommand type
      * @param command The {@link SubCommand} to register
@@ -173,8 +173,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
      * command name. If an exception is encountered, it will continue
      * registering commands and re-throw the exception upon method completion.
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param <T> The subcommand type
      * @param commands The {@link SubCommand} instances to register
@@ -197,8 +197,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     /**
      * Returns the main command associated with this {@link CommandHandler}
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @return The main command
      */

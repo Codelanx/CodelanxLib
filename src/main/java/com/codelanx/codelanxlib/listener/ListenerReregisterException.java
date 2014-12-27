@@ -22,17 +22,17 @@ package com.codelanx.codelanxlib.listener;
 /**
  * Exception thrown when a listener is attempted to be registered under the same key
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public class ListenerReregisterException extends RuntimeException {
     
     /**
      * The exception constructor
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param message The message to convey
      */

@@ -36,9 +36,9 @@ import org.json.simple.parser.JSONParser;
 /**
  * All credit to evilmidget38! A small bit of cleanup for Java 8
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author evilmidget38
- * @version 1.0.0
+ * @version 0.0.1
  */
 public class UUIDFetcher implements Callable<Map<String, UUID>> {
 

@@ -31,9 +31,9 @@ import org.bukkit.plugin.Plugin;
  * Skeleton class representing the structure of a sub-command for
  * {@link CommandHandler}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  * 
  * @param <T> Represents a {@link Plugin} that implements the
  *            {@link Commandable} interface
@@ -46,8 +46,8 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
     /**
      * {@link SubCommand} constructor
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param plugin The {@link Plugin} associated with this command
      */
@@ -58,8 +58,8 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
     /**
      * Executes a relevant command grabbed from the {@link CommandHandler}.
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param sender The command executor
      * @param args The command arguments, starting after the command name
@@ -73,8 +73,8 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
      * {@link java.util.HashMap} of the commands as well as the subcommand
      * argument
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return The command's name
      */
@@ -83,8 +83,8 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
     /**
      * Returns the command usage
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return Usage for this {@link SubCommand}
      */
@@ -95,8 +95,8 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
     /**
      * Information about this specific command. Should be kept concise
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @return A small string about the command
      */
@@ -108,8 +108,8 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
      * permissions by passing tokens to append to the end of the permission
      * string
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param sender The {@link CommandSender} executing this command
      * @param tokens Any additional tokens to append to the end of the string

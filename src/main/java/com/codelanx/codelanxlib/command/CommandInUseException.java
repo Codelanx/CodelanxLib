@@ -23,17 +23,17 @@ package com.codelanx.codelanxlib.command;
  * Thrown for when a {@link SubCommand} attempts to register under an already
  * used command
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public class CommandInUseException extends RuntimeException {
 
     /**
      * {@inheritDoc}
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param message {@inheritDoc}
      */

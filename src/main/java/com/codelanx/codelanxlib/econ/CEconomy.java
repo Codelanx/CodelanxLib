@@ -34,9 +34,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 /**
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public final class CEconomy extends Observable {
 
@@ -113,8 +113,8 @@ public final class CEconomy extends Observable {
     /**
      * Modified to send a bukkit event and force notification of the change
      * 
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      * 
      * @param arg An {@link EconomyChangePacket}
      */

@@ -27,17 +27,17 @@ import org.bukkit.entity.Player;
 /**
  * Class description for {@link PlayerUtil}
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.0.1
  */
 public class PlayerUtil {
 
     /**
      * Gets any players within range of a specific location
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param range The range in which to look for players
      * @param origin The {@link Location} representing the center of the circle
@@ -59,8 +59,8 @@ public class PlayerUtil {
      * Gets any players within range of a specific player, exclusive of the
      * player themselves.
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @since 0.0.1
+     * @version 0.0.1
      *
      * @param range The range in which to look for players
      * @param origin The {@link Player} representing the center of the circle
