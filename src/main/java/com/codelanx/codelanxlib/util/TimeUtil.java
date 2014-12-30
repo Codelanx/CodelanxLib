@@ -29,6 +29,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -37,7 +38,7 @@ import org.bukkit.scoreboard.Scoreboard;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public class TimeUtil {
 
@@ -45,13 +46,85 @@ public class TimeUtil {
         return TimeUtil.formatTime(System.nanoTime() - start);
     }
 
+    /**
+     * Formats time in a readable output.
+     * <br><br>
+     * Calling this method is equivalent to
+     * {@code TimeUtil.formatTime(durationNS, TimeUnit.NANOSECONDS)}
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @see TimeUtil#formatTime(long, TimeUnit)
+     * @param durationNS The amount of time in nanoseconds
+     * @return The formatted string
+     */
     public static String formatTime(long durationNS) {
+        return TimeUtil.formatTime(durationNS, TimeUnit.NANOSECONDS);
+    }
+
+    /**
+     * Formats time in a readable output. Creates a TimePoint out of the pass
+     * long in order to do so.
+     * <br><br>
+     * Calling this method is equivalent to
+     * {@code TimeUtil.formatTime(TimePoint, TimeUnit.NANOSECONDS)}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @see TimeUtil#formatTime(TimePoint, TimeUnit)
+     * @param durationNS
+     * @param min The minimum (inclusive) unit of time to output as a secondary
+     *            measurement
+     * @return The formatted string
+     */
+    public static String formatTime(long durationNS, TimeUnit min) {
+        if (min == null) {
+            throw new IllegalArgumentException("Minimum TimeUnit cannot be null!");
+        }
         TimePoint point = TimeUtil.getTimePoint(durationNS);
-        if (point.getNext() != null) {
+        return TimeUtil.formatTime(point, min);
+    }
+
+    /**
+     * Formats time in a readable output.
+     * <br><br>
+     * Calling this method is equivalent to
+     * {@code TimeUtil.formatTime(point, TimeUnit.NANOSECONDS)}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @see TimeUtil#formatTime(TimePoint, TimeUnit)
+     * @param point The {@link TimePoint} to use
+     * @return The formatted string
+     */
+    public static String formatTime(TimePoint point) {
+        return TimeUtil.formatTime(point, TimeUnit.NANOSECONDS);
+    }
+
+    /**
+     * Formats time in a readable output. Depending on the amount of time, the
+     * format will attempt to output the largest possible value first (e.g. 
+     * days), followed by the next non-zero measurement of time (e.g., minutes).
+     * If there is no non-zero secondary measurement, it is excluded.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param point The {@link TimePoint} to use
+     * @param min The minimum (inclusive) unit of time to output as a secondary
+     *            measurement
+     * @return The formatted string
+     */
+    public static String formatTime(TimePoint point, TimeUnit min) {
+        TimePoint next = point.getNextNonZero();
+        if (next != null && next.getUnit().compareTo(min) >= 0) {
             return String.format("%d %s, %d %s", point.getTime(), point.properName(),
-                    point.getNextNonZero().getTime(), point.getNextNonZero().properName());
+                    next.getTime(), next.properName());
         } else {
-            return String.format("%d %s", point.getTime(), TimeUtil.getProperUnitName(point.getUnit(), point.getTime()));
+            return String.format("%d %s", point.getTime(), point.properName());
         }
     }
 
@@ -109,6 +182,17 @@ public class TimeUtil {
         return root;
     }
 
+    /**
+     * Helper method to {@link TimeUtil#getTimePoint(long)}. Allocates nodes
+     * further down the {@link TimePoint} queue.
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param root The root {@link TimePoint} node
+     * @param allocate The node to allocate
+     * @return The root node
+     */
     private static TimePoint allocateNodes(TimePoint root, TimePoint allocate) {
         if (root == null) {
             return allocate;
@@ -119,7 +203,19 @@ public class TimeUtil {
         }
     }
 
-    private static String getProperUnitName(TimeUnit unit, long amount) {
+    /**
+     * Returns the appropriate spelling for a {@link TimeUnit} value based on
+     * the value of the "amount" parameter. Values other than 1 will return a
+     * plural measurement whereas 1 will return a singular measurement.
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param unit The unit to beautify
+     * @param amount The amount relevant to the measurement output
+     * @return A formatted word
+     */
+    public static String getProperUnitName(TimeUnit unit, long amount) {
         String proper = unit.toString().substring(0, 1) + unit.toString().substring(1, unit.toString().length()).toLowerCase();
         return amount != 1 ? proper : proper.substring(0, proper.length() - 1);
     }
@@ -185,6 +281,14 @@ public class TimeUtil {
             return TimeUtil.getProperUnitName(this.unit, this.time);
         }
 
+        public String format(TimeUnit min) {
+            return TimeUtil.formatTime(this, min);
+        }
+
+        public String format() {
+            return this.format(TimeUnit.NANOSECONDS);
+        }
+
         @Override
         public int compareTo(TimePoint o) {
             //No null checks, if o is null an NPE should be thrown
@@ -198,6 +302,27 @@ public class TimeUtil {
             }
             return curr;
         }
+
+        /**
+         * This is a helper method to find the closest {@link TimePoint} in a
+         * collection that is still of a greater value than the passed
+         * {@link TimePoint}. This method also truncates the passed collection
+         * and will modify its contents! However, if no values are found this
+         * method will return null.
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param points The {@link TimePoint} objects to look through. Should
+         *               be a sorted collection
+         * @param now The point of reference (ha!)
+         * @return The closest matching point
+         */
+        public static TimePoint findClosestAndWipe(TreeSet<? extends TimePoint> points, TimePoint now) {
+            TimePoint back;
+            points.descendingIterator(); //not done
+            return now;
+        }
     }
 
     public static class Countdown {
@@ -206,6 +331,7 @@ public class TimeUtil {
         private final Set<Scoreboard> boards = new LinkedHashSet<>();
         private final Map<Scoreboard, String> formats = new HashMap<>();
         private String defFormat = "%d:%d:%s";
+        private String announcement = "There are %s remaining!";
         private long start = -1;
         private volatile ScheduledFuture<?> task;
 
@@ -224,6 +350,7 @@ public class TimeUtil {
             if (this.task != null) {
                 this.task.cancel(true);
             }
+            final TreeSet<TimePoint> test = new TreeSet<>(this.queue);
             this.task = Scheduler.getService().scheduleWithFixedDelay(() -> {
                 if (this.start - System.nanoTime() < 0) {
                     if (exec != null) {
@@ -232,6 +359,12 @@ public class TimeUtil {
                     if (this.task != null) {
                         this.task.cancel(false);
                     }
+                }
+                TimePoint now = TimeUtil.getTimePoint(this.start - System.nanoTime());
+                TimePoint ref = TimePoint.findClosestAndWipe(test, now);
+                if (ref != null) {
+                    //announce
+                    Bukkit.broadcastMessage(String.format(this.announcement, ref.format(TimeUnit.SECONDS)));
                 }
                 this.formatTimes(this.boards).entrySet().forEach(ent -> 
                         ent.getKey().getObjective(DisplaySlot.SIDEBAR).setDisplayName(ent.getValue()));
@@ -327,7 +460,7 @@ public class TimeUtil {
             if (format == null) {
                 throw new IllegalArgumentException("Format cannot be null!");
             }
-            if (!format.matches("(?!.*%[^sd])(?!.*%d.*%d.*%d)(?!.*%s.*%s)(?!.*%s.*%d)(?=.*%s)(?=.*%d).*")) {
+            if (!format.matches("(?!.*%[^sd])(?!.*%d.*%d)(?!.*%s.*%s.*%s)(?!.*%s.*%d)(?=.*%s)(?=.*%d).*")) {
                 throw new IllegalArgumentException("Countdown format must follow contract! (See javadoc)");
             }
             this.formats.put(s, format);
@@ -357,15 +490,16 @@ public class TimeUtil {
         /**
          * Sets the format for the title of the sidebar scoreboard. This format
          * requires the format tokens ({@code %s} and {@code %d}), but
-         * if an additional {@code %d} is supplied it will use the first
-         * {@code %d} for displaying hours. Additionally, {@code %s} should be
-         * the last token in the format string. So in practice:
+         * if an additional {@code %s} is supplied it will use the first
+         * {@code %d} for displaying hours and the following for minutes and
+         * seconds. Additionally, {@code %d} should be
+         * the first token in the format string. So in practice:
          * <br><br>
-         * {@code .* %d (optional) .* %d .* %s .*}
+         * {@code .* %d .* %s (optional) .* %s .*}
          * <br><br>
          * The actual regex in use to verify this formatting string is:
          * <br>
-         * {@code (?!.*%[^sd])(?!.*%d.*%d.*%d)(?!.*%s.*%s)
+         * {@code (?!.*%[^sd])(?!.*%d.*%d)(?!.*%s.*%s.*%s)
          * (?!.*%s.*%d)(?=.*%s)(?=.*%d).*}
          * 
          * @since 0.1.0
@@ -375,10 +509,19 @@ public class TimeUtil {
          * @return 
          */
         public Countdown setDefaultFormat(String format) {
-            if (!format.matches("(?!.*%[^sd])(?!.*%d.*%d.*%d)(?!.*%s.*%s)(?!.*%s.*%d)(?=.*%s)(?=.*%d).*")) {
+            if (!format.matches("(?!.*%[^sd])(?!.*%d.*%d)(?!.*%s.*%s.*%s)(?!.*%s.*%d)(?=.*%s)(?=.*%d).*")) {
                 throw new IllegalArgumentException("Countdown format must follow contract! (See javadoc)");
             }
             this.defFormat = format;
+            return this;
+        }
+
+        public Countdown announceAt(long time, TimeUnit unit) {
+            return this.announceAt(new TimePoint(time, unit, null));
+        }
+
+        public Countdown announceAt(TimePoint point) {
+            this.queue.add(point);
             return this;
         }
 
