@@ -90,6 +90,20 @@ public interface SQLDataType extends DataType, AutoCloseable {
     }
 
     /**
+     * Returns whether or not this connection automatically commits changes
+     * to the database.
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return the current state of this connection's auto-commit mode 
+     * @throws SQLException database access error or closed connection
+     */
+    default public boolean isAutoCommit() throws SQLException {
+        return this.getConnection().getAutoCommit();
+    }
+
+    /**
      * Sets whether or not to automatically commit changes to the database. If
      * disabled, transactions will be grouped and not executed except from a
      * manual call to {@link SQLDataType#commit()} or
