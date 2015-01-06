@@ -25,13 +25,13 @@ import java.lang.reflect.AnnotatedElement;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Class description for {@link AnnotationUtil}
+ * Class description for {@link ReflectionUtil}
  *
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
  */
-public class AnnotationUtil {
+public class ReflectionUtil {
 
     public static JavaPlugin getPlugin(Class<?> clazz) {
         PluginClass pc = clazz.getAnnotation(PluginClass.class);
