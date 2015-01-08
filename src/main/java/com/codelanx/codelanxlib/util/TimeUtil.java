@@ -450,7 +450,7 @@ public class TimeUtil {
          * @since 0.1.0
          * @version 0.1.0
          * 
-         * @see Countdown#setDefaultFormat(java.lang.String) for info about the
+         * @see Countdown#setTimeFormat(java.lang.String) for info about the
          *      syntax for setting a format string
          * @param s The scoreboard to modify
          * @param format Optional board-specific format. Can be null
@@ -508,7 +508,7 @@ public class TimeUtil {
          * @param format
          * @return 
          */
-        public Countdown setDefaultFormat(String format) {
+        public Countdown setTimeFormat(String format) {
             if (!format.matches("(?!.*%[^sd])(?!.*%d.*%d)(?!.*%s.*%s.*%s)(?!.*%s.*%d)(?=.*%s)(?=.*%d).*")) {
                 throw new IllegalArgumentException("Countdown format must follow contract! (See javadoc)");
             }
@@ -516,13 +516,28 @@ public class TimeUtil {
             return this;
         }
 
+        public Countdown setAnnouncementFormat(String format) {
+            if (!format.matches("(?!.*%[^sd])")) {
+                throw new IllegalArgumentException("Countdown format must follow contract! (See javadoc)");
+            }
+            this.announcement = format;
+            return this;
+        }
+
         public Countdown announceAt(long time, TimeUnit unit) {
-            return this.announceAt(new TimePoint(time, unit, null));
+            return this.announceAt(TimeUtil.getTimePoint(unit.toNanos(time))); //Convert for consistency and large input
         }
 
         public Countdown announceAt(TimePoint point) {
             this.queue.add(point);
             return this;
+        }
+
+        public Countdown announceAtRange(long min, long max, TimeUnit unit) {
+             for (; min <= max; min++) {
+                 this.announceAt(min, unit);
+             }
+             return this;
         }
 
         /**
