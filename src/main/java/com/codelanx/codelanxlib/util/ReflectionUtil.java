@@ -44,4 +44,16 @@ public class ReflectionUtil {
     public static boolean hasAnnotation(AnnotatedElement target, Class<? extends Annotation> check) {
         return target.getAnnotation(check) != null;
     }
+
+    public boolean isLoadedPackage(String... packages) {
+        try {
+            for (String pkg : packages) {
+                Class.forName(pkg);
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
 }
