@@ -114,7 +114,7 @@ public class Scheduler {
      * @return The underlying {@link ScheduledExecutorService}
      */
     public static ScheduledExecutorService getService() {
-        if (Scheduler.es.isShutdown()) {
+        if (Scheduler.es == null || Scheduler.es.isShutdown()) {
             Scheduler.es = Executors.newScheduledThreadPool(10); //Going to find an expanding solution to this soon
         }
         return Scheduler.es;
