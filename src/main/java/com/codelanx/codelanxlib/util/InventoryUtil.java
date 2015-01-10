@@ -19,9 +19,14 @@
  */
 package com.codelanx.codelanxlib.util;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -44,38 +49,29 @@ public class InventoryUtil {
     }
 
     /**
-     * Returns the best approximation for the slot relevant to the item held
-     * in the player's hand
-     * <br><br>
-     * Note! This method will fail if there are {@link ItemStack} objects that
-     * exactly match the one in the hotbar.
+     * Returns the inventory slot for the item in a Player's hand.
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
+     * @throws IllegalStateException if the item is modified during the method
      * @param p The player to get the item slot from
      * @return The non-raw slot number of the item being held
      */
-    public static int getHeldItemSlot(Player p) {
-        Map<Integer, ItemStack> quickMatch = new HashMap<>();
-        ItemStack item;
+    public static synchronized int getHeldItemSlot(Player p) {
+        byte[] b = new byte[32];
+        new Random().nextBytes(b);
+        List<String> bitStr = new ArrayList<>(Arrays.asList(Base64.encode(b)));
+        //Time is of the essence now
+        List<String> oldLore = p.getItemInHand().getItemMeta().getLore();
+        p.getItemInHand().getItemMeta().setLore(bitStr);
         for (int i = 0; i < 9; i++) {
-            item = p.getInventory().getContents()[i];
-            if (item.getType() == p.getItemInHand().getType()) {
-                quickMatch.put(i, item);
+            if (p.getInventory().getContents()[i].getItemMeta().getLore().equals(bitStr)) {
+                p.getInventory().getContents()[i].getItemMeta().setLore(oldLore);
+                return i;
             }
         }
-        if (quickMatch.size() == 1) {
-            return quickMatch.entrySet().iterator().next().getKey();
-        } else {
-            Optional<Integer> opt = quickMatch.entrySet().stream()
-                    .filter(i -> i.getValue().equals(p.getItemInHand()))
-                    .map(i -> i.getKey()).findFirst();
-            if (opt.isPresent()) {
-                return opt.get();
-            }
-        }
-        throw new IllegalStateException("Player hotbar item not found!");
+        throw new IllegalStateException("Race conflict with other plugin while running method!");
     }
 
 }
