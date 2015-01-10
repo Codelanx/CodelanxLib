@@ -67,10 +67,11 @@ public class InventoryUtil {
         p.getItemInHand().getItemMeta().setLore(bitStr);
         for (int i = 0; i < 9; i++) {
             if (p.getInventory().getContents()[i].getItemMeta().getLore().equals(bitStr)) {
-                p.getInventory().getContents()[i].getItemMeta().setLore(oldLore);
+                p.getItemInHand().getItemMeta().setLore(oldLore);
                 return i;
             }
         }
+        p.getItemInHand().getItemMeta().setLore(oldLore);
         throw new IllegalStateException("Race conflict with other plugin while running method!");
     }
 
