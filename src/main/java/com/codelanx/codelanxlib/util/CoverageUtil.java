@@ -279,6 +279,9 @@ public final class CoverageUtil {
         });
     }
 
+    private CoverageUtil() {
+    }
+
     public static void marker(Plugin p) {
         PluginMarker pm = CoverageUtil.marks.get(p);
         if (pm != null) {

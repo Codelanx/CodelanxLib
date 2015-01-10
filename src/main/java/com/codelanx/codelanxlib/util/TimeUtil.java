@@ -40,7 +40,10 @@ import org.bukkit.scoreboard.Scoreboard;
  * @author 1Rogue
  * @version 0.1.0
  */
-public class TimeUtil {
+public final class TimeUtil {
+
+    private TimeUtil() {
+    }
 
     public static String getTime(long start) {
         return TimeUtil.formatTime(System.nanoTime() - start);

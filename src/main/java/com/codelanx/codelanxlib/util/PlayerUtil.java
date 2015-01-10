@@ -31,7 +31,10 @@ import org.bukkit.entity.Player;
  * @author 1Rogue
  * @version 0.0.1
  */
-public class PlayerUtil {
+public final class PlayerUtil {
+
+    private PlayerUtil() {
+    }
 
     /**
      * Gets any players within range of a specific location

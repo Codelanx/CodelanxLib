@@ -28,7 +28,10 @@ import org.bukkit.block.Sign;
  * @author 1Rogue
  * @version 1.0.0
  */
-public class BlockUtil {
+public final class BlockUtil {
+
+    private BlockUtil() {
+    }
 
     public static void updatePlayersInRange(Sign s) {
         //Seems to be that entities within ~60 block radius are not sent/updated

@@ -37,14 +37,17 @@ import org.bukkit.inventory.ItemStack;
  * @author 1Rogue
  * @version 0.0.1
  */
-public class InventoryUtil {
+public final class InventoryUtil {
+
+    private InventoryUtil() {
+    }
 
     /**
      * Returns whether or not the player clicked the top or bottom inventory
-     * 
+     *
      * @since 0.0.1
      * @version 0.0.1
-     * 
+     *
      * @param event The relevant {@link InventoryClickEvent}
      * @return {@code true} for clicking the top, {@code false} otherwise
      */
@@ -54,10 +57,10 @@ public class InventoryUtil {
 
     /**
      * Returns the inventory slot for the item in a Player's hand.
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @throws IllegalStateException if the item is modified during the method
      * @param p The player to get the item slot from
      * @return The non-raw slot number of the item being held

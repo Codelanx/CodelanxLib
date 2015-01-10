@@ -31,7 +31,10 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author 1Rogue
  * @version 0.0.1
  */
-public class ReflectionUtil {
+public final class ReflectionUtil {
+
+    private ReflectionUtil() {
+    }
 
     public static JavaPlugin getPlugin(Class<?> clazz) {
         PluginClass pc = clazz.getAnnotation(PluginClass.class);

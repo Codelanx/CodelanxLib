@@ -34,11 +34,15 @@ import java.util.concurrent.TimeUnit;
  * @author 1Rogue
  * @version 0.1.0
  */
-public class Scheduler {
+public final class Scheduler {
 
     private static final List<ScheduledFuture<?>> executives = new ArrayList<>();
     private static ScheduledExecutorService es;
+
     
+    private Scheduler() {
+    }
+
     /**
      * Runs a repeating asynchronous task
      * 

@@ -19,22 +19,24 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Class description for {@link DebugUtil}
- * 
+ *
  * TODO: Make class support multiple plugins
  *
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
  */
-public class DebugUtil {
-    
+public final class DebugUtil {
+
     private static boolean ENABLED = true;
+
+    private DebugUtil() {
+    }
 
     public static void print(Level level, String format, Object... args) {
         if (!DebugUtil.ENABLED) { return; }

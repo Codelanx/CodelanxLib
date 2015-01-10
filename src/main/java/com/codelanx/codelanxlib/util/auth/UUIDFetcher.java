@@ -122,4 +122,5 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     public static UUID getUUIDOf(String name) throws Exception {
         return new UUIDFetcher(Arrays.asList(name)).call().get(name);
     }
+
 }
