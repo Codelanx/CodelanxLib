@@ -62,11 +62,12 @@ public class InventoryUtil {
         byte[] b = new byte[32];
         new Random().nextBytes(b);
         List<String> bitStr = new ArrayList<>(Arrays.asList(Base64.encode(b)));
+        ItemStack[] contents = p.getInventory().getContents();
         //Time is of the essence now
         List<String> oldLore = p.getItemInHand().getItemMeta().getLore();
         p.getItemInHand().getItemMeta().setLore(bitStr);
         for (int i = 0; i < 9; i++) {
-            if (p.getInventory().getContents()[i].getItemMeta().getLore().equals(bitStr)) {
+            if (contents[i].getItemMeta().getLore().equals(bitStr)) {
                 p.getItemInHand().getItemMeta().setLore(oldLore);
                 return i;
             }
