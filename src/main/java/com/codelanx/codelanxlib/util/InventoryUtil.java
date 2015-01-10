@@ -22,17 +22,16 @@ package com.codelanx.codelanxlib.util;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Class description for {@link InventoryUtil}
+ * Utility methods for simplifying the use of Bukkit's inventory API, or
+ * providing methods that can accomplish tasks that have obscure or complicated
+ * solutions.
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -40,10 +39,15 @@ import org.bukkit.inventory.ItemStack;
  */
 public class InventoryUtil {
 
-    /*public static Inventory getSpacedInventory() {
-        return null;
-    }*/
-    
+    /**
+     * Returns whether or not the player clicked the top or bottom inventory
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param event The relevant {@link InventoryClickEvent}
+     * @return {@code true} for clicking the top, {@code false} otherwise
+     */
     public static boolean hasClickedTop(InventoryClickEvent event) {
         return event.getRawSlot() == event.getSlot();
     }
