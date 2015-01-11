@@ -64,7 +64,7 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @return The path to the YAML value
+     * @return The path to the file value
      */
     public String getPath();
 

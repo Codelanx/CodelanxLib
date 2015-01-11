@@ -17,27 +17,35 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.config;
+package com.codelanx.codelanxlib.test;
 
+import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.data.FileDataType;
+import com.codelanx.codelanxlib.data.types.Yaml;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
- * Class description for {@link AnonymousConfig}
+ * Class description for {@link ExampleConfig}
  *
- * @since 0.1.0
+ * @since 1.0.0
  * @author 1Rogue
- * @version 0.1.0
- * 
- * @param <T> The {@link FileDataType} relevant to this value
+ * @version 1.0.0
  */
-public class AnonymousConfig<T extends FileDataType> implements Config {
+public enum ExampleConfig implements Config<ExampleConfig> {
 
+    TEST_STRING("test.string", "Hello World!"),
+    TEST_DOUBLE("test.double", 3.14),
+    TEST_INT("test.int", 42),
+    TEST_LIST("test.list", new ArrayList<>()),
+    TEST_MAP("test.map", new HashMap<>()); //Potentially bad if someone stores references from default return value
+    ;
+
+    private static Yaml yaml;
     private final String path;
     private final Object def;
-    private final T file;
 
-    public AnonymousConfig(T file, String path, Object def) {
-        this.file = file;
+    private ExampleConfig(String path, Object def) {
         this.path = path;
         this.def = def;
     }
@@ -53,8 +61,22 @@ public class AnonymousConfig<T extends FileDataType> implements Config {
     }
 
     @Override
-    public T getConfig() {
-        return this.file;
+    public Yaml getConfig() {
+        if (ExampleConfig.yaml == null) {
+            ExampleConfig.yaml = this.init(Yaml.class);
+        }
+        return ExampleConfig.yaml;
+    }
+
+    /**
+     * Facade example, testing {@link Config#retrieve(FileDataType, Config)}
+     * return value
+     * 
+     * @param t A {@link FileDataType} to retrieve this config value from
+     * @return A config value that can be used to retrieve values from
+     */
+    public Config<?> fromOther(FileDataType t) {
+        return Config.retrieve(t, this);
     }
 
 }

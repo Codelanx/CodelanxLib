@@ -162,12 +162,13 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * @since 0.1.0
      * @version 0.1.0
      * 
+     * @param <T> Represents a {@link FileDataType} passed to the method
      * @param file The {@link FileDataType} to use
      * @param config The {@link Config} value to search with
      * @return An {@link AnonymousConfig} wrapping the configuration and keys
      */
-    public static Config<?> retrieve(FileDataType file, Config<?> config) {
-        return new AnonymousConfig(file, config.getPath(), config.getDefault());
+    public static <T extends FileDataType> Config<?> retrieve(T file, Config<?> config) {
+        return new AnonymousConfig<>(file, config.getPath(), config.getDefault());
     }
 
 }
