@@ -19,7 +19,6 @@
  */
 package com.codelanx.codelanxlib.events;
 
-import static com.codelanx.codelanxlib.events.ReloadEvent.handlers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
