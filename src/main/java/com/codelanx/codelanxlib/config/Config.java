@@ -171,4 +171,18 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
         return new AnonymousConfig<>(file, config.getPath(), config.getDefault());
     }
 
+    /**
+     * Facade method for {@link Config#retrieve(FileDataType, Config)}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param t A {@link FileDataType} to retrieve this config value from
+     * @see Config#retrieve(FileDataType, Config)
+     * @return A config value that can be used to retrieve values from
+     */
+    default public Config<?> fromOther(FileDataType t) {
+        return Config.retrieve(t, this);
+    }
+
 }
