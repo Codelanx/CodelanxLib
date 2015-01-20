@@ -25,6 +25,8 @@ package com.codelanx.codelanxlib.util.number;
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
+ * 
+ * @param <E> The type of the boxed item
  */
 public class Single<E> {
 
