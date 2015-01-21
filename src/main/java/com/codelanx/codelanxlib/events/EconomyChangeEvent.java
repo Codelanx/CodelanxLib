@@ -20,8 +20,8 @@
 package com.codelanx.codelanxlib.events;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerEvent;
 
 /**
  * Class description for {@link EconomyChangeEvent}
@@ -30,19 +30,14 @@ import org.bukkit.event.HandlerList;
  * @author 1Rogue
  * @version 0.0.1
  */
-public class EconomyChangeEvent extends Event {
+public class EconomyChangeEvent extends PlayerEvent {
 
     protected static final HandlerList handlers = new HandlerList();
-    private final Player p;
     private final double money;
 
     public EconomyChangeEvent(Player p, double money) {
-        this.p = p;
+        super(p);
         this.money = money;
-    }
-
-    public Player getPlayer() {
-        return this.p;
     }
 
     public double getNewBalance() {
