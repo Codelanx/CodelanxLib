@@ -26,9 +26,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -52,6 +54,7 @@ import org.bukkit.plugin.Plugin;
  */
 public final class InventoryInterface {
 
+    private final static Set<String> seeds = new LinkedHashSet<>();
     static final int SEED_LENGTH = 3;
     private InventoryPanel root;
     private final String seed;
@@ -68,7 +71,12 @@ public final class InventoryInterface {
      */
     public InventoryInterface(Plugin plugin) {
         //generate seed
-        this.seed = this.generateSeed(InventoryInterface.SEED_LENGTH);
+        String seed = this.generateSeed(InventoryInterface.SEED_LENGTH);
+        while (InventoryInterface.seeds.contains(seed)) {
+            seed = this.generateSeed(InventoryInterface.SEED_LENGTH);
+        }
+        this.seed = seed;
+        InventoryInterface.seeds.add(this.seed);
         //register listener
         Bukkit.getServer().getPluginManager().registerEvents(new InterfaceListener(this), plugin);
     }
