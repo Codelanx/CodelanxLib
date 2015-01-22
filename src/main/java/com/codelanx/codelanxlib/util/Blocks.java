@@ -22,20 +22,20 @@ package com.codelanx.codelanxlib.util;
 import org.bukkit.block.Sign;
 
 /**
- * Class description for {@link BlockUtil}
+ * Class description for {@link Blocks}
  *
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
  */
-public final class BlockUtil {
+public final class Blocks {
 
-    private BlockUtil() {
+    private Blocks() {
     }
 
     public static void updatePlayersInRange(Sign s) {
         //Seems to be that entities within ~60 block radius are not sent/updated
-        PlayerUtil.getPlayersInRange(65, s.getLocation()).keySet().forEach(p -> {
+        Players.getPlayersInRange(65, s.getLocation()).keySet().forEach(p -> {
             p.sendSignChange(s.getLocation(), s.getLines());
         });
     }

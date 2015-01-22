@@ -25,15 +25,15 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
- * Class description for {@link PlayerUtil}
+ * Class description for {@link Players}
  *
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
  */
-public final class PlayerUtil {
+public final class Players {
 
-    private PlayerUtil() {
+    private Players() {
     }
 
     /**

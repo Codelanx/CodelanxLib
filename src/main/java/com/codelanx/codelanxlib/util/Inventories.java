@@ -37,9 +37,9 @@ import org.bukkit.inventory.ItemStack;
  * @author 1Rogue
  * @version 0.0.1
  */
-public final class InventoryUtil {
+public final class Inventories {
 
-    private InventoryUtil() {
+    private Inventories() {
     }
 
     /**
