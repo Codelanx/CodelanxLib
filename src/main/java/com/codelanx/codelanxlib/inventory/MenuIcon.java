@@ -33,7 +33,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Class description for {@link MenuIcon}
+ * Represents an {@link ItemStack} in an {@link InventoryPanel}'s inventory that
+ * will execute code when clicked.
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -48,6 +49,12 @@ public class MenuIcon {
     protected Execution onExec;
     protected final List<String> perms = new ArrayList<>();
 
+    /**
+     * 
+     * @param item
+     * @param onExec
+     * @param options 
+     */
     MenuIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
         if (item == null || options == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!");

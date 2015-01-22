@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
-import com.codelanx.codelanxlib.util.InventoryUtil;
+import com.codelanx.codelanxlib.util.Inventories;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,7 +52,7 @@ public final class InterfaceListener implements Listener {
         if (event.getWhoClicked().getType() != EntityType.PLAYER) {
             return;
         }
-        if (InventoryUtil.hasClickedTop(event)) {
+        if (Inventories.hasClickedTop(event)) {
             if (event.getInventory().getTitle().endsWith(this.ii.getSeed())) {
                 Inventory i = event.getInventory();
                 InventoryPanel ip = this.ii.getPanelBySeed(i.getTitle());

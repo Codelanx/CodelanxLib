@@ -22,15 +22,27 @@ package com.codelanx.codelanxlib.inventory;
 import org.bukkit.entity.Player;
 
 /**
- * Class description for {@link Execution}
+ * Represents the actions to be taken upon clicking a {@link MenuIcon}
  *
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
+ * 
+ * @param <T> The type of the {@link MenuIcon} this Execution is for
  */
 @FunctionalInterface
 public interface Execution<T extends MenuIcon> {
 
+    /**
+     * Called when a {@link MenuIcon} is clicked
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param p The {@link Player} who clicked the icon
+     * @param ii The {@link InventoryInterface} this icon belongs to
+     * @param icon The {@link MenuIcon} that was clicked
+     */
     public void onExec(Player p, InventoryInterface ii, T icon);
 
 }
