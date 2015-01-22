@@ -69,4 +69,9 @@ public class CodelanxLib extends JavaPlugin {
         Scheduler.cancelAllTasks();
         Scheduler.getService().shutdown();
     }
+
+    public static CodelanxLib get() {
+        return JavaPlugin.getPlugin(CodelanxLib.class);
+    }
+
 }
