@@ -36,7 +36,6 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -66,11 +65,9 @@ public final class InventoryInterface {
      * Generates a new seed and registers itself to an {@link InterfaceListener}
      * 
      * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @param plugin The relevant {@link Plugin} controlling this interface
+     * @version 0.1.0
      */
-    public InventoryInterface(Plugin plugin) {
+    public InventoryInterface() {
         //generate seed
         String seed = this.generateSeed(InventoryInterface.SEED_LENGTH);
         while (InventoryInterface.seeds.contains(seed)) {
@@ -293,7 +290,7 @@ public final class InventoryInterface {
         Validate.notNull(f, "File cannot be null!");
         Validate.notNull(p, "Plugin cannot be null!");
         Validate.isTrue(f.exists(), "File must exist!");
-        InventoryInterface ii = new InventoryInterface(p);
+        InventoryInterface ii = new InventoryInterface();
         if (f.exists()) {
             FileConfiguration yml = YamlConfiguration.loadConfiguration(f);
             Map<String, Object> panes = Config.getConfigSectionValue(yml.get("panels"));

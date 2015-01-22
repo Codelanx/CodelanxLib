@@ -32,25 +32,36 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 /**
- * Class description for {@link InterfaceListener}
- * 
- * TODO:
- * 
- * Move listener to be a singleton listener that allows InventoryInterfaces to
- * register their seeds to them
+ * Listens for inventory clicks and conveys information to any appropriate and
+ * registered {@link InventoryInterface}
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public final class InterfaceListener implements Listener {
 
     private final Map<String, InventoryInterface> interfaces = new HashMap<>();
 
+    /**
+     * Constructs the listener instance and registers it to Bukkit
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     public InterfaceListener() {
         Bukkit.getServer().getPluginManager().registerEvents(this, CodelanxLib.get());
     }
 
+    /**
+     * Listens to inventory clicks, and conveys said information to an
+     * appropriate {@link InventoryInterface}
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param event The fired {@link InventoryClickEvent}
+     */
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (event.getWhoClicked().getType() != EntityType.PLAYER) {
@@ -71,6 +82,14 @@ public final class InterfaceListener implements Listener {
         }
     }
 
+    /**
+     * Registers an {@link InventoryInterface} to this listener
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param ii The {@link InventoryInterface} to register
+     */
     public void register(InventoryInterface ii) {
         this.interfaces.put(ii.getSeed(), ii);
     }
