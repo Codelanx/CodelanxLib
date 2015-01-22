@@ -55,6 +55,7 @@ import org.bukkit.plugin.Plugin;
 public final class InventoryInterface {
 
     private final static Set<String> seeds = new LinkedHashSet<>();
+    private final static InterfaceListener listener = new InterfaceListener();
     static final int SEED_LENGTH = 3;
     private InventoryPanel root;
     private final String seed;
@@ -77,8 +78,8 @@ public final class InventoryInterface {
         }
         this.seed = seed;
         InventoryInterface.seeds.add(this.seed);
-        //register listener
-        Bukkit.getServer().getPluginManager().registerEvents(new InterfaceListener(this), plugin);
+        //register to listener
+        InventoryInterface.listener.register(this);
     }
 
     /**

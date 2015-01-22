@@ -19,7 +19,11 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
+import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.util.Inventories;
+import java.util.HashMap;
+import java.util.Map;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,10 +45,10 @@ import org.bukkit.inventory.Inventory;
  */
 public final class InterfaceListener implements Listener {
 
-    private final InventoryInterface ii;
+    private final Map<String, InventoryInterface> interfaces = new HashMap<>();
 
-    public InterfaceListener(InventoryInterface ii) {
-        this.ii = ii;
+    public InterfaceListener() {
+        Bukkit.getServer().getPluginManager().registerEvents(this, CodelanxLib.get());
     }
 
     @EventHandler
@@ -53,15 +57,22 @@ public final class InterfaceListener implements Listener {
             return;
         }
         if (Inventories.hasClickedTop(event)) {
-            if (event.getInventory().getTitle().endsWith(this.ii.getSeed())) {
+            String title = event.getInventory().getTitle();
+            title = title.substring(title.length() - (InventoryInterface.SEED_LENGTH * 2));
+            InventoryInterface ii = this.interfaces.get(title);
+            if (ii != null) {
                 Inventory i = event.getInventory();
-                InventoryPanel ip = this.ii.getPanelBySeed(i.getTitle());
+                InventoryPanel ip = ii.getPanelBySeed(i.getTitle());
                 if (ip != null) {
                     ip.click((Player) event.getWhoClicked(), event.getSlot());
                     event.setCancelled(true);
                 }
             }
         }
+    }
+
+    public void register(InventoryInterface ii) {
+        this.interfaces.put(ii.getSeed(), ii);
     }
 
 }
