@@ -109,19 +109,33 @@ public final class InventoryInterface {
      * Creates and returns an {@link InventoryPanel} for use as a menu
      * 
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      * 
      * @param name The name (title) for the {@link InventoryPanel}
      * @param rows The number of rows for the {@link InventoryPanel}
      * @return The new {@link InventoryPanel} object
      */
-    public InventoryPanel createPanel(String name, int rows) {
+    public InventoryPanel newPanel(String name, int rows) {
         InventoryPanel ip = new InventoryPanel(this, name, rows);
         if (this.panels.isEmpty()) {
             this.root = ip;
         }
         this.panels.put(ip.getSeed(), ip);
         return ip;
+    }
+
+    /**
+     * Creates and returns an {@link InventoryPanel} for use as a menu
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @see InventoryInterface#newPanel(String, int)
+     * @param rows The number of rows for the {@link InventoryPanel}
+     * @return The new {@link InventoryPanel} object
+     */
+    public InventoryPanel newPanel(int rows) {
+        return this.newPanel(null, rows);
     }
 
     /**
