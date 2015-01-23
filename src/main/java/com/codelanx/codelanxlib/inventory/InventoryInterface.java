@@ -118,7 +118,7 @@ public final class InventoryInterface {
     public InventoryPanel createPanel(String name, int rows) {
         InventoryPanel ip = new InventoryPanel(this, name, rows);
         if (this.panels.isEmpty()) {
-            this.setRootPanel(ip);
+            this.root = ip;
         }
         this.panels.put(ip.getSeed(), ip);
         return ip;
