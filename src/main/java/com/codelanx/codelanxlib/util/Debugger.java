@@ -97,11 +97,7 @@ public final class Debugger {
      */
     public static void hookBukkit() throws IllegalAccessException {
         //Check to make sure CodelanxLib is calling it
-        StackTraceElement[] elems = Thread.currentThread().getStackTrace();
-        if (elems.length < 3) {
-            return;
-        }
-        if (!elems[2].getClass().getName().equals(CodelanxLib.class.getName())) {
+        if (!ReflectionUtil.accessedFrom(CodelanxLib.class)) {
             throw new IllegalAccessException("Debugger#hookBukkit may only be called by CodelanxLib!");
         }
         //end check - add hook

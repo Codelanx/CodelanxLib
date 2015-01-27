@@ -59,4 +59,43 @@ public final class ReflectionUtil {
         return true;
     }
 
+    /**
+     * Returns whether or not the current context was called from a class
+     * (instance or otherwise) that is passed to this method. This method can
+     * match a regex pattern for multiple classes. Note anonymous classes have
+     * an empty name.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param regex The regex to check against the calling class
+     * @return {@code true} if accessed from a class that matches the regex
+     */
+    public static boolean accessedFrom(String regex) {
+        StackTraceElement[] elems = Thread.currentThread().getStackTrace();
+        if (elems.length < 4) {
+            return false;
+        }
+        return elems[3].getClass().getName().matches(regex);
+    }
+
+    /**
+     * Returns whether or not the current context was called from a class
+     * (instance or otherwise) that is passed to this method. Note anonymous
+     * classes have an empty name.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param clazz The class to check
+     * @return {@code true} if accessed from this class
+     */
+    public static boolean accessedFrom(Class clazz) {
+        StackTraceElement[] elems = Thread.currentThread().getStackTrace();
+        if (elems.length < 4) {
+            return false;
+        }
+        return elems[3].getClass().equals(clazz); 
+   }
+
 }
