@@ -53,7 +53,7 @@ public final class Players {
                     double d = p.getLocation().distanceSquared(origin);
                     if (d <= range) {
                         back.put(p, d);
-                    }
+    }
                 });
         return back;
     }
@@ -71,15 +71,8 @@ public final class Players {
      *         the distance away they are
      */
     public static Map<Player, Double> getPlayersInRange(int range, Player origin) {
-        Map<Player, Double> back = new HashMap<>();
-        origin.getWorld().getPlayers().stream()
-                .filter((p) -> !p.equals(origin))
-                .forEach((p) -> {
-                    double d = p.getLocation().distanceSquared(origin.getLocation());
-                    if (d <= range) {
-                        back.put(p, d);
-                    }
-                });
+        Map<Player, Double> back = Players.getPlayersInRange(range, origin.getLocation());
+        back.remove(origin);
         return back;
     }
 
