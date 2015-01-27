@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.data.types;
 
 import com.codelanx.codelanxlib.data.FileDataType;
-import com.codelanx.codelanxlib.util.DebugUtil;
+import com.codelanx.codelanxlib.util.Debugger;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -57,7 +57,7 @@ public class Json implements FileDataType {
         try {
             root = (JSONObject) parser.parse(new FileReader(this.location));
         } catch (IOException ex) {
-            DebugUtil.error("Error loading JSON file!", ex);
+            Debugger.error(ex, "Error loading JSON file!");
         }
         this.root = root;
     }

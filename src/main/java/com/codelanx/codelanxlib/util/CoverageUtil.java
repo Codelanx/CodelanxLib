@@ -316,20 +316,20 @@ public final class CoverageUtil {
                     c.getMethodMarkers()
                 });*/
             } catch (IOException ex) {
-                DebugUtil.error(String.format("Error reading latest coverage log for plugin '%s'!", p.getName()), ex);
+                Debugger.error(ex, "Error reading latest coverage log for plugin '%s'!", p.getName());
             }
         } else {
-            DebugUtil.print(Level.WARNING, "Plugin '%s' called CoverageUtil#load(Plugin), but no logfile was found", p.getName());
+            Debugger.print(Level.WARNING, "Plugin '%s' called CoverageUtil#load(Plugin), but no logfile was found", p.getName());
         }
     }
 
     public static void reportAll() {
-        DebugUtil.print("Current coverage report:");
+        Debugger.print("Current coverage report:");
         CoverageUtil.marks.values().forEach((pm) -> {
             pm.getClassMarkers().forEach((c) -> {
                 c.getMethodMarkers().forEach((m) -> {
                     m.getMarkers().forEach((mk) -> {
-                        DebugUtil.print("Plugin: %s\n\tClass: %s\n\tMethod: %s\n\tLine: %d\n\tValue: %B\n", pm.name, c.getName(), m.getName(), mk.getLine(), mk.isHit());
+                        Debugger.print("Plugin: %s\n\tClass: %s\n\tMethod: %s\n\tLine: %d\n\tValue: %B\n", pm.name, c.getName(), m.getName(), mk.getLine(), mk.isHit());
                     });
                 });
             });
@@ -401,7 +401,7 @@ public final class CoverageUtil {
         while ((line = br.readLine()) != null) {
             String[] tokens = line.split(";");
             if (line.isEmpty() || tokens.length < 5) {
-                DebugUtil.print(Level.WARNING, "Bad coverage value found, skipping!");
+                Debugger.print(Level.WARNING, "Bad coverage value found, skipping!");
                 continue;
             }
             if (pm == null) {
@@ -415,7 +415,7 @@ public final class CoverageUtil {
                     pm.addValue(tokens[1], tokens[2], li, Boolean.valueOf(tokens[4]));
                 }
             } catch (NumberFormatException ex) {
-                DebugUtil.print(Level.WARNING, "Bad coverage value found, skipping!");
+                Debugger.print(Level.WARNING, "Bad coverage value found, skipping!");
             }
         }
         return pm;

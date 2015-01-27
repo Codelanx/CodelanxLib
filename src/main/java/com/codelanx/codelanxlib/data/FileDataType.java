@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.data;
 
-import com.codelanx.codelanxlib.util.DebugUtil;
+import com.codelanx.codelanxlib.util.Debugger;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -127,7 +127,7 @@ public interface FileDataType extends DataType {
                 | IllegalAccessException
                 | IllegalArgumentException
                 | InvocationTargetException ex) {
-            DebugUtil.error("Error parsing data file!", ex);
+            Debugger.error(ex, "Error parsing data file!");
         }
         return null;
     }

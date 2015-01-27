@@ -104,7 +104,7 @@ public final class Scheduler {
         try {
             Scheduler.getService().awaitTermination(2, TimeUnit.SECONDS);
         } catch (InterruptedException ex) {
-            DebugUtil.error("Error halting scheduler service!", ex);
+            Debugger.error(ex, "Error halting scheduler service!");
         }
     }
 

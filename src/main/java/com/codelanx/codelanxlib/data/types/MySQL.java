@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.data.types;
 
 import com.codelanx.codelanxlib.data.SQLDataType;
-import com.codelanx.codelanxlib.util.DebugUtil;
+import com.codelanx.codelanxlib.util.Debugger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -90,7 +90,7 @@ public class MySQL implements SQLDataType {
 
         this.con = DriverManager.getConnection("jdbc:mysql://" + this.prefs.getHost() + ":"
                 + this.prefs.getPort() + "/" + this.prefs.getDatabase(), connectionProps);
-        DebugUtil.print("Open MySQL connections: %d", ++connections);
+        Debugger.print("Open MySQL connections: %d", ++connections);
         return this.con;
     }
 
@@ -128,7 +128,7 @@ public class MySQL implements SQLDataType {
     @Override
     public void close() {
         SQLDataType.super.close();
-        DebugUtil.print("Open MySQL connections: %d", --connections);
+        Debugger.print("Open MySQL connections: %d", --connections);
     }
 
     /**

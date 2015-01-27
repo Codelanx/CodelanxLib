@@ -23,7 +23,7 @@ import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
 import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.util.ReflectionUtil;
-import com.codelanx.codelanxlib.util.DebugUtil;
+import com.codelanx.codelanxlib.util.Debugger;
 import java.io.File;
 import java.io.IOException;
 
@@ -124,7 +124,7 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
             use.save();
             return (T) use;
         } catch (IOException ex) {
-            DebugUtil.error(String.format("Error creating lang file '%s'!", path), ex);
+            Debugger.error(ex, "Error creating lang file '%s'!", path);
             return null;
         }
     }

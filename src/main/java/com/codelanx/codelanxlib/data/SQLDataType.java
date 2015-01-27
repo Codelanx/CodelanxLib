@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.data;
 
-import com.codelanx.codelanxlib.util.DebugUtil;
+import com.codelanx.codelanxlib.util.Debugger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -168,7 +168,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
         try {
             this.getConnection().close();
         } catch (SQLException ex) {
-            DebugUtil.error("Error closing SQL connection!", ex);
+            Debugger.error(ex, "Error closing SQL connection!");
         }
     }
 

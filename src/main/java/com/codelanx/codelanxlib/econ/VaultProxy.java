@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.econ;
 
-import com.codelanx.codelanxlib.util.DebugUtil;
+import com.codelanx.codelanxlib.util.Debugger;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -102,12 +102,12 @@ public final class VaultProxy implements InvocationHandler {
             Server server = Bukkit.getServer();
             RegisteredServiceProvider<Economy> rsp = server.getServicesManager().getRegistration(Economy.class);
             if (rsp == null) {
-                DebugUtil.print(Level.SEVERE, "No economy found, will not proxy Vault!");
+                Debugger.print(Level.SEVERE, "No economy found, will not proxy Vault!");
                 return;
             }
             Economy e = rsp.getProvider();
             if (e == null || Proxy.isProxyClass(e.getClass())) {
-                DebugUtil.print(Level.SEVERE, "Error proxying vault economy! No responsive updating");
+                Debugger.print(Level.SEVERE, "Error proxying vault economy! No responsive updating");
                 return;
             }
             ClassLoader l;
@@ -118,7 +118,7 @@ public final class VaultProxy implements InvocationHandler {
                 m.setAccessible(true);
                 l = (ClassLoader) m.invoke(v);
                 if (l == null) {
-                    DebugUtil.print(Level.SEVERE, "Unable to retrieve economy classloader!");
+                    Debugger.print(Level.SEVERE, "Unable to retrieve economy classloader!");
                     return;
                 }
             }
@@ -132,7 +132,7 @@ public final class VaultProxy implements InvocationHandler {
                 | IllegalAccessException
                 | IllegalArgumentException
                 | InvocationTargetException ex) {
-            DebugUtil.error("Error proxying vault economy class!", ex);
+            Debugger.error(ex, "Error proxying vault economy class!");
         }
     }
 
