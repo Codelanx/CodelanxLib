@@ -207,6 +207,7 @@ public final class Debugger {
         server.put("default-world-type", s.getWorldType());
         server.put("generate-structures", s.getGenerateStructures());
         server.put("idle-timeout", s.getIdleTimeout());
+        server.put("players-online", s.getOnlinePlayers().size());
         server.put("max-players", s.getMaxPlayers());
         server.put("monster-spawn-limit", s.getMonsterSpawnLimit());
         server.put("motd", s.getMotd());
