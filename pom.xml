@@ -10,10 +10,6 @@
 
     <repositories>
         <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/repositories/public/</url>
-        </repository>
-        <repository>
             <id>Plugin Metrics</id>
             <url>http://repo.mcstats.org/content/repositories/public</url>
         </repository>
@@ -109,7 +105,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>LATEST</version>
+            <version>1.7.10-R0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
