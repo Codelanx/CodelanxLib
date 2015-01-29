@@ -20,7 +20,10 @@
 package com.codelanx.codelanxlib.permission;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.plugin.PluginManager;
 
 /**
  * Represents an enum that 
@@ -80,7 +83,14 @@ public interface Permissions<E extends Enum<E> & Permissions<E>> {
      */
     default public boolean has(Player p) {
         Validate.notNull(p, "Player cannot be null!");
-        return p.hasPermission(this.build());
+        //Register permission to conform to bukkit API
+        String fullPerm = this.build();
+        PluginManager pm = Bukkit.getServer().getPluginManager();
+        if (pm.getPermission(fullPerm) == null) {
+            pm.addPermission(new Permission(fullPerm));
+        }
+        //end register
+        return p.hasPermission(fullPerm);
     }
 
 }
