@@ -1,0 +1,78 @@
+/*
+ * Copyright (C) 2015 Codelanx, All Rights Reserved
+ *
+ * This work is licensed under a Creative Commons
+ * Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ *
+ * This program is protected software: You are free to distrubute your
+ * own use of this software under the terms of the Creative Commons BY-NC-ND
+ * license as published by Creative Commons in the year 2015 or as published
+ * by a later date. You may not provide the source files or provide a means
+ * of running the software outside of those licensed to use it.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * You should have received a copy of the Creative Commons BY-NC-ND license
+ * long with this program. If not, see <https://creativecommons.org/licenses/>.
+ */
+package com.codelanx.codelanxlib.util.inventory;
+
+import java.util.Arrays;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+
+/**
+ * Class description for {@link InventoryState}
+ *
+ * @since 1.0.0
+ * @author 1Rogue
+ * @version 1.0.0
+ */
+public class InventoryState {
+
+    private final ItemStack[] contents;
+
+    public InventoryState(Inventory i) {
+        ItemStack[] arr = i.getContents();
+        this.contents = Arrays.copyOf(arr, arr.length);
+    }
+
+    /**
+     * Returns a copy of the underlying array from the inventory contents.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @deprecated Returns an array copy, should not be used heavily
+     * @return A copy of the inventory contents
+     */
+    public ItemStack[] getContents() {
+        return Arrays.copyOf(this.contents, this.contents.length);
+    }
+
+    /**
+     * Returns the {@link ItemStack} in the given inventory slot
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param index The index or "slot"  to retrieve from
+     * @return The {@link ItemStack} in the relevant index
+     * @throws ArrayIndexOutOfBoundsException {@code 0 <= index < size()}
+     */
+    public ItemStack getItem(int index) {
+        return this.contents[index];
+    }
+
+    public int size() {
+        return this.contents.length;
+    }
+
+    public void setContents(InventoryHolder holder) {
+        holder.getInventory().setContents(this.getContents());
+    }
+
+}
