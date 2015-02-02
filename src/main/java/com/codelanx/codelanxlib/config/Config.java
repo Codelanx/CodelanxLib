@@ -21,7 +21,7 @@ package com.codelanx.codelanxlib.config;
 
 import com.codelanx.codelanxlib.data.FileDataType;
 import java.util.Map;
-import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * Class description for {@link Config}
@@ -140,13 +140,14 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * @param o The object to interpret
      * @return A {@link Map} representing the section
      */
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> getConfigSectionValue(Object o) {
         if (o == null) {
             return null;
         }
         Map<String, Object> map;
-        if (o instanceof MemorySection) {
-            map = ((MemorySection) o).getValues(false);
+        if (o instanceof ConfigurationSection) {
+            map = ((ConfigurationSection) o).getValues(false);
         } else if (o instanceof Map) {
             map = (Map<String, Object>) o;
         } else {
