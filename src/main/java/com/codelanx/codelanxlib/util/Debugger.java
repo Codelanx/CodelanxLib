@@ -97,9 +97,8 @@ public final class Debugger {
      */
     public static void hookBukkit() throws IllegalAccessException {
         //Check to make sure CodelanxLib is calling it
-        if (!ReflectionUtil.accessedFrom(CodelanxLib.class)) {
-            throw new IllegalAccessException("Debugger#hookBukkit may only be called by CodelanxLib!");
-        }
+        Exceptions.illegalAccess(Reflections.accessedFrom(CodelanxLib.class),
+                "Debugger#hookBukkit may only be called by CodelanxLib!");
         //end check - add hook
         if (!Debugger.listenerHooked) {
             //Add listener hook for new, incoming plugins
