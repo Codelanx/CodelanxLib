@@ -85,6 +85,14 @@ public class MenuIcon {
         return Collections.unmodifiableMap(this.options);
     }
 
+    public Object addOption(String key, Object value) {
+        return this.options.put(key, value);
+    }
+
+    public Object getOption(String key) {
+        return this.options.get(key);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -97,10 +105,7 @@ public class MenuIcon {
         if (this.seed != other.seed) {
             return false;
         }
-        if (!Objects.equals(this.item, other.item)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.item, other.item);
     }
 
     void execute(Player p, InventoryInterface ii) {
