@@ -17,7 +17,7 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.test;
+package com.codelanx.codelanxlib.example;
 
 import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.data.FileDataType;
