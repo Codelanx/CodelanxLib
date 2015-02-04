@@ -1,6 +1,5 @@
-
 /*
- * Copyright (C) 2015 Spencer
+ * Copyright (C) 2015 Codelanx
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +17,7 @@
 package com.codelanx.codelanxlib.util.auth;
 
 import com.google.common.collect.ImmutableList;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -29,16 +29,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import org.apache.commons.lang.Validate;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * All credit to evilmidget38! A small bit of cleanup for Java 8
  *
  * @since 0.0.1
  * @author evilmidget38
- * @version 0.0.1
+ * @author 1Rogue slight cleanup
+ * @version 0.1.0
  */
 public class UUIDFetcher implements Callable<Map<String, UUID>> {
 
@@ -58,37 +61,35 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     }
 
     @Override
-    public Map<String, UUID> call() throws Exception {
+    public Map<String, UUID> call() throws IOException, ParseException, InterruptedException {
         Map<String, UUID> uuidMap = new HashMap<>();
-        int requests = (int) Math.ceil(names.size() / PROFILES_PER_REQUEST);
+        int requests = (int) Math.ceil(this.names.size() / UUIDFetcher.PROFILES_PER_REQUEST);
         for (int i = 0; i < requests; i++) {
-            HttpURLConnection connection = createConnection();
-            String body = JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, names.size())));
-            writeBody(connection, body);
-            JSONArray array = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
+            HttpURLConnection connection = UUIDFetcher.createConnection();
+            String body = JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, this.names.size())));
+            UUIDFetcher.writeBody(connection, body);
+            JSONArray array = (JSONArray) this.jsonParser.parse(new InputStreamReader(connection.getInputStream()));
             for (Object profile : array) {
                 JSONObject jsonProfile = (JSONObject) profile;
-                String id = (String) jsonProfile.get("id");
-                String name = (String) jsonProfile.get("name");
-                UUID uuid = UUIDFetcher.getUUID(id);
-                uuidMap.put(name, uuid);
+                UUID uuid = UUIDFetcher.getUUID((String) jsonProfile.get("id"));
+                uuidMap.put((String) jsonProfile.get("name"), uuid);
             }
-            if (rateLimiting && i != requests - 1) {
+            if (this.rateLimiting && i != requests - 1) {
                 Thread.sleep(100L);
             }
         }
         return uuidMap;
     }
 
-    private static void writeBody(HttpURLConnection connection, String body) throws Exception {
-        OutputStream stream = connection.getOutputStream();
-        stream.write(body.getBytes());
-        stream.flush();
-        stream.close();
+    private static void writeBody(HttpURLConnection connection, String body) throws IOException {
+        try (OutputStream stream = connection.getOutputStream()) {
+            stream.write(body.getBytes());
+            stream.flush();
+        }
     }
 
-    private static HttpURLConnection createConnection() throws Exception {
-        URL url = new URL(PROFILE_URL);
+    private static HttpURLConnection createConnection() throws IOException {
+        URL url = new URL(UUIDFetcher.PROFILE_URL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
@@ -99,7 +100,11 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     }
 
     private static UUID getUUID(String id) {
-        return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" +id.substring(20, 32));
+        return UUID.fromString(id.substring(0, 8)
+                + "-" + id.substring(8, 12)
+                + "-" + id.substring(12, 16)
+                + "-" + id.substring(16, 20)
+                + "-" +id.substring(20, 32));
     }
 
     public static byte[] toBytes(UUID uuid) {
@@ -110,16 +115,14 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     }
 
     public static UUID fromBytes(byte[] array) {
-        if (array.length != 16) {
-            throw new IllegalArgumentException("Illegal byte array length: " + array.length);
-        }
+        Validate.isTrue(array.length == 16, "Illegal byte array length: " + array.length);
         ByteBuffer byteBuffer = ByteBuffer.wrap(array);
         long mostSignificant = byteBuffer.getLong();
         long leastSignificant = byteBuffer.getLong();
         return new UUID(mostSignificant, leastSignificant);
     }
 
-    public static UUID getUUIDOf(String name) throws Exception {
+    public static UUID getUUIDOf(String name) throws IOException, ParseException, InterruptedException {
         return new UUIDFetcher(Arrays.asList(name)).call().get(name);
     }
 
