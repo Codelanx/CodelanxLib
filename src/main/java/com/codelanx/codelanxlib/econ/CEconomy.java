@@ -65,7 +65,7 @@ public final class CEconomy extends Observable {
     }
 
     public ChargeStatus canCharge(Player p, Config<?> value) {
-        return this.canCharge(p, value.asPrimitive(Double.class));
+        return this.canCharge(p, value.as(double.class));
     }
     
     public ChargeStatus canCharge(Player p, double cost) {

@@ -20,7 +20,10 @@
 package com.codelanx.codelanxlib.config;
 
 import com.codelanx.codelanxlib.data.FileDataType;
+import com.codelanx.codelanxlib.util.Reflections;
+import com.google.common.primitives.Primitives;
 import java.util.Map;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -45,12 +48,17 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * 
      * @param <T> The type of the casting class
      * @param c The class type to cast to
-     * @return A casted value, or {@code null} if unable to cast
+     * @return A casted value, or {@code null} if unable to cast. If the passed
+     *         class parameter is of a primitive type or autoboxed primitive,
+     *         then a casted value of -1 is returned, or {@code false} for
+     *         booleans
      */
     default public <T> T as(Class<T> c) {
+        Validate.notNull(c, "Cannot cast to null!");
+        Validate.isTrue(Primitives.unwrap(c) != void.class, "Cannot cast to a void type!");
         Object o = this.get();
-        if (o == null) { //Add safety check for primitive classes?
-            return null;
+        if (o == null) {
+            return Reflections.defaultPrimitiveValue(c);
         }
         if (c.isInstance(o)) {
             return c.cast(o);
@@ -58,48 +66,7 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
         if (c.isInstance(this.getDefault())) {
             return c.cast(this.getDefault());
         }
-        throw new ClassCastException();
-    }
-
-    /**
-     * This method adds null-safety to the return value to avoid a
-     * {@link NullPointerException}
-     * 
-     * @since 0.1.0
-     * @version 0.1.0
-     * 
-     * @see Config#as(java.lang.Class)
-     * @param <T> The type of the casting class
-     * @param c The class type to cast to
-     * @return A casted value, -1 for null numbers, and {@code false} for
-     *         booleans.
-     */
-    default public <T> T asPrimitive(Class<T> c) {
-        T back = this.as(c);
-        if (back == null) {
-            if (c == Boolean.class) {
-                back = c.cast(false);
-            } /*else if (Number.class.isAssignableFrom(c) || c == Character.class) {
-                back = c.cast(-1); // Will throw cast exceptions for Long etc.
-            }*/
-            //god help me
-            else if (c == Character.class) {
-                back = c.cast((char) -1);
-            } else if (c == Float.class) {
-                back = c.cast(-1F);
-            } else if (c == Long.class) {
-                back = c.cast(-1L);
-            } else if (c == Double.class) {
-                back = c.cast(-1D);
-            } else if (c == Integer.class) {
-                back = c.cast(-1); //ha
-            } else if (c == Short.class) {
-                back = c.cast((short) -1);
-            } else if (c == Byte.class) {
-                back = c.cast((byte) -1);
-            }
-        }
-        return back;
+        throw new ClassCastException("Unable to cast config value!");
     }
 
     /**

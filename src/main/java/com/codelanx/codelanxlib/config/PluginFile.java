@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.config;
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
 import com.codelanx.codelanxlib.data.FileDataType;
-import com.codelanx.codelanxlib.util.ReflectionUtil;
+import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.Debugger;
 import java.io.File;
 import java.io.IOException;
@@ -50,11 +50,11 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
      *           for this configuration type
      */
     public static File getFileLocation(Class<? extends PluginFile> clazz) {
-        if (!(ReflectionUtil.hasAnnotation(clazz, PluginClass.class)
-                && ReflectionUtil.hasAnnotation(clazz, RelativePath.class))) {
+        if (!(Reflections.hasAnnotation(clazz, PluginClass.class)
+                && Reflections.hasAnnotation(clazz, RelativePath.class))) {
             throw new IllegalStateException("'" + clazz.getName() + "' is missing either PluginClass or RelativePath annotations!");
         }
-        return new File(ReflectionUtil.getPlugin(clazz).getDataFolder(),
+        return new File(Reflections.getPlugin(clazz).getDataFolder(),
                 clazz.getAnnotation(RelativePath.class).value());
     }
 
@@ -100,13 +100,13 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
      * @return The relevant {@link FileDataType} for all the config info
      */
     default public <T extends FileDataType> T init(Class<T> clazz) {
-        if (!(ReflectionUtil.hasAnnotation(this.getClass(), PluginClass.class)
-                && ReflectionUtil.hasAnnotation(this.getClass(), RelativePath.class))) {
+        if (!(Reflections.hasAnnotation(this.getClass(), PluginClass.class)
+                && Reflections.hasAnnotation(this.getClass(), RelativePath.class))) {
             throw new IllegalStateException("'" + this.getClass().getName() + "' is missing either PluginClass or RelativePath annotations!");
         }
         String path = null;
         try {
-            File folder = ReflectionUtil.getPlugin(this.getClass()).getDataFolder();
+            File folder = Reflections.getPlugin(this.getClass()).getDataFolder();
             if (!folder.exists()) {
                 folder.mkdirs();
             }
