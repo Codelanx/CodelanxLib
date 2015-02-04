@@ -27,11 +27,9 @@ import org.bukkit.entity.Player;
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
- * 
- * @param <T> The type of the {@link MenuIcon} this Execution is for
  */
 @FunctionalInterface
-public interface Execution<T extends MenuIcon> {
+public interface Execution {
 
     /**
      * Called when a {@link MenuIcon} is clicked
@@ -43,6 +41,6 @@ public interface Execution<T extends MenuIcon> {
      * @param ii The {@link InventoryInterface} this icon belongs to
      * @param icon The {@link MenuIcon} that was clicked
      */
-    public void onExec(Player p, InventoryInterface ii, T icon);
+    public void onExec(Player p, InventoryInterface ii, MenuIcon icon);
 
 }
