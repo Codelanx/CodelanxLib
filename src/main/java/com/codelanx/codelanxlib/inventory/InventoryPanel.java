@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -50,9 +51,7 @@ public final class InventoryPanel {
     private final Map<Integer, MenuIcon> locations = new HashMap<>();
 
     InventoryPanel(InventoryInterface ii, String name, int rows) {
-        if (ii == null) {
-            throw new IllegalArgumentException("InventoryInterface cannot be null!");
-        }
+        Validate.notNull(ii, "InventoryInterface cannot be null!");
         if (name == null) {
             name = "Choose an option!";
         }
@@ -68,6 +67,9 @@ public final class InventoryPanel {
         return icon;
     }
 
+    public MenuIcon newIcon(ItemStack item, Execution onExec) {
+        return this.newIcon(item, onExec, new HashMap<>());
+    }
 
     public void linkIcon(MenuIcon icon) {
         this.ii.linkPanel(icon, this);
@@ -115,7 +117,7 @@ public final class InventoryPanel {
             } else {
                 rows = Integer.valueOf(String.valueOf(map.get("rows")));
             }
-            InventoryPanel ip = ii.createPanel(name, rows);
+            InventoryPanel ip = ii.newPanel(name, rows);
             ip.icons.addAll(icons);
             ip.icons.forEach(i -> ip.locations.put(ip.index++, i));
             if (root) {
