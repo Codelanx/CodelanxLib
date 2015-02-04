@@ -19,6 +19,9 @@
  */
 package com.codelanx.codelanxlib.util;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Class description for {@link Exceptions}
  *
@@ -44,6 +47,20 @@ public final class Exceptions {
 
     public static void illegalState(boolean state) {
         Exceptions.illegalState(state, null);
+    }
+
+    public static void illegalAccess(boolean state, String message) throws IllegalAccessException {
+        if (!state) {
+            if (message != null) {
+                throw new IllegalAccessException(message);
+            } else {
+                throw new IllegalAccessException();
+            }
+        }
+    }
+
+    public static void illegalAccess(boolean state) throws IllegalAccessException {
+        Exceptions.illegalAccess(state, null);
     }
 
 }
