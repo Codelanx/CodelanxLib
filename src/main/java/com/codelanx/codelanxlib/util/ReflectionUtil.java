@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.annotation.PluginClass;
+import com.google.common.primitives.Primitives;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -97,5 +98,42 @@ public final class ReflectionUtil {
         }
         return elems[3].getClass().equals(clazz); 
    }
+
+    /**
+     * Returns a "default value" of -1 or {@code false} for a default type's
+     * class or autoboxing class. Will return {@code null} if not relevant to
+     * primitives
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <T> The type of the primitive
+     * @param c The primitive class
+     * @return The default value, or {@link null} if not a primitive
+     */
+    public static <T> T defaultPrimitiveValue(Class<T> c) {
+        if (c.isPrimitive() || Primitives.isWrapperType(c)) {
+            c = Primitives.unwrap(c);
+            T back;
+            if (c == boolean.class) {
+                back = c.cast(false);
+            } else if (c == char.class) { //god help me
+                back = c.cast((char) -1);
+            } else if (c == float.class) {
+                back = c.cast(-1F);
+            } else if (c == long.class) {
+                back = c.cast(-1L);
+            } else if (c == double.class) {
+                back = c.cast(-1D);
+            } else if (c == int.class) {
+                back = c.cast(-1); //ha
+            } else if (c == short.class) {
+                back = c.cast((short) -1);
+            } else if (c == byte.class) {
+                back = c.cast((byte) -1);
+            }
+        }
+        return null;
+    }
 
 }
