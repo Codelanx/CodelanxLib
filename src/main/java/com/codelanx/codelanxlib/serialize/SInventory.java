@@ -21,6 +21,8 @@ package com.codelanx.codelanxlib.serialize;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,12 +47,13 @@ public class SInventory implements ConfigurationSerializable {
         this.items.removeIf((i) -> {return i == null;});
     }
 
+    @SuppressWarnings("unchecked")
     public SInventory(Map<String, Object> map) {
-        this.items.addAll((List<ItemStack>) map.get("items"));
+        this.items.addAll((Collection<? extends ItemStack>) map.get("items"));
     }
 
     public List<ItemStack> getContents() {
-        return this.items;
+        return Collections.unmodifiableList(this.items);
     }
 
     public ItemStack[] getContentsAsArray() {
