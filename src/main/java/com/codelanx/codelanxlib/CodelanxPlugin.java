@@ -48,6 +48,4 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
         return this.commands;
     }
 
-    protected abstract String getMainCommand();
-
 }

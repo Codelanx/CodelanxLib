@@ -23,22 +23,35 @@ import com.codelanx.codelanxlib.command.CommandHandler;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Interface for a plugin that makes use of a {@link CommandHandler}
+ * Interface for a {@link Plugin} that makes use of a {@link CommandHandler}
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
+ *
+ * @param <E> The {@link Plugin} relevant to the {@link CommandHandler}
  */
-public interface Commandable<E extends Plugin & Commandable<E>> extends Formatted {
+public interface Commandable<E extends Plugin> extends Formatted {
 
     /**
-     * Gets the {@link CommandHandler} for the plugin
-     * 
+     * Gets the {@link CommandHandler} for the {@link Plugin}
+     *
      * @since 0.0.1
      * @version 0.0.1
-     * 
+     *
      * @return The {@link CommandHandler} instance
      */
     public abstract CommandHandler<E> getCommandHandler();
+
+    /**
+     * Returns the main string to use as a command for the primary
+     * {@link CommandHandler}
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @return The main command in the form of a string
+     */
+    public abstract String getMainCommand();
 
 }
