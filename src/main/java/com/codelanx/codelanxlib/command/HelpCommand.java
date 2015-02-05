@@ -20,11 +20,9 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
-import com.codelanx.codelanxlib.config.lang.Lang;
-import com.codelanx.codelanxlib.config.lang.InternalLang;
+import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.util.Paginator;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -33,32 +31,36 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Displays help information
+ * Displays help information.
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  *
  * @param <E> Represents a {@link Plugin} that implements the
  * {@link Commandable} interface
  */
-public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCommand<E> {
+public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
 
+    /** Internal {@link Paginator} cache, used to pre-render and output pages */
     private Paginator pages;
+    /** The time in milliseconds that a cache should be remade */
     private long nextCache;
+    /** The number of commands to show per page */
     private int factor = 5;
 
     /**
-     * {@link HelpCommand} constructor. Initializes the
-     * {@link HelpCommand#BAR} field.
+     * {@link HelpCommand} constructor. Initializes the {@link HelpCommand#BAR}
+     * field.
      *
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      *
      * @param plugin {@inheritDoc}
+     * @param handler {@inheritDoc}
      */
-    public HelpCommand(E plugin) {
-        super(plugin);
+    public HelpCommand(E plugin, CommandHandler<E> handler) {
+        super(plugin, handler);
     }
 
     /**
@@ -89,35 +91,84 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
         return CommandStatus.SUCCESS;
     }
 
+    /**
+     * Checks if the {@link Paginator} cache needs to be reset
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     private void checkCache() {
         if (this.pages == null || System.currentTimeMillis() >= this.nextCache) {
             this.setNextCache();
         }
     }
 
+    /**
+     * Resets the {@link Paginator} cache
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     private void setNextCache() {
         this.nextCache = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.pages = this.newPaginator();
     }
 
+    /**
+     * Returns a new {@link Paginator} instance according to the current state
+     * of the {@link CommandHandler} command map and the set page factor for
+     * this {@link HelpCommand}
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @return A new {@link Paginator} instance containing help information
+     */
     private Paginator newPaginator() {
-        List<SubCommand<E>> cmds = new ArrayList<>(this.plugin.getCommandHandler().getCommands());
+        List<SubCommand<E>> cmds = new ArrayList<>(this.handler.getCommands());
         Collections.sort(cmds);
         String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(
-                this.plugin.getCommandHandler().getMainCommand());
+                this.handler.getMainCommand());
         Paginator back = new Paginator(title, this.factor,
                 cmds.stream().map(this::toHelpInfo).collect(Collectors.toList()));
         return back;
     }
 
-    private String toHelpInfo(SubCommand<E> cmd) {
+    /**
+     * Converts a {@link SubCommand} into a readable format for help output
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param cmd The {@link SubCommand} to convert
+     * @return The human-readable output of the command information
+     */
+    private String toHelpInfo(SubCommand<?> cmd) {
         return InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info());
     }
 
+    /**
+     * Sets the number of commands to show information for per page. This will
+     * forcefully refresh the {@link Paginator} cache
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param factor The number of commands per page
+     */
     public void setItemsPerPage(int factor) {
         this.factor = factor;
+        this.setNextCache();
     }
 
+    /**
+     * Returns the number of commands displayed per page
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @return The number of commands shown per page
+     */
     public int getItemsPerPage() {
         return this.factor;
     }

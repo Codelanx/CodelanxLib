@@ -42,7 +42,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @param <E> The specific {@link Plugin} to use
  */
-public class CommandHandler<E extends Plugin & Commandable<E>> implements CommandExecutor {
+public class CommandHandler<E extends Plugin> implements CommandExecutor {
 
     /** The format for output */
     protected final Lang name;
@@ -73,7 +73,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
         Validate.notNull(cmd, "Attempted to register a non-existant command!");
         cmd.setExecutor(chand);
-        this.registerSubCommands(new HelpCommand<E>(this.plugin), new ReloadCommand<E>(this.plugin));
+        this.registerSubCommands(new HelpCommand<>(this.plugin, this),
+                new ReloadCommand<>(this.plugin, this));
     }
 
     /**

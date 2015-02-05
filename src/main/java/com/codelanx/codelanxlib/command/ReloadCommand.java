@@ -19,10 +19,9 @@
  */
 package com.codelanx.codelanxlib.command;
 
-import com.codelanx.codelanxlib.config.lang.InternalLang;
+import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.lang.Lang;
 import com.codelanx.codelanxlib.events.ReloadEvent;
-import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.implementers.Reloadable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -35,20 +34,21 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 0.0.1
  * 
- * @param <E> The plugin type
+ * @param <E> The {@link Plugin} type
  */
-public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand<E> {
+public class ReloadCommand<E extends Plugin> extends SubCommand<E> {
 
     /**
-     * {@link ReloadCommand constructor}
+     * {@link ReloadCommand} constructor
      * 
      * @since 0.0.1
      * @version 0.0.1
      * 
-     * @param plugin {@inheritDoc} 
+     * @param plugin {@inheritDoc}
+     * @param handler {@inheritDoc}
      */
-    public ReloadCommand(E plugin) {
-        super(plugin);
+    public ReloadCommand(E plugin, CommandHandler<E> handler) {
+        super(plugin, handler);
     }
 
     /**
@@ -63,7 +63,7 @@ public class ReloadCommand<E extends Plugin & Commandable<E>> extends SubCommand
      * @return {@inheritDoc}
      */
     @Override
-    public CommandStatus execute(CommandSender sender, String[] args) {
+    public CommandStatus execute(CommandSender sender, String... args) {
         this.plugin.getServer().getPluginManager().callEvent(new ReloadEvent<>(this.plugin));
         if (this.plugin instanceof Reloadable) {
             ((Reloadable) this.plugin).reload();

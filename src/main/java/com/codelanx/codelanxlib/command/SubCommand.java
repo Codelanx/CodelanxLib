@@ -24,7 +24,6 @@ import com.codelanx.codelanxlib.implementers.Commandable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
@@ -42,21 +41,25 @@ import org.bukkit.plugin.Plugin;
  * @param <E> Represents a {@link Plugin} that implements the
  *            {@link Commandable} interface
  */
-public abstract class SubCommand<E extends Plugin & Commandable<E>> implements Comparable<SubCommand<E>> {
+public abstract class SubCommand<E extends Plugin> implements Comparable<SubCommand<E>> {
 
     /** The main {@link Plugin} instance */
     protected final E plugin;
+    /** The {@link CommandHandler} responsible for this command */
+    protected final CommandHandler<E> handler;
 
     /**
      * {@link SubCommand} constructor
      * 
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      * 
      * @param plugin The {@link Plugin} associated with this command
+     * @param handler The {@link CommandHandler} responsible for this command
      */
-    public SubCommand(E plugin) {
+    public SubCommand(E plugin, CommandHandler<E> handler) {
         this.plugin = plugin;
+        this.handler = handler;
     }
 
     /**
@@ -88,19 +91,19 @@ public abstract class SubCommand<E extends Plugin & Commandable<E>> implements C
      * Returns the command usage
      *
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      *
      * @return Usage for this {@link SubCommand}
      */
     public String getUsage() {
-        return "/" + this.plugin.getCommandHandler().getMainCommand() + " " + this.getName();
+        return "/" + this.handler.getMainCommand() + " " + this.getName();
     }
 
     /**
      * Information about this specific command. Should be kept concise
      *
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      *
      * @return A small string about the command
      */
@@ -111,6 +114,8 @@ public abstract class SubCommand<E extends Plugin & Commandable<E>> implements C
      * {@code <plugin-name>.cmd.<subcommand-name>}, can be nested into further
      * permissions by passing tokens to append to the end of the permission
      * string
+     * 
+     * TODO: Figure out catch for multiple CommandHandlers
      * 
      * @since 0.0.1
      * @version 0.1.0
@@ -126,11 +131,22 @@ public abstract class SubCommand<E extends Plugin & Commandable<E>> implements C
         lis.add(this.getName());
         lis.addAll(Arrays.asList(tokens));
         String perm = String.join(".", lis);
-        //register perm to bukkit
-        Bukkit.getServer().getPluginManager().addPermission(new Permission(perm));
+        //register perm to Bukkit
+        this.plugin.getServer().getPluginManager().addPermission(new Permission(perm));
         return sender.hasPermission(perm);
     }
 
+    /**
+     * Compares {@link SubCommand} objects by command name via
+     * {@link SubCommand#getName()}
+     * <br><br> {inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param o The {@link SubCommand} to compare to
+     * @return {@inheritDoc}
+     */
     @Override
     public int compareTo(SubCommand<E> o) {
         //Do not check for null, comparable contract calls for NPE
