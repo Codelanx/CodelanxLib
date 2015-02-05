@@ -20,13 +20,16 @@
 package com.codelanx.codelanxlib.config.lang;
 
 import com.codelanx.codelanxlib.config.PluginFile;
+import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Class description for {@link Lang}
+ * Represents a single value that is dynamically retrieved from a
+ * {@link FileDataType}. This value should be usable with a Formatter and
+ * is typically implemented through an enum
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -67,7 +70,7 @@ public interface Lang extends PluginFile {
      * @return The formatted string
      */
     default public String format(Object... args) {
-        if (this instanceof MutableLang) {
+        if (this.getClass().isAnonymousClass()) {
             return Lang.__(String.format(this.getDefault(), args));
         }
         return Lang.__(String.format(String.valueOf(this.getConfig().get(this.getPath(), this.getDefault())), args));
@@ -92,7 +95,7 @@ public interface Lang extends PluginFile {
      */
     default public String pluralFormat(int amount, Object... args) {
         String repl;
-        if (this instanceof MutableLang) {
+        if (this.getClass().isAnonymousClass()) {
             repl = this.getDefault();
         } else {
             repl = String.valueOf(this.getConfig().get(this.getPath(), this.getDefault()));
@@ -113,7 +116,28 @@ public interface Lang extends PluginFile {
      * @return A {@link Lang} object that will 
      */
     public static Lang createLang(String format) {
-        return new MutableLang(format);
+        return new Lang() {
+
+            @Override
+            public Lang getFormat() {
+                return this;
+            }
+
+            @Override
+            public String getDefault() {
+                return format;
+            }
+
+            @Override
+            public String getPath() {
+                return null;
+            }
+
+            @Override
+            public FileDataType getConfig() {
+                throw new UnsupportedOperationException("A dynamic Lang does not have a FileDataType associated with it!");
+            }
+        };
     }
 
     /**
