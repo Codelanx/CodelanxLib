@@ -65,14 +65,14 @@ public final class ListenerManager {
      * @since 0.0.1
      * @version 0.1.0
      *
-     * @param <T> The {@link SubListener} class to get
+     * @param <S> The {@link SubListener} type
      * @param listener An instance of the class type to retrieve
      * @return The listener class, null if disabled or not registered
      * @throws IllegalArgumentException If the listener isn't registered
      */
-    public static <T extends SubListener<?>> T getListener(Class<T> listener) {
+    public static <S extends SubListener<? extends Plugin>> S getListener(Class<S> listener) {
         Validate.isTrue(ListenerManager.isRegistered(listener), "Class is not registered with listener manager!");
-        return (T) ListenerManager.listeners.get(listener);
+        return (S) ListenerManager.listeners.get(listener);
     }
 
     /**
@@ -82,12 +82,13 @@ public final class ListenerManager {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param <T> The type of the {@link Plugin} being returned
+     * @param <P> The {@link Plugin} type
+     * @param <S> The {@link SubListener} type
      * @param listener The {@link SubListener} class that was registered
      * @return The {@link Plugin} that registered the {@link SubListener}
      * @throws IllegalArgumentException If the listener isn't registered
      */
-    public static <T extends Plugin> T getRegisteringPlugin(Class<? extends SubListener<T>> listener) {
+    public static <P extends Plugin, S extends SubListener<P>> P getRegisteringPlugin(Class<S> listener) {
         return ListenerManager.getListener(listener).getPlugin();
     }
 
@@ -112,12 +113,12 @@ public final class ListenerManager {
      * @since 0.0.1
      * @version 0.1.0
      *
-     * @param <T> The {@link SubListener} class to register
+     * @param <S> The {@link SubListener} class to register
      * @param listener The listener to register
      * @throws IllegalArgumentException Attempted to register a Listener twice
      * @return The listener that was registered
      */
-    public static <T extends SubListener<?>> T registerListener(T listener) {
+    public static <S extends SubListener<?>> S registerListener(S listener) {
         Validate.isTrue(!ListenerManager.listeners.containsKey(listener.getClass()),
                 "Listener Map already contains key: " + listener.getClass().getName());
         ListenerManager.listeners.put(listener.getClass(), listener);
