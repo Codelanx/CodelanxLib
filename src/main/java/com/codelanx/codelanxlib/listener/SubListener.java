@@ -57,7 +57,7 @@ public abstract class SubListener<T extends Plugin> implements Listener {
             has finished initializing), in this specific case events should not
             be firing before the Listener has finished running
         */
-        ListenerManager.registerListener(plugin, this);
+        ListenerManager.registerListener(this);
     }
 
     /**
@@ -69,4 +69,15 @@ public abstract class SubListener<T extends Plugin> implements Listener {
      */
     public void onDisable() {}
 
+    /**
+     * Returns the {@link Plugin} used for this {@link SubListener}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The {@link Plugin} that registered this {@link SubListener}
+     */
+    public T getPlugin() {
+        return this.plugin;
+    }
 }
