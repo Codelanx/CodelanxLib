@@ -21,10 +21,12 @@ package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.config.lang.Lang;
-import com.codelanx.codelanxlib.config.lang.InternalLang;
+import com.codelanx.codelanxlib.util.Exceptions;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.Validate;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,8 +38,8 @@ import org.bukkit.plugin.Plugin;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
- * 
+ * @version 0.1.0
+ *
  * @param <E> The specific {@link Plugin} to use
  */
 public class CommandHandler<E extends Plugin & Commandable<E>> implements CommandExecutor {
@@ -51,12 +53,14 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     /** The primary command to access this {@link CommandHandler} in-game */
     protected String command;
 
+
     /**
-     * {@link CommandHandler} constructor
-     * 
+     * {@link CommandHandler} constructor. Sets fields and registers the main
+     * command through Bukkit to be executed by this handler.
+     *
      * @since 0.0.1
-     * @version 0.0.1
-     * 
+     * @version 0.1.0
+     *
      * @param plugin The main {@link Plugin} instance
      * @param command The command to write subcommands under
      */
@@ -67,11 +71,8 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
         //this.root = new RootToken<>(plugin, this.command);
         final CommandHandler<E> chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
-        if (cmd == null) {
-            throw new NullPointerException("Attempted to register a non-existant command!");
-        } else {
-            cmd.setExecutor(chand);
-        }
+        Validate.notNull(cmd, "Attempted to register a non-existant command!");
+        cmd.setExecutor(chand);
         this.registerSubCommands(new HelpCommand<E>(this.plugin), new ReloadCommand<E>(this.plugin));
     }
 
@@ -79,7 +80,7 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
      * Executes the proper {@link SubCommand}
      *
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      *
      * @param sender The command executor
      * @param cmd The command instance
@@ -94,24 +95,20 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
             args = new String[]{"help", "1"};
         }
         SubCommand<E> scommand = this.getCommand(args[0]);
-        if (scommand != null) {
-            String[] newArgs = new String[args.length - 1];
-            for (int i = 0; i < newArgs.length; i++) {
-                newArgs[i] = args[i + 1];
-            }
-            scommand.execute(sender, newArgs).handle(sender, this.name, scommand);
-        } else {
-            Lang.sendMessage(sender, this.name, InternalLang.COMMAND_STATUS_UNKNOWN);
+        if (scommand == null) {
+            scommand = this.getCommand("help");
+            Exceptions.illegalState(scommand != null, "CommandHandler does not have a help command!");
         }
+        scommand.execute(sender, Arrays.copyOfRange(args, 1, args.length)).handle(sender, this.name, scommand);
         return false;
     }
 
     /**
      * Returns a subcommand, or {@code null} if none exists.
-     * 
+     *
      * @since 0.0.1
      * @version 0.0.1
-     * 
+     *
      * @param name The name of the subcommand
      * @return A relevant {@link SubCommand}, or null if it does not exist
      */
@@ -121,10 +118,10 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
 
     /**
      * Returns all subcommands as a {@link Collection}.
-     * 
+     *
      * @since 0.0.1
      * @version 0.0.1
-     * 
+     *
      * @return A {@link Collection} of all registered {@link SubCommand}
      */
     public final Collection<SubCommand<E>> getCommands() {
@@ -132,26 +129,11 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     }
 
     /**
-     * Returns a permissions check for
-     * {@code <plugin-name>.cmd.<subcommand-name>}, can be nested further
-     * 
-     * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @param sender The {@link CommandSender} executing the command
-     * @param cmd The {@link SubCommand} being executed
-     * @return {@code true} if they have permission, false otherwise
-     */
-    public boolean hasPermission(CommandSender sender, SubCommand<E> cmd) {
-        return sender.hasPermission(this.plugin.getName().toLowerCase() + ".cmd." + cmd.getName());
-    }
-
-    /**
      * Registers a {@link SubCommand} under the main supplied command name
-     * 
+     *
      * @since 0.0.1
      * @version 0.0.1
-     * 
+     *
      * @param <T> The subcommand type
      * @param command The {@link SubCommand} to register
      * @throws CommandInUseException If the command's name is already in use
@@ -167,13 +149,13 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     }
 
     /**
-     * Registers multiple {@link SubCommand} instance under the provided
-     * command name. If an exception is encountered, it will continue
-     * registering commands and re-throw the exception upon method completion.
-     * 
+     * Registers multiple {@link SubCommand} instance under the provided command
+     * name. If an exception is encountered, it will continue registering
+     * commands and re-throw the exception upon method completion.
+     *
      * @since 0.0.1
      * @version 0.0.1
-     * 
+     *
      * @param <T> The subcommand type
      * @param commands The {@link SubCommand} instances to register
      * @throws CommandInUseException If the command's name is already in use
@@ -184,7 +166,9 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
             try {
                 this.registerSubCommand(scommand);
             } catch (CommandInUseException e) {
-                if (ex == null) { ex = e; }
+                if (ex == null) {
+                    ex = e;
+                }
             }
         }
         if (ex != null) {
@@ -193,11 +177,40 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     }
 
     /**
+     * Removes a {@link SubCommand} in use by this handler. If no
+     * {@link SubCommand} is registered under the name, then nothing happens
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param name The command to check for
+     */
+    public void unregisterSubCommand(String name) {
+        if (this.isRegistered(name)) {
+            this.commands.remove(name);
+        }
+    }
+
+    /**
+     * Checks to see if a {@link SubCommand} is registered under the passed
+     * command name
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param name The command to check for
+     * @return {@code true} if registered to a {@link SubCommand}
+     */
+    public boolean isRegistered(String name) {
+        return this.commands.containsKey(name);
+    }
+
+    /**
      * Returns the main command associated with this {@link CommandHandler}
-     * 
+     *
      * @since 0.0.1
      * @version 0.0.1
-     * 
+     *
      * @return The main command
      */
     public String getMainCommand() {
