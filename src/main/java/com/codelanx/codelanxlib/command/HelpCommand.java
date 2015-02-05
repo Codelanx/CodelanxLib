@@ -22,10 +22,13 @@ package com.codelanx.codelanxlib.command;
 import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.config.lang.Lang;
 import com.codelanx.codelanxlib.config.lang.InternalLang;
+import com.codelanx.codelanxlib.util.Paginator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
@@ -41,8 +44,9 @@ import org.bukkit.plugin.Plugin;
  */
 public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCommand<E> {
 
-    /** The bar to use for encapsulating help info */
-    private final String BAR;
+    private Paginator pages;
+    private long nextCache;
+    private int factor = 5;
 
     /**
      * {@link HelpCommand} constructor. Initializes the
@@ -55,18 +59,6 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      */
     public HelpCommand(E plugin) {
         super(plugin);
-        String s = InternalLang.COMMAND_HELP_BARCHAR.format();
-        if (s.isEmpty()) {
-            this.BAR = "------------------------------"
-                    + "------------------------------";
-        } else {
-            char[] barr = new char[60];
-            char c = s.toCharArray()[0];
-            for (int i = barr.length - 1; i >= 0; i--) {
-                barr[i] = c;
-            }
-            this.BAR = new String(barr);
-        }
     }
 
     /**
@@ -75,14 +67,14 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * class.
      *
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      *
      * @param sender {@inheritDoc}
      * @param args {@inheritDoc}
      * @return {@inheritDoc}
      */
     @Override
-    public CommandStatus execute(CommandSender sender, String[] args) {
+    public CommandStatus execute(CommandSender sender, String... args) {
         if (args.length != 1) {
             return CommandStatus.BAD_ARGS;
         }
@@ -92,145 +84,42 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
         } catch (NumberFormatException ex) {
             return CommandStatus.BAD_ARGS;
         }
-
-        int factor = 5;
-        List<HelpItem> help = this.getOrderedCommands(sender,
-                this.plugin.getCommandHandler().getCommands());
-        int pages = 0;
-        pages = help.stream().map((h)
-                -> ((h.getOutputs().size() - 1) / factor) + 1)
-                .reduce(pages, Integer::sum);
-        if (select > pages) {
-            select = pages;
-        }
-        if (select < 1) {
-            select = 1;
-        }
-
-        sender.sendMessage(Lang.__(this.showHelp(
-                this.getView(help, select, factor), pages)));
-
+        this.checkCache();
+        sender.sendMessage(this.pages.getPage(select));
         return CommandStatus.SUCCESS;
     }
 
-    /**
-     * Gets s list of the enabled {@link SubCommand} objects in natural sorting
-     * order.
-     *
-     * @since 0.0.1
-     * @version 0.0.1
-     *
-     * @param sender The executor of the {@link SubCommand}
-     * @param cmds A {@link Collection} representing the registered
-     * {@link SubCommand} objects
-     * @return A list of {@link HelpItem} objects for commands
-     */
-    private List<HelpItem> getOrderedCommands(CommandSender sender,
-            Collection<SubCommand<E>> cmds) {
-        List<HelpItem> back = new ArrayList<>();
-        List<SubCommand<E>> vals = new ArrayList<>(cmds);
-        Collections.sort(vals, (SubCommand<E> o1, SubCommand<E> o2) -> o1.getName().compareTo(o2.getName()));
-        List<String> temp = new ArrayList<>();
-        vals.stream().filter((cmd)
-                -> cmd.hasPermission(sender)).forEach((cmd) -> {
-                    temp.add(InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info()));
-                });
-        back.add(new HelpItem(temp, this.plugin.getCommandHandler().getMainCommand(), 0));
+    private void checkCache() {
+        if (this.pages == null || System.currentTimeMillis() >= this.nextCache) {
+            this.setNextCache();
+        }
+    }
+
+    private void setNextCache() {
+        this.nextCache = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
+        this.pages = this.newPaginator();
+    }
+
+    private Paginator newPaginator() {
+        List<SubCommand<E>> cmds = new ArrayList<>(this.plugin.getCommandHandler().getCommands());
+        Collections.sort(cmds);
+        String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(
+                this.plugin.getCommandHandler().getMainCommand());
+        Paginator back = new Paginator(title, this.factor,
+                cmds.stream().map(this::toHelpInfo).collect(Collectors.toList()));
         return back;
     }
 
-    /**
-     * Returns a relevant {@link HelpItem} for printing out based on the
-     * requested page and amount of commands to display per "help page".
-     *
-     * @since 0.0.1
-     * @version 0.0.1
-     *
-     * @param help All the {@link HelpItem} objects
-     * @param pages The number of pages
-     * @param factor The number of commands to display per page
-     * @return A single {@link HelpItem} to print out
-     */
-    private HelpItem getView(List<HelpItem> help, int pages, int factor) {
-        int current = 1;
-        for (HelpItem h : help) {
-            List<String> out = h.getOutputs();
-            while (!out.isEmpty()) {
-                if (current < pages) {
-                    for (int w = 0; !out.isEmpty() && w < factor; w++) {
-                        out.remove(0);
-                    }
-                    current++;
-                } else {
-                    List<String> last = new ArrayList<>();
-                    for (int w = 0; w < out.size() && w < factor; w++) {
-                        last.add(out.get(w));
-                    }
-                    return new HelpItem(last, h.getTitle(), current);
-                }
-            }
-        }
-        return null;
+    private String toHelpInfo(SubCommand<E> cmd) {
+        return InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info());
     }
 
-    /**
-     * Formats and returns the requested help information
-     *
-     * @since 0.0.1
-     * @version 0.0.1
-     *
-     * @param item The {@link HelpItem} to parse
-     * @param pages The total number of pages
-     * @return The formatted help output
-     */
-    private String showHelp(HelpItem item, int pages) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.formatTitle(InternalLang.COMMAND_HELP_TITLEFORMAT.format(item.getTitle()),
-                InternalLang.COMMAND_HELP_BARCOLOR.format(),
-                InternalLang.COMMAND_HELP_TITLECOLOR.format()));
-        sb.append('\n');
-        sb.append(InternalLang.COMMAND_HELP_PAGEFORMAT.format(item.getPage(), pages));
-        sb.append('\n');
-        item.getOutputs().stream().forEach((s) -> {
-            sb.append(s).append('\n');
-        });
-        sb.append(this.formatFooter(InternalLang.COMMAND_HELP_BARCOLOR.format()));
-        sb.append('\n');
-        return sb.toString();
+    public void setItemsPerPage(int factor) {
+        this.factor = factor;
     }
 
-    /**
-     * Formats the title-bar for displaying help information
-     *
-     * @since 0.0.1
-     * @version 0.0.1
-     *
-     * @param title The title to use
-     * @param barcolor The color of the bar (ref: {@link ChatColor})
-     * @param titlecolor The color of the title (ref: {@link ChatColor})
-     * @return A formatted header
-     */
-    private String formatTitle(String title, String barcolor, String titlecolor) {
-        String line = barcolor + this.BAR;
-        int pivot = line.length() / 2;
-        String center = InternalLang.COMMAND_HELP_TITLECONTAINER.format(barcolor, titlecolor, title);
-        return Lang.__(line.substring(0, pivot - center.length() / 2)
-                + center
-                + line.substring(0, pivot - center.length() / 2));
-    }
-
-    /**
-     * Formats the footer-bar of the help information.
-     *
-     * @since 0.0.1
-     * @version 0.0.1
-     *
-     * @param barcolor The color of the footer-bar
-     * @return A formatted footer
-     */
-    private String formatFooter(String barcolor) {
-        String back = barcolor + this.BAR;
-        return Lang.__(back.substring(0, back.length() - 11));
+    public int getItemsPerPage() {
+        return this.factor;
     }
 
     /**
@@ -269,79 +158,8 @@ public final class HelpCommand<E extends Plugin & Commandable<E>> extends SubCom
      * @return {@inheritDoc}
      */
     @Override
-    public Lang info() {
+    public InternalLang info() {
         return InternalLang.COMMAND_HELP_INFO;
-    }
-
-}
-
-/**
- * Helper class for representing data used in the help menus. Simply stores
- * data to be used later
- *
- * @since 0.0.1
- * @author 1Rogue
- * @version 0.0.1
- */
-class HelpItem {
-
-    private final List<String> outputs;
-    private final String title;
-    private final int page;
-
-    /**
-     * {@link HelpItem} constructor
-     * 
-     * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @param outputs The outputs relevant to this {@link HelpItem}
-     * @param title The title to use, if relevant
-     * @param page The page associated with this {@link HelpItem}, if relevant
-     */
-    public HelpItem(List<String> outputs, String title, int page) {
-        this.outputs = outputs;
-        this.title = title;
-        this.page = page;
-    }
-
-    /**
-     * Returns the {@link List} of {@link HelpItem} objects passed upon
-     * construction
-     * 
-     * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @return A {@link List} of {@link HelpItem} objects
-     */
-    public List<String> getOutputs() {
-        return this.outputs;
-    }
-
-    /**
-     * Gets the page associated with this {@link HelpItem}. Will be 0 or -1 if
-     * the page is irrelevant.
-     * 
-     * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @return The relevant page 
-     */
-    public int getPage() {
-        return this.page;
-    }
-
-    /**
-     * Gets the title to use for the title-bar for this {@link HelpItem}. May
-     * be null if no titlebar is associated with this item.
-     * 
-     * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @return The title to use for the title-bar relevant to this HelpItem 
-     */
-    public String getTitle() {
-        return this.title;
     }
 
 }

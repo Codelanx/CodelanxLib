@@ -41,15 +41,7 @@ public enum InternalLang implements Lang<InternalLang> {
     COMMAND_STATUS_FAILED("command.status.failed", "Command execution failed :("),
     COMMAND_STATUS_UNSUPPORTED("command.status.unsupported", "Unknown commmand."),
     COMMAND_STATUS_RESTRICTED("command.status.restricted", "This command should only be used by %s!"),
-    COMMAND_HELP_BARCHAR("command.help.barchar", "-"),
-    COMMAND_HELP_BARCOLOR("command.help.barcolor", "&f"),
-    COMMAND_HELP_TITLECOLOR("command.help.titlecolor", "&c"),
-    /**
-     * Accept a bar color first, title color second, then the title itself third
-     */
-    COMMAND_HELP_TITLECONTAINER("command.help.title-container", "%1$s[ %2$s%3$s %1$s]"),
     COMMAND_HELP_TITLEFORMAT("command.help.format.title", "/%s help"),
-    COMMAND_HELP_PAGEFORMAT("command.help.format.page", "Page (%d/%d)"),
     COMMAND_HELP_ITEMFORMAT("command.help.format.item", "&9%s &f- &7%s"),
     COMMAND_HELP_INFO("command.help.info", "Displays help information about this plugin"),
     COMMAND_RELOAD_UNSUPPORTED("command.reload.unsupported", "This plugin does not support reloading!"),
@@ -58,6 +50,14 @@ public enum InternalLang implements Lang<InternalLang> {
     ECONOMY_INSUFF("economy.insufficient", "You do not have enough money for this! (Required: %.2f)"),
     ECONOMY_REFUND("economy.refund", "Refunded amount &7.2f&9"),
     ECONOMY_FAILED("economy.trans-failed", "&cError:&7 Failed to charge your account!"),
+    PAGINATOR_BARCHAR("utils.paginator.barchar", "-"),
+    PAGINATOR_BARCOLOR("utils.paginator.barcolor", "&f"),
+    PAGINATOR_TITLECOLOR("utils.paginator.titlecolor", "&c"),
+    /**
+     * Accept a bar color first, title color second, then the title itself third
+     */
+    PAGINATOR_TITLECONTAINER("utils.paginator.title-container", "%1$s[ %2$s%3$s %1$s]"),
+    PAGINATOR_PAGEFORMAT("utils.paginator.page-format", "Page (%d/%d)"),
     FORMAT("format", "&f[&9CL-Lib&f] %s");
 
     private static Yaml yaml;
