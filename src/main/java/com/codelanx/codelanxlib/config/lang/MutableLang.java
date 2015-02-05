@@ -22,8 +22,7 @@ package com.codelanx.codelanxlib.config.lang;
 import com.codelanx.codelanxlib.data.FileDataType;
 
 /**
- * Represents a dynamically created {@link Lang} value to replace the inability
- * to declare anonymous enums and/or dynamic enumeration values.
+ * Represents a dynamically created {@link Lang} value
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -52,9 +51,6 @@ public final class MutableLang implements Lang {
         return this.format;
     }
 
-    /**
-     * @deprecated
-     */
     @Override
     public FileDataType getConfig() {
         throw new UnsupportedOperationException("MutableLang does not have a FileDataType associated with it!");

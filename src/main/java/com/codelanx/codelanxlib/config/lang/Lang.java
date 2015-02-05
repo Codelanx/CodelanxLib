@@ -31,10 +31,8 @@ import org.bukkit.plugin.Plugin;
  * @since 0.1.0
  * @author 1Rogue
  * @version 0.1.0
- * 
- * @param <E> Represents the enum type that implements this interface
  */
-public interface Lang<E extends Enum<E> & Lang<E>> extends PluginFile<E> {
+public interface Lang extends PluginFile {
 
     /**
      * Returns the format specifier for this {@link Lang} file. This should be

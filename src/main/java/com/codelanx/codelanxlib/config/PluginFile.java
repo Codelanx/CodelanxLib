@@ -26,6 +26,7 @@ import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.Debugger;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Class description for {@link PluginFile}
@@ -33,10 +34,8 @@ import java.io.IOException;
  * @since 0.1.0
  * @author 1Rogue
  * @version 0.1.0
- * 
- * @param <E> Represents the type of the implementing enum
  */
-public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
+public interface PluginFile {
 
     /**
      * Returns the save location for passed {@link PluginFile} argument
@@ -100,9 +99,18 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
      * @return The relevant {@link FileDataType} for all the config info
      */
     default public <T extends FileDataType> T init(Class<T> clazz) {
-        if (!(Reflections.hasAnnotation(this.getClass(), PluginClass.class)
-                && Reflections.hasAnnotation(this.getClass(), RelativePath.class))) {
-            throw new IllegalStateException("'" + this.getClass().getName() + "' is missing either PluginClass or RelativePath annotations!");
+        Class<? extends PluginFile> me = this.getClass();
+        if (!(Reflections.hasAnnotation(me, PluginClass.class)
+                && Reflections.hasAnnotation(me, RelativePath.class))) {
+            throw new IllegalStateException("'" + me.getName() + "' is missing either PluginClass or RelativePath annotations!");
+        }
+        Iterable<? extends PluginFile> itr;
+        if (me.isEnum()) {
+            itr = Arrays.asList(me.getEnumConstants());
+        } else if (Iterable.class.isAssignableFrom(me)) {
+            itr = ((Iterable<? extends PluginFile>) this);
+        } else {
+            throw new IllegalStateException("'" + me.getName() + "' is neither an enum nor an Iterable!");
         }
         String path = null;
         try {
@@ -116,7 +124,7 @@ public interface PluginFile<E extends Enum<E> & PluginFile<E>> {
                 ref.createNewFile();
             }
             FileDataType use = FileDataType.newInstance(clazz, ref);
-            for (PluginFile l : this.getClass().getEnumConstants()) {
+            for (PluginFile l : itr) {
                 if (!use.isSet(l.getPath())) {
                     use.set(l.getPath(), l.getDefault());
                 }

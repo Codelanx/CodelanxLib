@@ -32,10 +32,8 @@ import org.bukkit.configuration.ConfigurationSection;
  * @since 0.1.0
  * @author 1Rogue
  * @version 0.1.0
- * 
- * @param <E> Represents the enum type that implements this interface
  */
-public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
+public interface Config extends PluginFile {
 
     /**
      * Attempts to return the {@link Config} value as a casted type. If the
@@ -90,7 +88,7 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * @param val The value to set
      * @return The previous {@link Config} value
      */
-    default public Config<?> set(Object val) {
+    default public Config set(Object val) {
         this.getConfig().set(this.getPath(), val);
         return this;
     }
@@ -135,7 +133,7 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * @param config The {@link Config} value to search with
      * @return An {@link AnonymousConfig} wrapping the configuration and keys
      */
-    public static <T extends FileDataType> Config<?> retrieve(T file, Config<?> config) {
+    public static <T extends FileDataType> Config retrieve(T file, Config config) {
         return new AnonymousConfig<>(file, config.getPath(), config.getDefault());
     }
 
@@ -149,7 +147,7 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
      * @see Config#retrieve(FileDataType, Config)
      * @return A config value that can be used to retrieve values from
      */
-    default public Config<?> fromOther(FileDataType t) {
+    default public Config fromOther(FileDataType t) {
         return Config.retrieve(t, this);
     }
 
