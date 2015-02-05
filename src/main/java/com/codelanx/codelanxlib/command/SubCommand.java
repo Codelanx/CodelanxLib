@@ -24,7 +24,9 @@ import com.codelanx.codelanxlib.implementers.Commandable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -33,7 +35,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  * 
  * @param <T> Represents a {@link Plugin} that implements the
  *            {@link Commandable} interface
@@ -109,7 +111,7 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
      * string
      * 
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      * 
      * @param sender The {@link CommandSender} executing this command
      * @param tokens Any additional tokens to append to the end of the string
@@ -121,7 +123,10 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
         lis.add("cmd");
         lis.add(this.getName());
         lis.addAll(Arrays.asList(tokens));
-        return sender.hasPermission(String.join(".", lis));
+        String perm = String.join(".", lis);
+        //register perm to bukkit
+        Bukkit.getServer().getPluginManager().addPermission(new Permission(perm));
+        return sender.hasPermission(perm);
     }
 
 }

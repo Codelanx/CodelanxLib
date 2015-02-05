@@ -48,8 +48,6 @@ public class CommandHandler<E extends Plugin & Commandable<E>> implements Comman
     protected final E plugin;
     /** Private {@link HashMap} of subcommands */
     protected final Map<String, SubCommand<E>> commands = new HashMap<>();
-    /** Represents the root {@link Token} used for this {@link CommandHandler} */
-    //protected final Token<E> root;
     /** The primary command to access this {@link CommandHandler} in-game */
     protected String command;
 
