@@ -24,11 +24,12 @@ import java.lang.annotation.RetentionPolicy;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Class description for {@link PluginClass}
+ * An annotation for relaying the primary class of the {@link JavaPlugin}
+ * responsible for the element.
  *
- * @since 0.0.1
+ * @since 0.1.0
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PluginClass {

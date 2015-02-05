@@ -23,11 +23,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Class description for {@link RelativePath}
+ * Describes the relative abstract file path of an item
  *
- * @since 0.0.1
+ * @since 0.1.0
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RelativePath {
