@@ -296,7 +296,7 @@ public final class TimeUtil {
 
         @Override
         public int compareTo(TimePoint o) {
-            Validate.notNull(o);
+            //Do not check for null, Comparable contract calls for NPE
             int curr = this.unit.compareTo(o.unit);
             if (curr != 0) {
                 return curr > 0 ? 1 : -1;
