@@ -48,6 +48,14 @@ public class SerializationFactory {
             SerializationFactory.registerClass(toBukkit, c);
         }
     }
+    
+    public static void registerClass(Class<? extends ConfigurationSerializable> clazz) {
+        SerializationFactory.registerClass(true, clazz);
+    }
+
+    public static void registerClasses(Class<? extends ConfigurationSerializable>... clazz) {
+        SerializationFactory.registerClasses(true, clazz);
+    }
 
     //Static does not imply synchronization, wheeee
     public static synchronized void registerToBukkit() {
@@ -55,8 +63,8 @@ public class SerializationFactory {
         notRegistered.clear();
     }
 
-    public static Class[] getNativeSerializables() {
-        return new Class[] {
+    public static Class<?>[] getNativeSerializables() {
+        return new Class<?>[] {
             SInventory.class,
             SPlayerInventory.class,
             SLocation.class
