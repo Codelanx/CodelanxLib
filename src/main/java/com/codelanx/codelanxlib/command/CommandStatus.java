@@ -19,7 +19,6 @@
  */
 package com.codelanx.codelanxlib.command;
 
-import com.codelanx.codelanxlib.command.neu.Token;
 import com.codelanx.codelanxlib.config.lang.InternalLang;
 import com.codelanx.codelanxlib.config.lang.Lang;
 import org.bukkit.command.CommandSender;
@@ -36,11 +35,15 @@ public enum CommandStatus {
     SUCCESS,
     FAILED,
     BAD_ARGS,
-    PLAYER_ONLY,
-    CONSOLE_ONLY,
-    /** Use if your {@link Token} is not meant to be an endpoint */
-    UNSUPPORTED,
+    PLAYER_ONLY("players"),
+    CONSOLE_ONLY("the console"),
     NO_PERMISSION;
+
+    private final Object[] args;
+
+    private CommandStatus(Object... args) {
+        this.args = args;
+    }
 
     public void handle(CommandSender sender, Lang format, SubCommand<?> tok) {
         switch (this) {
@@ -53,14 +56,10 @@ public enum CommandStatus {
                 break;
             case PLAYER_ONLY:
             case CONSOLE_ONLY:
-                Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_RESTRICTED,
-                        this == CommandStatus.PLAYER_ONLY ? "players" : "the console");
+                Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_RESTRICTED, this.args);
                 break;
             case NO_PERMISSION:
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_NOPERM);
-                break;
-            case UNSUPPORTED:
-                Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_USAGE);
                 break;
         }
     }
