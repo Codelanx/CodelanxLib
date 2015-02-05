@@ -50,9 +50,7 @@ public final class ListenerManager {
     }
 
     /**
-     * Maps {@link SubListener} class types to a {@link ListenerPluginPair} for
-     * easy reference of both the {@link SubListener} instance as well as the
-     * {@link Plugin} responsible for registering it.
+     * Maps {@link SubListener} class types to a {@link SubListener} instance
      * 
      * @since 0.1.0
      * @version 0.1.0
@@ -84,11 +82,12 @@ public final class ListenerManager {
      * @since 0.1.0
      * @version 0.1.0
      *
+     * @param <T> The type of the {@link Plugin} being returned
      * @param listener The {@link SubListener} class that was registered
      * @return The {@link Plugin} that registered the {@link SubListener}
      * @throws IllegalArgumentException If the listener isn't registered
      */
-    public static Plugin getRegisteringPlugin(Class<? extends SubListener<?>> listener) {
+    public static <T extends Plugin> T getRegisteringPlugin(Class<? extends SubListener<T>> listener) {
         return ListenerManager.getListener(listener).getPlugin();
     }
 
