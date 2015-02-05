@@ -17,7 +17,9 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.permission;
+package com.codelanx.codelanxlib.internal;
+
+import com.codelanx.codelanxlib.permission.Permissions;
 
 /**
  * Class description for {@link CLPerms}

@@ -17,11 +17,12 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.config.lang;
+package com.codelanx.codelanxlib.internal;
 
 import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
+import com.codelanx.codelanxlib.config.lang.Lang;
 import com.codelanx.codelanxlib.data.types.Yaml;
 
 /**
@@ -35,7 +36,6 @@ import com.codelanx.codelanxlib.data.types.Yaml;
 @RelativePath("lang.yml")
 public enum InternalLang implements Lang<InternalLang> {
 
-    COMMAND_STATUS_UNKNOWN("command.status.unknown", "Unknown command"),
     COMMAND_STATUS_USAGE("command.status.usage", "Usage: %s"),
     COMMAND_STATUS_NOPERM("command.status.noperm", "&cYou do not have permission for this!"),
     COMMAND_STATUS_FAILED("command.status.failed", "Command execution failed :("),
@@ -65,7 +65,7 @@ public enum InternalLang implements Lang<InternalLang> {
     private final String path;
 
     /**
-     * {@link Lang} private constructor
+     * {@link InternalLang} private constructor
      *
      * @since 0.1.0
      * @version 0.1.0
