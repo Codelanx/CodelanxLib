@@ -32,18 +32,20 @@ import org.bukkit.plugin.Plugin;
 /**
  * Skeleton class representing the structure of a sub-command for
  * {@link CommandHandler}
+ * <br><br>
+ * Note: this class has a natural ordering that is inconsistent with equals.
  *
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.1.0
  * 
- * @param <T> Represents a {@link Plugin} that implements the
+ * @param <E> Represents a {@link Plugin} that implements the
  *            {@link Commandable} interface
  */
-public abstract class SubCommand<T extends Plugin & Commandable<T>> {
+public abstract class SubCommand<E extends Plugin & Commandable<E>> implements Comparable<SubCommand<E>> {
 
     /** The main {@link Plugin} instance */
-    protected final T plugin;
+    protected final E plugin;
 
     /**
      * {@link SubCommand} constructor
@@ -53,7 +55,7 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
      * 
      * @param plugin The {@link Plugin} associated with this command
      */
-    public SubCommand(T plugin) {
+    public SubCommand(E plugin) {
         this.plugin = plugin;
     }
 
@@ -127,6 +129,12 @@ public abstract class SubCommand<T extends Plugin & Commandable<T>> {
         //register perm to bukkit
         Bukkit.getServer().getPluginManager().addPermission(new Permission(perm));
         return sender.hasPermission(perm);
+    }
+
+    @Override
+    public int compareTo(SubCommand<E> o) {
+        //Do not check for null, comparable contract calls for NPE
+        return this.getName().compareTo(o.getName());
     }
 
 }
