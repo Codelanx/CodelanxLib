@@ -19,122 +19,236 @@
  */
 package com.codelanx.codelanxlib.listener;
 
+import com.codelanx.codelanxlib.CodelanxLib;
+import com.codelanx.codelanxlib.util.Exceptions;
+import com.codelanx.codelanxlib.util.Exceptions.IllegalPluginAccessException;
+import com.codelanx.codelanxlib.util.Reflections;
+import com.codelanx.codelanxlib.util.Scheduler;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang.Validate;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Handles listeners for the {@link Plugin}
+ * Centrally holds references to different Listener classes to allow for
+ * retrieval of {@link SubListener} references
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
- * 
- * @param <E> The specific {@link Plugin} to bound all {@link SubListener}
- *            classes to
+ * @version 0.1.0
  */
-public class ListenerManager<E extends Plugin> {
-    
-    protected final E plugin;
-    protected final Map<String, SubListener> listeners = new HashMap<>();
-    
+public final class ListenerManager {
+
     /**
-     * {@link ListenerManager} constructor
+     * Private constructor to prevent instantiation
      * 
-     * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @param plugin The main {@link Plugin} instance
+     * @since 0.1.0
+     * @version 0.1.0
      */
-    public ListenerManager(E plugin) {
-        this.plugin = plugin;
+    private ListenerManager() {
     }
+
+    /**
+     * Maps {@link SubListener} class types to a {@link ListenerPluginPair} for
+     * easy reference of both the {@link SubListener} instance as well as the
+     * {@link Plugin} responsible for registering it.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
+    @SuppressWarnings("rawtypes")
+    private static final Map<Class<? extends SubListener>, ListenerPluginPair<?>> listeners = new HashMap<>();
 
     /**
      * Gets a listener by its string name. Returns null if the listener is
      * disabled or not registered.
-     * 
+     *
      * @since 0.0.1
-     * @version 0.0.1
-     * 
+     * @version 0.1.0
+     *
      * @param <T> The {@link SubListener} class to get
      * @param listener An instance of the class type to retrieve
      * @return The listener class, null if disabled or not registered
+     * @throws IllegalArgumentException If the listener isn't registered
      */
-    public <T extends SubListener<E>> T getListener(Class<T> listener) {
-        return (T) this.listeners.get(listener.getName());
+    public static <T extends SubListener<?>> T getListener(Class<T> listener) {
+        return (T) (ListenerManager.getPair(listener).getListener());
     }
-    
+
     /**
-     * Returns whether or not a listener is registered under the relevant listener key
+     * Returns the {@link Plugin} relevant to the passed {@link SubListener}
+     * class
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param listener The {@link SubListener} class that was registered
+     * @return
+     * @throws IllegalArgumentException If the listener isn't registered
+     */
+    public static Plugin getRegisteringPlugin(Class<? extends SubListener<?>> listener) {
+        return ListenerManager.getPair(listener).getPlugin();
+    }
+
+    /**
+     * Returns the {@link ListenerPluginPair} associated with the passed
+     * {@link SubListener} class
      * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param listener The {@link SubListener} class to check for
+     * @return The relevant {@link ListenerPluginPair}
+     * @throws IllegalArgumentException If the listener isn't registered
+     */
+    private static ListenerPluginPair<?> getPair(Class<? extends SubListener<?>> listener) {
+        Validate.isTrue(ListenerManager.isRegistered(listener), "Class is not registered with listener manager!");
+        return ListenerManager.listeners.get(listener);
+    }
+
+    /**
+     * Returns whether or not a listener is registered under the relevant
+     * listener key
+     *
      * @since 0.0.1
-     * @version 0.0.1
-     * 
+     * @version 0.1.0
+     *
      * @param <T> The {@link SubListener} class to get
      * @param listener The listener class to look for
      * @return {@code true} if registered, {@code false} otherwise
      */
-    public <T extends SubListener<E>> boolean isRegistered(Class<T> listener) {
-        return this.listeners.containsKey(listener.getName());
+    public static <T extends SubListener<?>> boolean isRegistered(Class<T> listener) {
+        return ListenerManager.listeners.containsKey(listener);
     }
 
     /**
      * Registers a listener through bukkit and {@link ListenerManager}
-     * 
+     *
      * @since 0.0.1
-     * @version 0.0.1
-     * 
+     * @version 0.1.0
+     *
      * @param <T> The {@link SubListener} class to register
+     * @param plugin The {@link Plugin} registering the {@link SubListener}
      * @param listener The listener to register
-     * @throws ListenerReregisterException Attempted to register a Listener under a similar key
+     * @throws IllegalArgumentException Attempted to register a Listener twice
      * @return The listener that was registered
      */
-    public <T extends SubListener<E>> T registerListener(T listener) throws ListenerReregisterException {
-        String name = listener.getName();
-        if (!this.listeners.containsKey(name)) {
-            this.listeners.put(name, listener);
-            this.plugin.getServer().getPluginManager().registerEvents(listener, this.plugin);
-            return listener;
-        } else {
-            throw new ListenerReregisterException("Listener Map already contains key: " + name);
-        }
+    public static <T extends SubListener<?>> T registerListener(Plugin plugin, T listener) {
+        Validate.isTrue(!ListenerManager.listeners.containsKey(listener.getClass()),
+                "Listener Map already contains key: " + listener.getClass().getName());
+        ListenerManager.listeners.put(listener.getClass(), new ListenerPluginPair<>(listener, plugin));
+        //SO HACKY - ensures objection creation before bukkit events will fire
+        Scheduler.runAsyncTask(() -> {
+            plugin.getServer().getScheduler().callSyncMethod(plugin, () -> {
+                plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+                return null;
+            });
+        }, 1);
+        return listener;
     }
 
     /**
      * Calls {@link ListenerManager#registerListener(SubListener)} for every
      * passed listener. Any exception thrown will be re-thrown after all
      * listeners are registered
-     * 
+     *
      * @since 0.0.1
-     * @version 0.0.1
-     * 
+     * @version 0.1.0
+     *
      * @param <T> The {@link SubListener} class to register
+     * @param plugin The {@link Plugin} registering the {@link SubListener}s
      * @param listeners The listeners to register
-     * @throws ListenerReregisterException Attempted to register a Listener under a similar key
+     * @throws IllegalArgumentException Attempted to register a Listener twice
      */
-    public <T extends SubListener<E>> void registerListeners(T... listeners) throws ListenerReregisterException {
-        ListenerReregisterException ex = null;
+    public static <T extends SubListener<?>> void registerListeners(Plugin plugin, T... listeners) {
+        IllegalArgumentException ex = null;
         for (T listener : listeners) {
             try {
-                this.registerListener(listener);
-            } catch (ListenerReregisterException e) {
-                if (ex != null) { ex = e; }
+                ListenerManager.registerListener(plugin, listener);
+            } catch (IllegalArgumentException e) {
+                if (ex != null) {
+                    ex = e;
+                }
             }
         }
         if (ex != null) {
             throw ex;
         }
     }
-    
+
     /**
-     * Unregisters all the listeners attached to this {@link ListenerManager}
-     * 
+     * Unregisters all the listeners attached to this {@link ListenerManager}.
+     * Can only be called from {@link CodelanxLib}
+     *
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
+     *
+     * @throws IllegalPluginAccessException Only {@link CodelanxLib} can use
      */
-    public void cleanup() {
-        this.listeners.values().forEach((l) -> { l.onDisable(); HandlerList.unregisterAll(l); });
+    public static void release() {
+        Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class),
+                "ListenerManager#release may only be called by CodelanxLib!");
+        ListenerManager.listeners.values().forEach((l) -> {
+            l.getListener().onDisable();
+            HandlerList.unregisterAll(l.getListener());
+        });
+    }
+
+    /**
+     * Private helper class for holding a reference to both the actual
+     * {@link SubListener} instance, as well as the {@link Plugin} that
+     * registered it.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <E> The type bounding for the {@link Plugin}
+     */
+    private static class ListenerPluginPair<E extends Plugin> {
+
+        private final E plugin;
+        private final SubListener<?> listener;
+
+        /**
+         * Class constructor, stores both the {@link Plugin} and
+         * {@link SubListener} instances
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param listener The {@link SubListener} reference to store
+         * @param plugin The {@link Plugin} reference to store
+         */
+        public ListenerPluginPair(SubListener<?> listener, E plugin) {
+            this.plugin = plugin;
+            this.listener = listener;
+        }
+
+        /**
+         * Returns the stored {@link Plugin} instance
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The stored {@link Plugin} reference
+         */
+        public E getPlugin() {
+            return plugin;
+        }
+
+        /**
+         * Returns the stored {@link SubListener}{@literal <?>} reference
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The stored {@link SubListener}{@literal <?>} reference
+         */
+        public SubListener<?> getListener() {
+            return listener;
+        }
+
     }
 }
