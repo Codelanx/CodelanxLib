@@ -108,7 +108,7 @@ public final class ListenerManager {
     }
 
     /**
-     * Registers a listener through bukkit and {@link ListenerManager}
+     * Registers a listener through Bukkit and {@link ListenerManager}
      *
      * @since 0.0.1
      * @version 0.1.0
@@ -122,7 +122,7 @@ public final class ListenerManager {
         Validate.isTrue(!ListenerManager.listeners.containsKey(listener.getClass()),
                 "Listener Map already contains key: " + listener.getClass().getName());
         ListenerManager.listeners.put(listener.getClass(), listener);
-        //SO HACKY - ensures objection creation before bukkit events will fire
+        //SO HACKY - ensures object creation before Bukkit events will fire
         Scheduler.runAsyncTask(() -> {
             listener.getPlugin().getServer().getScheduler().callSyncMethod(listener.getPlugin(), () -> {
                 listener.getPlugin().getServer().getPluginManager().registerEvents(listener, listener.getPlugin());

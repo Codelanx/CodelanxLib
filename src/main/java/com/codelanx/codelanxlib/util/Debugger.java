@@ -86,7 +86,7 @@ public final class Debugger {
     }
 
     /**
-     * Hooks into bukkit's plugin system and adds a handler to all plugin
+     * Hooks into Bukkit's plugin system and adds a handler to all plugin
      * loggers to allow catching unreported exceptions. If already hooked,
      * will do nothing.
      * 

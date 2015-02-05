@@ -81,7 +81,7 @@ public interface Permissions {
      */
     default public boolean has(Player p) {
         Validate.notNull(p, "Player cannot be null!");
-        //Register permission to conform to bukkit API
+        //Register permission to conform to Bukkit API
         String fullPerm = this.build();
         PluginManager pm = Bukkit.getServer().getPluginManager();
         if (pm.getPermission(fullPerm) == null) {

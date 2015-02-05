@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.econ;
 import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
 import com.codelanx.codelanxlib.config.lang.Lang;
-import com.codelanx.codelanxlib.config.lang.InternalLang;
+import com.codelanx.codelanxlib.internal.InternalLang;
 import java.util.Observable;
 import java.util.logging.Level;
 import net.milkbowl.vault.economy.Economy;
@@ -64,7 +64,7 @@ public final class CEconomy extends Observable {
         }
     }
 
-    public ChargeStatus canCharge(Player p, Config<?> value) {
+    public ChargeStatus canCharge(Player p, Config value) {
         return this.canCharge(p, value.as(double.class));
     }
     
@@ -79,7 +79,7 @@ public final class CEconomy extends Observable {
         return new ChargeStatus(this.econ.has(p.getName(), cost), cost);
     }
 
-    public boolean charge(Player p, Config<?> value) {
+    public boolean charge(Player p, Config value) {
         return this.charge(p, value.as(Double.class));
     }
 
@@ -111,7 +111,7 @@ public final class CEconomy extends Observable {
     }
 
     /**
-     * Modified to send a bukkit event and force notification of the change
+     * Modified to send a Bukkit event and force notification of the change
      * 
      * @since 0.0.1
      * @version 0.0.1

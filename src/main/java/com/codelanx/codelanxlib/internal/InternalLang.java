@@ -34,7 +34,7 @@ import com.codelanx.codelanxlib.data.types.Yaml;
  */
 @PluginClass(CodelanxLib.class)
 @RelativePath("lang.yml")
-public enum InternalLang implements Lang<InternalLang> {
+public enum InternalLang implements Lang {
 
     COMMAND_STATUS_USAGE("command.status.usage", "Usage: %s"),
     COMMAND_STATUS_NOPERM("command.status.noperm", "&cYou do not have permission for this!"),

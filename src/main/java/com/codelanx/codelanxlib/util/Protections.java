@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.CodelanxLib;
-import com.codelanx.codelanxlib.permission.CLPerms;
+import com.codelanx.codelanxlib.internal.CLPerms;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;

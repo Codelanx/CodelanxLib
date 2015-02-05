@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import com.codelanx.codelanxlib.config.lang.InternalLang;
+import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.lang.Lang;
 import java.util.ArrayList;
 import java.util.Arrays;
