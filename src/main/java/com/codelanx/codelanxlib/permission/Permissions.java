@@ -31,10 +31,8 @@ import org.bukkit.plugin.PluginManager;
  * @since 0.1.0
  * @author 1Rogue
  * @version 0.1.0
- * 
- * @param <E> The permission enum type
  */
-public interface Permissions<E extends Enum<E> & Permissions<E>> {
+public interface Permissions {
 
     /**
      * Returns the base permission node for the plugin. e.g. "codelanxlib".

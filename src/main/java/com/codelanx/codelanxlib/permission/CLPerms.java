@@ -22,11 +22,11 @@ package com.codelanx.codelanxlib.permission;
 /**
  * Class description for {@link CLPerms}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
-public enum CLPerms implements Permissions<CLPerms> {
+public enum CLPerms implements Permissions {
 
     PROTECTION_OVERRIDE("protect.override");
 
