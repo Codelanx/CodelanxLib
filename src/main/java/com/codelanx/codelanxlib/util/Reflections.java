@@ -109,7 +109,7 @@ public final class Reflections {
      * 
      * @param <T> The type of the primitive
      * @param c The primitive class
-     * @return The default value, or {@link null} if not a primitive
+     * @return The default value, or {@code null} if not a primitive
      */
     public static <T> T defaultPrimitiveValue(Class<T> c) {
         if (c.isPrimitive() || Primitives.isWrapperType(c)) {

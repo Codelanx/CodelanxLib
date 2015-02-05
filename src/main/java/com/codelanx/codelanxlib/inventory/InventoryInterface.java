@@ -249,8 +249,8 @@ public final class InventoryInterface {
      * @since 0.0.1
      * @version 0.0.1
      * 
-     * @param icon
-     * @param panel 
+     * @param icon The {@link MenuIcon} to link to a panel
+     * @param panel The {@link InventoryPanel} to link to
      */
     protected void linkPanel(MenuIcon icon, InventoryPanel panel) {
         this.links.put(icon, panel);

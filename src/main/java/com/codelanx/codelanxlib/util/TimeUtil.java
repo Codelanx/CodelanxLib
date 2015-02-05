@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.util;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
@@ -77,7 +79,7 @@ public final class TimeUtil {
      * @version 0.1.0
      * 
      * @see TimeUtil#formatTime(TimePoint, TimeUnit)
-     * @param durationNS
+     * @param durationNS The amount of time in nanoseconds
      * @param min The minimum (inclusive) unit of time to output as a secondary
      *            measurement
      * @return The formatted string
@@ -294,16 +296,16 @@ public final class TimeUtil {
 
         @Override
         public int compareTo(TimePoint o) {
-            //No null checks, if o is null an NPE should be thrown
+            Validate.notNull(o);
             int curr = this.unit.compareTo(o.unit);
             if (curr != 0) {
-                return curr;
+                return curr > 0 ? 1 : -1;
             }
             curr = Long.compare(this.time, o.time);
             if (curr == 0 && this.next != null && o.next != null) {
                 curr = this.next.compareTo(o.next);
             }
-            return curr;
+            return curr > 0 ? 1 : -1;
         }
 
         /**
@@ -312,6 +314,8 @@ public final class TimeUtil {
          * {@link TimePoint}. This method also truncates the passed collection
          * and will modify its contents! However, if no values are found this
          * method will return null.
+         * 
+         * TODO: Optimize to use binary search
          * 
          * @since 0.1.0
          * @version 0.1.0
@@ -322,9 +326,15 @@ public final class TimeUtil {
          * @return The closest matching point
          */
         public static TimePoint findClosestAndWipe(TreeSet<? extends TimePoint> points, TimePoint now) {
-            TimePoint back;
-            points.descendingIterator(); //not done
-            return now;
+            Iterator<? extends TimePoint> itr = points.iterator();
+            while (itr.hasNext()) {
+                TimePoint next = itr.next();
+                if (next.compareTo(now) > 0) {
+                    itr.remove();
+                    return next;
+                }
+            }
+            return null;
         }
     }
 

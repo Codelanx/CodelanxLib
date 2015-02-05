@@ -98,8 +98,8 @@ public interface Config<E extends Enum<E> & Config<E>> extends PluginFile<E> {
     /**
      * Returns a {@link Map} representative of the passed Object that represents
      * a section of a YAML file. This method neglects the implementation of the
-     * section (whether it be {@link MemorySection} or just a {@link Map}), and
-     * returns the appropriate value.
+     * section (whether it be {@link ConfigurationSection} or just a
+     * {@link Map}), and returns the appropriate value.
      * 
      * @since 0.1.0
      * @version 0.1.0

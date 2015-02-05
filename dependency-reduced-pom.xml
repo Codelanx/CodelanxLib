@@ -70,6 +70,10 @@
   </build>
   <repositories>
     <repository>
+      <id>codelanx-repo</id>
+      <url>http://repo.codelanx.com/content/repositories/public/</url>
+    </repository>
+    <repository>
       <id>Plugin Metrics</id>
       <url>http://repo.mcstats.org/content/repositories/public</url>
     </repository>

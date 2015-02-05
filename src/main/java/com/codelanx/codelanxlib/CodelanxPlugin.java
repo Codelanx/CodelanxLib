@@ -21,7 +21,6 @@ package com.codelanx.codelanxlib;
 
 import com.codelanx.codelanxlib.command.CommandHandler;
 import com.codelanx.codelanxlib.implementers.Commandable;
-import com.codelanx.codelanxlib.listener.ListenerManager;
 import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
