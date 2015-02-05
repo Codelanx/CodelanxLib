@@ -21,9 +21,7 @@ package com.codelanx.codelanxlib;
 
 import com.codelanx.codelanxlib.command.CommandHandler;
 import com.codelanx.codelanxlib.implementers.Commandable;
-import com.codelanx.codelanxlib.implementers.Listening;
 import com.codelanx.codelanxlib.listener.ListenerManager;
-import com.codelanx.codelanxlib.serialize.*;
 import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,43 +34,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * @param <E> The implementing plugin instance
  */
-public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable<E>, Listening<E> {
-    
-    static {
-        SerializationFactory.registerClasses(false,
-                SerializationFactory.getNativeSerializables());
-    }
+public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable<E> {
 
-    private Class cnfg; //Purposefully raw-typed
-    private String cmd;
     protected CommandHandler<E> commands;
-    protected ListenerManager<E> listener;
-    
-    public CodelanxPlugin(String command) {
-        this.cmd = command;
-    }
-
-    @Override
-    public void onLoad() {
-        SerializationFactory.registerToBukkit();
-    }
 
     @Override
     public void onEnable() {
-        this.getLogger().log(Level.INFO, "Loading configuration...");
-        this.cnfg = null;
-        
-        this.getLogger().log(Level.INFO, "Enabling listeners...");
-        this.listener = new ListenerManager<>((E) this);
-        
         this.getLogger().log(Level.INFO, "Enabling command handler...");
-        this.commands = new CommandHandler<>((E) this, this.cmd);
-        this.cmd = null;
-    }
-
-    @Override
-    public void onDisable() {
-        this.listener.cleanup();
+        this.commands = new CommandHandler<>((E) this, this.getMainCommand());
     }
 
     @Override
@@ -80,9 +49,6 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
         return this.commands;
     }
 
-    @Override
-    public ListenerManager<E> getListenerManager() {
-        return this.listener;
-    }
+    protected abstract String getMainCommand();
 
 }

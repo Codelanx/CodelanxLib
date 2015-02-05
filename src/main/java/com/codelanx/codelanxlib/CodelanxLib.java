@@ -19,12 +19,11 @@
  */
 package com.codelanx.codelanxlib;
 
+import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.serialize.*;
 import com.codelanx.codelanxlib.util.Debugger;
 import com.codelanx.codelanxlib.util.Scheduler;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
@@ -33,7 +32,7 @@ import org.mcstats.Metrics;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public class CodelanxLib extends JavaPlugin {
     
@@ -48,29 +47,28 @@ public class CodelanxLib extends JavaPlugin {
     }
 
     /**
-     * Reports metrics to http://mcstats.org/
+     * Reports metrics to <a href="http://mcstats.org/">MCStats</a>, and hooks
+     * the plugin loggers for {@link Debugger}
      * <br><br>
      * {@inheritDoc}
      * 
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      */
     @Override
     public void onEnable() {
         try {
-            Metrics m = new Metrics(this);
-            m.start();
+            new Metrics(this).start();
         } catch (IOException ex) {
-            Logger.getLogger(CodelanxLib.class.getName()).log(Level.SEVERE, null, ex);
+            Debugger.error(ex, "Error reporting metrics!");
         }
-        
-        try {
-            Debugger.hookBukkit();
-        } catch (IllegalAccessException ex) {} //never happens
+
+        Debugger.hookBukkit();
     }
 
     @Override
     public void onDisable() {
+        ListenerManager.release();
         Scheduler.cancelAllTasks();
         Scheduler.getService().shutdown();
     }
