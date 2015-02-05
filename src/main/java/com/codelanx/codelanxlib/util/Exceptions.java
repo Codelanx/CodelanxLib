@@ -19,15 +19,12 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * Class description for {@link Exceptions}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public final class Exceptions {
     
@@ -49,18 +46,36 @@ public final class Exceptions {
         Exceptions.illegalState(state, null);
     }
 
-    public static void illegalAccess(boolean state, String message) throws IllegalAccessException {
+    public static void illegalPluginAccess(boolean state, String message) {
         if (!state) {
             if (message != null) {
-                throw new IllegalAccessException(message);
+                throw new IllegalPluginAccessException(message);
             } else {
-                throw new IllegalAccessException();
+                throw new IllegalPluginAccessException();
             }
         }
     }
 
-    public static void illegalAccess(boolean state) throws IllegalAccessException {
-        Exceptions.illegalAccess(state, null);
+    public static void illegalPluginAccess(boolean state) {
+        Exceptions.illegalPluginAccess(state, null);
     }
 
+    public static class IllegalPluginAccessException extends RuntimeException {
+
+        public IllegalPluginAccessException(String message) {
+            super(message);
+        }
+
+        public IllegalPluginAccessException() {
+        }
+
+        public IllegalPluginAccessException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public IllegalPluginAccessException(Throwable cause) {
+            super(cause);
+        }
+
+    }
 }
