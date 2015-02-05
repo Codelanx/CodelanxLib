@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.command;
 
-import com.codelanx.codelanxlib.config.lang.Lang;
+import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.implementers.Commandable;
 import java.util.Arrays;
 import java.util.LinkedList;

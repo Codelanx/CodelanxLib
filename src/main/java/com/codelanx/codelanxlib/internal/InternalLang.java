@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.internal;
 import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
-import com.codelanx.codelanxlib.config.lang.Lang;
+import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.data.types.Yaml;
 
 /**

@@ -21,7 +21,7 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
-import com.codelanx.codelanxlib.config.lang.Lang;
+import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.internal.InternalLang;
 import java.util.Observable;
 import java.util.logging.Level;

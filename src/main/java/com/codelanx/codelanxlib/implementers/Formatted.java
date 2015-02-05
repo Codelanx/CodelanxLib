@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.implementers;
 
-import com.codelanx.codelanxlib.config.lang.Lang;
+import com.codelanx.codelanxlib.config.Lang;
 
 /**
  * Describes a plugin with a message format

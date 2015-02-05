@@ -17,9 +17,8 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.config.lang;
+package com.codelanx.codelanxlib.config;
 
-import com.codelanx.codelanxlib.config.PluginFile;
 import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import org.bukkit.ChatColor;
