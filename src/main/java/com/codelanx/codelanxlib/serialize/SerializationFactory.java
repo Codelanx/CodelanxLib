@@ -63,8 +63,9 @@ public class SerializationFactory {
         notRegistered.clear();
     }
 
-    public static Class<?>[] getNativeSerializables() {
-        return new Class<?>[] {
+    @SuppressWarnings("rawtypes")
+    public static Class[] getNativeSerializables() {
+        return new Class[] {
             SInventory.class,
             SPlayerInventory.class,
             SLocation.class
