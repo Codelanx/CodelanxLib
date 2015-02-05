@@ -102,7 +102,7 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-        <finalName>${project.name}</finalName>
+        <finalName>${project.name}-v${project.version}</finalName>
     </build>
   
     <dependencies>
