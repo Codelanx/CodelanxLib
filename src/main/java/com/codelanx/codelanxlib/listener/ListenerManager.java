@@ -179,6 +179,22 @@ public final class ListenerManager {
     }
 
     /**
+     * Unregisters a specific {@link SubListener} from both CodelanxLib and
+     * Bukkit
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param listener The {@link SubListener} class to unregister
+     */
+    public static void unregisterListener(Class<? extends SubListener<?>> listener) {
+        ListenerPluginPair<?> lpp = ListenerManager.listeners.remove(listener);
+        if (lpp != null) {
+            HandlerList.unregisterAll(lpp.getListener());
+        }
+    }
+
+    /**
      * Unregisters all the listeners attached to this {@link ListenerManager}.
      * Can only be called from {@link CodelanxLib}
      *
@@ -194,6 +210,7 @@ public final class ListenerManager {
             l.getListener().onDisable();
             HandlerList.unregisterAll(l.getListener());
         });
+        ListenerManager.listeners.clear();
     }
 
     /**
