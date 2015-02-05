@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.CodelanxLib;
+import com.codelanx.codelanxlib.util.Exceptions.IllegalPluginAccessException;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -92,12 +93,12 @@ public final class Debugger {
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @throws IllegalAccessException If something other than
+     * @throws IllegalPluginAccessException If something other than
      *                                {@link CodelanxLib} calls this method
      */
-    public static void hookBukkit() throws IllegalAccessException {
+    public static void hookBukkit() {
         //Check to make sure CodelanxLib is calling it
-        Exceptions.illegalAccess(Reflections.accessedFrom(CodelanxLib.class),
+        Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class),
                 "Debugger#hookBukkit may only be called by CodelanxLib!");
         //end check - add hook
         if (!Debugger.listenerHooked) {
