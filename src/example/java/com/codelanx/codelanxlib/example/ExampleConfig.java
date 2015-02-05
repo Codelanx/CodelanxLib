@@ -28,9 +28,9 @@ import java.util.HashMap;
 /**
  * Class description for {@link ExampleConfig}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public enum ExampleConfig implements Config<ExampleConfig> {
 

@@ -24,9 +24,9 @@ import org.bukkit.block.Sign;
 /**
  * Class description for {@link Blocks}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public final class Blocks {
 

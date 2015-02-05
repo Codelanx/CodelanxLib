@@ -27,9 +27,9 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Class description for {@link InventoryState}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public class InventoryState {
 
