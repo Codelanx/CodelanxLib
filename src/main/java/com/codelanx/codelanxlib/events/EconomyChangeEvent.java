@@ -37,11 +37,28 @@ public class EconomyChangeEvent extends PlayerEvent {
     /** The new balance */
     private final double money;
 
+    /**
+     * Constructor. Assigns the {@link Player} and money to fields
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param p The {@link Player} whose balance changed
+     * @param money The new balance
+     */
     public EconomyChangeEvent(Player p, double money) {
         super(p);
         this.money = money;
     }
 
+    /**
+     * Returns the new balance for the {@link Player}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The new balance
+     */
     public double getNewBalance() {
         return this.money;
     }
@@ -51,6 +68,15 @@ public class EconomyChangeEvent extends PlayerEvent {
         return handlers;
     }
 
+    /**
+     * Returns the {@link HandlerList} that Bukkit uses to register plugins
+     * for events
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The internal {@link HandlerList} for this event
+     */
     public static HandlerList getHandlerList() {
         return handlers;
     }
