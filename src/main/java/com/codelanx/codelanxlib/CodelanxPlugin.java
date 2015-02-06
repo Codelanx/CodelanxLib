@@ -31,7 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author 1Rogue
  * @version 0.1.0
  * 
- * @param <E> The implementing {@link Plugin} type
+ * @param <E> The implementing {@link org.bukkit.plugin.Plugin Plugin} type
  */
 public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable<E> {
 
