@@ -191,7 +191,6 @@ public interface Lang extends PluginFile {
      * @since 0.1.0
      * @version 0.1.0
      *
-     *
      * @param target The target to send to
      * @param message The message to colorize and send
      * @param args Arguments to supply to the {@link Lang} message
@@ -206,7 +205,6 @@ public interface Lang extends PluginFile {
      *
      * @since 0.1.0
      * @version 0.1.0
-     *
      *
      * @param target The target to send to
      * @param format The format provided
@@ -229,7 +227,6 @@ public interface Lang extends PluginFile {
      *
      * @since 0.1.0
      * @version 0.1.0
-     *
      *
      * @param target The target to send to
      * @param message The message to colorize and send

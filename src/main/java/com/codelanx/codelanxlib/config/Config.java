@@ -27,7 +27,9 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- * Class description for {@link Config}
+ * Represents a single value that is dynamically retrieved from a
+ * {@link FileDataType}. This value can be of any type, and the class should
+ * typically be implemented through an enum
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -122,7 +124,7 @@ public interface Config extends PluginFile {
     }
 
     /**
-     * Retrieves an {@link AnonymousConfig} value which can utilize a
+     * Retrieves an anonymous value which can utilize a
      * {@link Config} parameter to retrieve data from any source
      * 
      * @since 0.1.0
@@ -131,10 +133,27 @@ public interface Config extends PluginFile {
      * @param <T> Represents a {@link FileDataType} passed to the method
      * @param file The {@link FileDataType} to use
      * @param config The {@link Config} value to search with
-     * @return An {@link AnonymousConfig} wrapping the configuration and keys
+     * @return An anonymous class wrapping of the configuration and keys
      */
     public static <T extends FileDataType> Config retrieve(T file, Config config) {
-        return new AnonymousConfig<>(file, config.getPath(), config.getDefault());
+        return new Config() {
+
+            @Override
+            public String getPath() {
+                return config.getPath();
+            }
+
+            @Override
+            public Object getDefault() {
+                return config.getDefault();
+            }
+
+            @Override
+            public FileDataType getConfig() {
+                return file;
+            }
+            
+        };
     }
 
     /**

@@ -100,10 +100,12 @@ public interface PluginFile {
      */
     default public <T extends FileDataType> T init(Class<T> clazz) {
         Class<? extends PluginFile> me = this.getClass();
+        //Check Annotations
         if (!(Reflections.hasAnnotation(me, PluginClass.class)
                 && Reflections.hasAnnotation(me, RelativePath.class))) {
             throw new IllegalStateException("'" + me.getName() + "' is missing either PluginClass or RelativePath annotations!");
         }
+        //Get fields
         Iterable<? extends PluginFile> itr;
         if (me.isEnum()) {
             itr = Arrays.asList(me.getEnumConstants());
@@ -112,6 +114,7 @@ public interface PluginFile {
         } else {
             throw new IllegalStateException("'" + me.getName() + "' is neither an enum nor an Iterable!");
         }
+        //Initialize file
         String path = null;
         try {
             File folder = Reflections.getPlugin(this.getClass()).getDataFolder();
@@ -132,7 +135,7 @@ public interface PluginFile {
             use.save();
             return (T) use;
         } catch (IOException ex) {
-            Debugger.error(ex, "Error creating lang file '%s'!", path);
+            Debugger.error(ex, "Error creating plugin file '%s'!", path);
             return null;
         }
     }
