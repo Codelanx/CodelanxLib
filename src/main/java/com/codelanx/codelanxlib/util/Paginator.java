@@ -84,8 +84,8 @@ public class Paginator {
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param page
-     * @return 
+     * @param page The page to retrieve
+     * @return The page in the form of a string 
      */
     public String getPage(int page) {
         page--;

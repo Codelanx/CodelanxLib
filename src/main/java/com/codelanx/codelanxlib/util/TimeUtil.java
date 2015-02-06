@@ -30,7 +30,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
@@ -518,8 +517,8 @@ public final class TimeUtil {
          * @since 0.1.0
          * @version 0.1.0
          * 
-         * @param format
-         * @return 
+         * @param format The format for the clock
+         * @return The current {@link Countdown} object
          */
         public Countdown setTimeFormat(String format) {
             if (!format.matches("(?!.*%[^sd])(?!.*%d.*%d)(?!.*%s.*%s.*%s)(?!.*%s.*%d)(?=.*%s)(?=.*%d).*")) {

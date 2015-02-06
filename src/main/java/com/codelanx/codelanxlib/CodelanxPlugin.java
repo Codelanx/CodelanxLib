@@ -35,7 +35,13 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable<E> {
 
-    /** The underlying {@link CommandHandler} in use by this {@link Plugin} */
+    /**
+     * The underlying {@link CommandHandler} in use by this
+     * {@link org.bukkit.plugin.Plugin Plugin}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     protected CommandHandler<E> commands;
 
     @Override

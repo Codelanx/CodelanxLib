@@ -21,7 +21,7 @@
         <directory>${basedir}/src/main/resources</directory>
       </resource>
     </resources>
-    <finalName>${project.name}</finalName>
+    <finalName>${project.name}-v${project.version}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>

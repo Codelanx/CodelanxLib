@@ -209,7 +209,7 @@ public interface Lang extends PluginFile {
      * @param target The target to send to
      * @param format The format provided
      * @param message The message to colorize and send
-     * @param args Arguments to supply to the {@link InternalLang} message
+     * @param args Arguments to supply to the {@link Lang} message
      */
     public static void sendMessage(CommandSender target, Lang format, Lang message, Object... args) {
         if (target == null || format == null || message == null) {

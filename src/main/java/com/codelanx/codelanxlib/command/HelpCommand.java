@@ -50,8 +50,7 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
     private int factor = 5;
 
     /**
-     * {@link HelpCommand} constructor. Initializes the {@link HelpCommand#BAR}
-     * field.
+     * {@link HelpCommand} constructor.
      *
      * @since 0.0.1
      * @version 0.1.0
