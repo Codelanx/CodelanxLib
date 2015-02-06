@@ -38,10 +38,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  * @author 1Rogue
  * @version 0.0.1
  */
-public final class CEconomy extends Observable {
+public class CEconomy extends Observable {
 
     protected final Lang format;
-    private Economy econ;
+    protected Economy econ;
 
     public CEconomy(Plugin plugin) {
         this.format = Lang.getFormat(plugin);
@@ -124,9 +124,7 @@ public final class CEconomy extends Observable {
         if (!(arg instanceof EconomyChangePacket)) {
             return;
         }
-        EconomyChangePacket packet = (EconomyChangePacket) arg;
-        Bukkit.getServer().getPluginManager().callEvent(new EconomyChangeEvent(packet.getPlayer(), packet.getAmount()));
-        super.notifyObservers(arg);
+        super.notifyObservers((EconomyChangePacket) arg);
     }
 
     @Override

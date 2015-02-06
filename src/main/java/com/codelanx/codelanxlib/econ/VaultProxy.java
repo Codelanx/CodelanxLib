@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib.econ;
 
+import com.codelanx.codelanxlib.events.EconomyChangeEvent;
 import com.codelanx.codelanxlib.util.Debugger;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -47,7 +48,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class VaultProxy implements InvocationHandler {
 
+    /** The cached {@link Economy} class that Vault registered */
+    private final Economy econ;
+    /** The registered {@link CEconomy} classes listening to changes */
     private final static Set<CEconomy> econs = new LinkedHashSet<>();
+    /** Known methods that do not need to be listened to */
     private final static Set<String> blackListed = new LinkedHashSet<String>() {{
         addAll(Arrays.asList(
                 "getBalance",
@@ -67,8 +72,15 @@ public final class VaultProxy implements InvocationHandler {
                 "isEnabled"
         ));
     }};
-    private final Economy econ;
 
+    /**
+     * Constructor. Holds the {@link Economy} object registered from Vault
+     *
+     * @since 0.0.1
+     * @version 0.0.1
+     *
+     * @param econ The {@link Economy} object
+     */
     private VaultProxy(Economy econ) {
         this.econ = econ;
     }
@@ -88,15 +100,27 @@ public final class VaultProxy implements InvocationHandler {
             }
             if (o.isOnline()) {
                 Player p = (Player) o;
+                double bal = this.econ.getBalance(p);
+                Bukkit.getServer().getPluginManager().callEvent(
+                        new EconomyChangeEvent(p, bal));
+                EconomyChangePacket packet = new EconomyChangePacket(p, bal);
                 VaultProxy.econs.forEach(e -> {
                     e.setChanged();
-                    e.notifyObservers(new EconomyChangePacket(p, e.getBalance(p)));
+                    e.notifyObservers(packet);
                 });
             }
         }
         return back;
     }
 
+    /**
+     * Proxies the Vault {@link Economy} class and replaces it with a
+     * {@link VaultProxy} instance to handle method invocation, allowing
+     * {@link CEconomy} objects to be notified upon money updates
+     *
+     * @since 0.0.1
+     * @version 0.0.1
+     */
     public static void proxyVault() {
         try {
             Server server = Bukkit.getServer();
@@ -127,15 +151,22 @@ public final class VaultProxy implements InvocationHandler {
                     (Economy) Proxy.newProxyInstance(l, new Class[]{Economy.class}, new VaultProxy(e)),
                     v,
                     ServicePriority.Normal);
-        } catch (NoSuchMethodException
-                | SecurityException
-                | IllegalAccessException
-                | IllegalArgumentException
-                | InvocationTargetException ex) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Debugger.error(ex, "Error proxying vault economy class!");
         }
     }
 
+    /**
+     * Registers a {@link CEconomy} object to the {@link VaultProxy}
+     * {@link InvocationHandler}.
+     *
+     * @since 0.0.1
+     * @version 0.0.1
+     *
+     * @param <T> The type of the {@link CEconomy} class
+     * @param econ The {@link CEconomy} instance
+     * @return {@code true} if the class was registered and cached
+     */
     public static <T extends CEconomy> boolean register(T econ) {
         return VaultProxy.econs.add(econ);
     }
