@@ -39,8 +39,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  */
 public class CEconomy extends Observable {
 
+    /** The {@link Lang} format to use for output */
     protected final Lang format;
-    protected Economy econ;
+    /** The underlying {@link Economy} object, usually a proxy */
+    private Economy econ;
 
     /**
      * Constructor. Will check if the Vault {@link Economy} class is proxied and
@@ -242,7 +244,7 @@ public class CEconomy extends Observable {
      * 
      * @return {@code false} if the {@link Economy} object is {@code null}
      */
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return this.econ != null;
     }
 
@@ -255,7 +257,7 @@ public class CEconomy extends Observable {
      * 
      * @return The underlying {@link Economy} object
      */
-    protected Economy getEconomy() {
+    protected final Economy getEconomy() {
         return this.econ;
     }
 
