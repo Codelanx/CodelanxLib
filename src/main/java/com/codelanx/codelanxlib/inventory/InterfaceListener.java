@@ -49,6 +49,7 @@ public final class InterfaceListener implements Listener {
      * @since 0.1.0
      * @version 0.1.0
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public InterfaceListener() {
         Bukkit.getServer().getPluginManager().registerEvents(this, CodelanxLib.get());
     }

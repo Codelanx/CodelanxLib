@@ -67,6 +67,7 @@ public final class InventoryInterface {
      * @since 0.0.1
      * @version 0.1.0
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public InventoryInterface() {
         //generate seed
         String seed = this.generateSeed(InventoryInterface.SEED_LENGTH);
