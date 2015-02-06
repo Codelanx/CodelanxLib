@@ -28,14 +28,14 @@ import org.bukkit.plugin.Plugin;
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.1.0
- * 
+ *
  * @param <T> The specific {@link Plugin} to use
  */
 public abstract class SubListener<T extends Plugin> implements Listener {
 
     /**
      * The stored {@link Plugin} reference relevant to this {@link SubListener}
-     * 
+     *
      * @since 0.0.1
      * @version 0.0.1
      */
@@ -44,38 +44,39 @@ public abstract class SubListener<T extends Plugin> implements Listener {
     /**
      * Stores the {@link Plugin} reference and registers the {@link SubListener}
      * to CodelanxLib and Bukkit
-     * 
+     *
      * @since 0.0.1
      * @version 0.1.0
-     * 
-     * @param plugin The 
+     *
+     * @param plugin The
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public SubListener(T plugin) {
         this.plugin = plugin;
         /*
-            While this would normally be an issue (registering before child class
-            has finished initializing), in this specific case events should not
-            be firing before the Listener has finished running
-        */
+         While this would normally be an issue (registering before child class
+         has finished initializing), in this specific case events should not
+         be firing before the Listener has finished running
+         */
         ListenerManager.registerListener(this);
     }
 
     /**
-     * Called when the plugin is being disabled. This is a convenience method
-     * to allow simple cleanup of any resources
-     * 
+     * Called when the plugin is being disabled. This is a convenience method to
+     * allow simple cleanup of any resources
+     *
      * @since 0.1.0
      * @version 0.1.0
      */
-    public void onDisable() {}
+    public void onDisable() {
+    }
 
     /**
      * Returns the {@link Plugin} used for this {@link SubListener}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @return The {@link Plugin} that registered this {@link SubListener}
      */
     public T getPlugin() {

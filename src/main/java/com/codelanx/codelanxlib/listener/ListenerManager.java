@@ -42,7 +42,7 @@ public final class ListenerManager {
 
     /**
      * Private constructor to prevent instantiation
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
      */
@@ -51,7 +51,7 @@ public final class ListenerManager {
 
     /**
      * Maps {@link SubListener} class types to a {@link SubListener} instance
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
      */
@@ -163,10 +163,10 @@ public final class ListenerManager {
     /**
      * Unregisters a specific {@link SubListener} from both CodelanxLib and
      * Bukkit
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param listener The {@link SubListener} class to unregister
      */
     public static void unregisterListener(Class<? extends SubListener<?>> listener) {
