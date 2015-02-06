@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.implementers;
 import com.codelanx.codelanxlib.econ.CEconomy;
 
 /**
- * Class description for {@link Economics}
+ * Represents a plugin that utilizes the {@link CEconomy} class
  *
  * @since 0.0.1
  * @author 1Rogue

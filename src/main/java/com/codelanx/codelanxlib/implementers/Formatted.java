@@ -24,12 +24,20 @@ import com.codelanx.codelanxlib.config.Lang;
 /**
  * Describes a plugin with a message format
  *
- * @since 0.0.1
+ * @since 0.1.0
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public interface Formatted {
 
+    /**
+     * The {@link Lang} format to use for any plugin output
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The {@link Lang} object to use for plugin output as a format
+     */
     public Lang getFormat();
 
 }

@@ -20,14 +20,21 @@
 package com.codelanx.codelanxlib.implementers;
 
 /**
- * Class description for {@link Reloadable}
+ * Represents a plugin that is capable of being reloaded
  *
- * @since 0.0.1
+ * @since 0.1.0
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public interface Reloadable {
 
+    /**
+     * Method that is called upon reloading of the plugin. If using a
+     * ReloadEvent, then this method is not required
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     public void reload();
 
 }
