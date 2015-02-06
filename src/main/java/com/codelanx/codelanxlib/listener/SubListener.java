@@ -50,6 +50,7 @@ public abstract class SubListener<T extends Plugin> implements Listener {
      * 
      * @param plugin The 
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public SubListener(T plugin) {
         this.plugin = plugin;
         /*
