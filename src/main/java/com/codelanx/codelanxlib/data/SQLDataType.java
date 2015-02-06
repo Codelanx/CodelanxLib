@@ -26,7 +26,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Class description for {@link SQLDataType}
+ * Represents an object that connects to an SQL database and allows operations
+ * to be made upon it
  *
  * @since 0.1.0
  * @author 1Rogue

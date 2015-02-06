@@ -34,15 +34,17 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class Yaml implements FileDataType {
 
+    /** The location of this {@link FileDataType} */
     protected final File location;
+    /** The underlying {@link FileConfiguration} object */
     protected final FileConfiguration yaml;
 
     /**
      * Reads and loads a YAML file into memory.
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param location The location of the file to read
      */
     public Yaml(File location) {
@@ -52,10 +54,10 @@ public class Yaml implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -66,10 +68,10 @@ public class Yaml implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path {@inheritDoc}
      * @param value {@inheritDoc}
      */
@@ -80,10 +82,10 @@ public class Yaml implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -94,10 +96,10 @@ public class Yaml implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path {@inheritDoc}
      * @param def {@inheritDoc}
      * @return {@inheritDoc}
@@ -109,10 +111,10 @@ public class Yaml implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @throws IOException {@inheritDoc}
      */
     @Override
@@ -122,10 +124,10 @@ public class Yaml implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param target {@inheritDoc}
      * @throws IOException {@inheritDoc}
      */
@@ -135,12 +137,12 @@ public class Yaml implements FileDataType {
     }
 
     /**
-     * Returns the underlying {@link FileConfiguration} used in reading the
-     * YAML file.
-     * 
+     * Returns the underlying {@link FileConfiguration} used in reading the YAML
+     * file.
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @return The underlying {@link FileConfiguration} in use
      */
     public FileConfiguration getFileConfiguration() {

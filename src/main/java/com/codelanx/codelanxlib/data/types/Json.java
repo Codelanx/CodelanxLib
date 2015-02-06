@@ -38,15 +38,17 @@ import org.json.simple.parser.ParseException;
  */
 public class Json implements FileDataType {
 
+    /** The {@link File} location of this {@link FileDataType} */
     protected final File location;
+    /** The root {@link JSONObject} */
     protected final JSONObject root;
 
     /**
      * Reads and loads a JSON file into memory
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param location The location of the file to parse
      * @throws ParseException If the file is not in standard JSON format
      */
@@ -64,10 +66,10 @@ public class Json implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path {@inheritDoc}
      * @param value {@inheritDoc}
      */
@@ -79,10 +81,10 @@ public class Json implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -94,10 +96,10 @@ public class Json implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -109,10 +111,10 @@ public class Json implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path {@inheritDoc}
      * @param def {@inheritDoc}
      * @return {@inheritDoc}
@@ -127,12 +129,12 @@ public class Json implements FileDataType {
     /**
      * Gets the {@link JSONObject} above the requested object specified by the
      * supplied {@code ladder} parameter.
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param ladder A string array, already split in order of levels to
-     *               traverse
+     * traverse
      * @return The {@link JSONObject} above the requested object
      */
     protected JSONObject getContainer(String... ladder) {
@@ -142,10 +144,10 @@ public class Json implements FileDataType {
     /**
      * Gets the {@link JSONObject} above the requested object specified by the
      * supplied {@code path} parameter.
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path The period-delimited path to the object desired
      * @return The {@link JSONObject} above the requested object
      */
@@ -155,10 +157,10 @@ public class Json implements FileDataType {
 
     /**
      * Converts a period-delimited string into a String array
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param path The path to split
      * @return The split path
      */
@@ -170,10 +172,10 @@ public class Json implements FileDataType {
      * Traverses a {@link JSONObject} tree from the internal root node. Will
      * return a {@link JSONObject} container of the relevant element at the end
      * of the search, or just an empty {@link JSONObject} if nothing exists.
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param makePath Whether to fill empty space with {@link JSONObject}s
      * @param ladder A String array depicting the location to search in
      * @return A {@link JSONObject} containing the last node in the ladder
@@ -197,10 +199,10 @@ public class Json implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @throws IOException {@inheritDoc}
      */
     @Override
@@ -210,10 +212,10 @@ public class Json implements FileDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param target {@inheritDoc}
      * @throws IOException {@inheritDoc}
      */

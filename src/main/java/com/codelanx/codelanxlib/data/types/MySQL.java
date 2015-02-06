@@ -178,9 +178,21 @@ public class MySQL implements SQLDataType {
         private final String database;
         private final String port;
 
+        /**
+         * Class constructor. Assigns the passed variables to fields
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param host The host name for this MySQL connection
+         * @param user The user to utilize when connecting
+         * @param pass The password for the user
+         * @param database The database to use in the cluster
+         * @param port The port of the database
+         */
         public ConnectionPrefs(String host, String user, String pass, String database, String port) {
             if (host == null || user == null || pass == null || database == null || port == null) {
-                throw new IllegalArgumentException(this.getClass().getName() + " does not take null arguments in the constructor!");
+                throw new IllegalArgumentException(this.getClass().getSimpleName() + " does not take null arguments in the constructor!");
             }
             this.host = host;
             this.user = user;
@@ -189,22 +201,66 @@ public class MySQL implements SQLDataType {
             this.port = port;
         }
 
+        /**
+         * Returns the host in use by these {@link ConnectionPrefs}
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The host name
+         */
         public String getHost() {
             return this.host;
         }
 
+        /**
+         * Returns the username to use when connecting
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The username to use 
+         */
         public String getUser() {
             return this.user;
         }
 
+        /**
+         * Returns the password to use when connecting with the user. Note the
+         * password is stored internally as a char array, so the string is
+         * freshly constructed and interned upon every call to this method
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The password to use
+         */
         public String getPass() {
             return new String(this.pass).intern();
         }
 
+        /**
+         * Returns the database to use in the MySQL cluster
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The database to use 
+         */
         public String getDatabase() {
             return this.database;
         }
 
+        /**
+         * Returns the port to use for the MySQL connection. This is stored as
+         * a string for the most part because it is not needed as an int type,
+         * since it is concatenated into a connection string regardless
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The port to use 
+         */
         public String getPort() {
             return this.port;
         }

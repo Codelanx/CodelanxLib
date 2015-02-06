@@ -38,7 +38,9 @@ import org.bukkit.plugin.Plugin;
  */
 public class SQLite implements SQLDataType {
 
+    /** The number of connections in use by this data type */
     protected static byte connections = 0;
+    /** The {@link Connection} object */
     protected Connection con = null;
 
     /**
@@ -48,7 +50,7 @@ public class SQLite implements SQLDataType {
      *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param plugin The {@link Plugin} with the data folder to use
      * @return The Connection object
      * @throws SQLException If the connection fails to open
@@ -139,10 +141,10 @@ public class SQLite implements SQLDataType {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @return {@inheritDoc}
      */
     @Override
