@@ -40,11 +40,13 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Class description for {@link VaultProxy}
+ * A proxy {@link InvocationHandler} class for Vault's {@link Economy} class,
+ * used to make it possible to observe changes in the {@link Economy} status
+ * without modifying the original class
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public final class VaultProxy implements InvocationHandler {
 

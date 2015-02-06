@@ -20,7 +20,9 @@
 package com.codelanx.codelanxlib.econ;
 
 /**
- * Represents the status of a charge
+ * Represents the result of a call to
+ * {@link CEconomy#canCharge(org.bukkit.entity.Player, double) CEconomy#canCharge}
+ *
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -28,18 +30,46 @@ package com.codelanx.codelanxlib.econ;
  */
 public class ChargeStatus {
 
+    /** Whether or not the transaction is capable of being done */
     private final boolean status;
+    /** The amount being charged */
     private final double amount;
 
+    /**
+     * Constructor. Assigns parameters to fields
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     *
+     * @param status {@code true} if the charge can be made
+     * @param amount The actual amount being charged (accounts for taxes, etc)
+     */
     protected ChargeStatus(boolean status, double amount) {
         this.status = status;
         this.amount = amount;
     }
 
+    /**
+     * Returns whether or not the player is capable of paying the charge
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return {@code true} if the player can pay the charge
+     */
     public boolean getStatus() {
         return this.status;
     }
 
+    /**
+     * The actual amount being charged, including any modifications such as
+     * taxes. Outputs to the player about balance should use this return value
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The amount being charged
+     */
     public double getAmount() {
         return this.amount;
     }

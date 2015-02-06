@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.econ;
 import org.bukkit.entity.Player;
 
 /**
- * Class description for {@link EconomyChangePacket}
+ * Packet used to describe a change in balance from a transaction with Vault
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -30,18 +30,45 @@ import org.bukkit.entity.Player;
  */
 public class EconomyChangePacket {
 
+    /** The relevant {@link Player} to this packet */
     private final Player p;
+    /** The new balance */
     private final double amount;
 
+    /**
+     * Constructor. Assigns parameters to fields
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param p The {@link Player} whose balance changed
+     * @param amount The new balance
+     */
     public EconomyChangePacket(Player p, double amount) {
         this.p = p;
         this.amount = amount;
     }
 
+    /**
+     * The {@link Player} whose balance changed
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The relevant {@link Player} object 
+     */
     public Player getPlayer() {
         return this.p;
     }
 
+    /**
+     * Returns the new balance
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The new balance
+     */
     public double getAmount() {
         return this.amount;
     }
