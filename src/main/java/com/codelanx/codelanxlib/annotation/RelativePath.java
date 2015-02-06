@@ -32,6 +32,14 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RelativePath {
 
+    /**
+     * Returns the relative file path in the form of a string
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The relative file path
+     */
     String value();
 
 }

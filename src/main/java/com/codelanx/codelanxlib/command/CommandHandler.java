@@ -19,7 +19,6 @@
  */
 package com.codelanx.codelanxlib.command;
 
-import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.util.Exceptions;
 import java.util.Arrays;

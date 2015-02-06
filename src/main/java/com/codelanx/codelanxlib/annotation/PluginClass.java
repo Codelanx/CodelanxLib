@@ -34,6 +34,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PluginClass {
 
+    /**
+     * Returns the value for the relevant {@link JavaPlugin} class
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The relevant {@link JavaPlugin} class 
+     */
     Class<? extends JavaPlugin> value();
 
 }
