@@ -28,19 +28,31 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 /**
- * Main class. Only used for reporting plugin metrics
+ * Main class
  *
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.1.0
  */
 public class CodelanxLib extends JavaPlugin {
-    
+
+    /**
+     * Registers any serializables to Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     */
     public CodelanxLib() {
         SerializationFactory.registerClasses(false,
                 SerializationFactory.getNativeSerializables());
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     */
     @Override
     public void onLoad() {
         SerializationFactory.registerToBukkit();
@@ -66,6 +78,15 @@ public class CodelanxLib extends JavaPlugin {
         Debugger.hookBukkit();
     }
 
+    /**
+     * Releases all currently registered listeners and cancels all Scheduler
+     * tasks
+     * <br><br>
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     @Override
     public void onDisable() {
         ListenerManager.release();
@@ -73,6 +94,14 @@ public class CodelanxLib extends JavaPlugin {
         Scheduler.getService().shutdown();
     }
 
+    /**
+     * Returns the instance in use of this class as held interally by Bukkit
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The relevant {@link CodelanxLib} instance
+     */
     public static CodelanxLib get() {
         return JavaPlugin.getPlugin(CodelanxLib.class);
     }

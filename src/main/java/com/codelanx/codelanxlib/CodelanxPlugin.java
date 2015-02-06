@@ -25,16 +25,17 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Class description for {@link CodelanxPlugin}
+ * Represents a plugin that uses many of the features in the CodelanxLib project
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  * 
- * @param <E> The implementing plugin instance
+ * @param <E> The implementing {@link Plugin} type
  */
 public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable<E> {
 
+    /** The underlying {@link CommandHandler} in use by this {@link Plugin} */
     protected CommandHandler<E> commands;
 
     @Override
