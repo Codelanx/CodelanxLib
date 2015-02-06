@@ -24,7 +24,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
 /**
- * Class description for {@link EconomyChangeEvent}
+ * Fired when a player balance changes via Vault
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -32,7 +32,9 @@ import org.bukkit.event.player.PlayerEvent;
  */
 public class EconomyChangeEvent extends PlayerEvent {
 
+    /** {@link HandlerList} for this event */
     protected static final HandlerList handlers = new HandlerList();
+    /** The new balance */
     private final double money;
 
     public EconomyChangeEvent(Player p, double money) {

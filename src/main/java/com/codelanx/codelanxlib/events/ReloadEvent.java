@@ -25,7 +25,7 @@ import org.bukkit.plugin.Plugin;
 
 /**
  * Event fired upon the use of a
- * {@link com.codelanx.codelanxlib.command.ReloadCommand}
+ * {@link com.codelanx.codelanxlib.command.ReloadCommand ReloadCommand}
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -35,13 +35,31 @@ import org.bukkit.plugin.Plugin;
  */
 public class ReloadEvent<E extends Plugin> extends Event {
 
+    /** {@link HandlerList} for this event */
     protected static final HandlerList handlers = new HandlerList();
+    /** {@link Plugin} that is reloaded */
     private final E plugin;
 
+    /**
+     * Constructor. Assigns the passed {@link Plugin} to a field
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param plugin The {@link Plugin} that fired this {@link ReloadEvent}
+     */
     public ReloadEvent(E plugin) {
         this.plugin = plugin;
     }
 
+    /**
+     * Returns the {@link Plugin} involved with this event
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The relevant {@link Plugin}
+     */
     public E getPlugin() {
         return this.plugin;
     }
@@ -51,6 +69,15 @@ public class ReloadEvent<E extends Plugin> extends Event {
         return handlers;
     }
 
+    /**
+     * Returns the {@link HandlerList} that Bukkit uses to register plugins
+     * for events
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The internal {@link HandlerList} for this event
+     */
     public static HandlerList getHandlerList() {
         return handlers;
     }
