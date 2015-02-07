@@ -109,9 +109,10 @@ public final class Reflections {
      * @version 0.1.0
      * 
      * @see Reflections#getCallingPlugin(int)
-     * @return The relevant {@link JavaPlugin}, or {@code null} if not called
-     *         from a {@link JavaPlugin} class (either through an alternative
-     *         Classloader, executing code directly, or some voodoo magic)
+     * @return The relevant {@link JavaPlugin}
+     * @throws UnsupportedOperationException If not called from a
+     *         {@link JavaPlugin} class (either through an alternative
+     *         ClassLoader, executing code directly, or some voodoo magic)
      */
     public static JavaPlugin getCallingPlugin() {
         return Reflections.getCallingPlugin(0);
@@ -126,9 +127,10 @@ public final class Reflections {
      * @version 0.1.0
      * 
      * @param offset The number of additional methods to look back
-     * @return The relevant {@link JavaPlugin}, or {@code null} if not called
-     *         from a {@link JavaPlugin} class (either through an alternative
-     *         Classloader, executing code directly, or some voodoo magic)
+     * @return The relevant {@link JavaPlugin}
+     * @throws UnsupportedOperationException If not called from a
+     *         {@link JavaPlugin} class (either through an alternative
+     *         ClassLoader, executing code directly, or some voodoo magic)
      */
     public static JavaPlugin getCallingPlugin(int offset) {
         StackTraceElement[] elems = Thread.currentThread().getStackTrace();
@@ -136,7 +138,11 @@ public final class Reflections {
             //We shouldn't be able to get this high on the stack at offset 0
             throw new UnsupportedOperationException("Must be called from a class loaded from a plugin!");
         }
-        return JavaPlugin.getProvidingPlugin(elems[2 + offset].getClass());
+        JavaPlugin back = JavaPlugin.getProvidingPlugin(elems[2 + offset].getClass());
+        if (back == null) {
+            throw new UnsupportedOperationException("Must be called from a class loaded from a plugin!");
+        }
+        return back;
     }
 
     /**
