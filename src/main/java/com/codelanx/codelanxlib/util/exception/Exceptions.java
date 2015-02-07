@@ -102,4 +102,40 @@ public final class Exceptions {
         Exceptions.illegalPluginAccess(state, null);
     }
 
+    /**
+     * Throws an {@link UnsupportedOperationException} if the value of the
+     * {@code state} parameter is {@code false}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param state The conditional to verify
+     * @param message The message to include in an
+     *                {@link UnsupportedOperation}
+     * @throws UnsupportedOperationException if {@code state} is {@code false}
+     */
+    public static void unsupportedOperation(boolean state, String message) {
+        if (!state) {
+            if (message != null) {
+                throw new UnsupportedOperationException(message);
+            } else {
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
+
+    /**
+     * Throws an {@link UnsupportedOperationException} if the value of the
+     * {@code state} parameter is {@code false}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param state The conditional to verify
+     * @throws UnsupportedOperationException if {@code state} is {@code false}
+     */
+    public static void unsupportedOperation(boolean state) {
+        Exceptions.unsupportedOperation(state, null);
+    }
+
 }
