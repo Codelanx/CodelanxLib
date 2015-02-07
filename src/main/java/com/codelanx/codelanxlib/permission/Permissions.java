@@ -26,7 +26,9 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 
 /**
- * Represents an enum that 
+ * Represents a single permission value for use with checking whether or not a
+ * {@link org.bukkit.permissions.Permissible Permissible} has a specific
+ * permission or not. Meant for use on enum types
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -52,7 +54,7 @@ public interface Permissions {
      * 
      * @return The permission suffix supplied by the enum
      */
-    public String getPermission();
+    public String getNode();
 
     /**
      * Builds the full permission string
@@ -67,7 +69,7 @@ public interface Permissions {
         if (this.getBase().endsWith(median)) {
             median = "";
         }
-        return this.getBase().toLowerCase() + median + this.getPermission().toLowerCase();
+        return this.getBase().toLowerCase() + median + this.getNode().toLowerCase();
     }
 
     /**
