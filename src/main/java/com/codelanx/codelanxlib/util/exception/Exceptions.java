@@ -17,21 +17,31 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.util;
+package com.codelanx.codelanxlib.util.exception;
 
 /**
- * Class description for {@link Exceptions}
+ * A utility class for throwing conditional exceptions, similar to Apache's
+ * {@link org.apache.commons.lang.Validate Validate} class.
  *
  * @since 0.1.0
  * @author 1Rogue
  * @version 0.1.0
  */
 public final class Exceptions {
-    
-    private Exceptions() {
-        
-    }
 
+    private Exceptions() {}
+
+    /**
+     * Throws an {@link IllegalStateException} if the value of the {@code state}
+     * parameter is {@code false}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param state The conditional to verify
+     * @param message The message to include in an {@link IllegalStateException}
+     * @throws IllegalStateException if {@code state} is {@code false}
+     */
     public static void illegalState(boolean state, String message) {
         if (!state) {
             if (message != null) {
@@ -42,10 +52,32 @@ public final class Exceptions {
         }
     }
 
+    /**
+     * Throws an {@link IllegalStateException} if the value of the {@code state}
+     * parameter is {@code false}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param state The conditional to verify
+     * @throws IllegalStateException if {@code state} is {@code false}
+     */
     public static void illegalState(boolean state) {
         Exceptions.illegalState(state, null);
     }
 
+    /**
+     * Throws an {@link IllegalPluginAccessException} if the value of the
+     * {@code state} parameter is {@code false}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param state The conditional to verify
+     * @param message The message to include in an
+     *                {@link IllegalPluginAccessException}
+     * @throws IllegalPluginAccessException if {@code state} is {@code false}
+     */
     public static void illegalPluginAccess(boolean state, String message) {
         if (!state) {
             if (message != null) {
@@ -56,26 +88,18 @@ public final class Exceptions {
         }
     }
 
+    /**
+     * Throws an {@link IllegalPluginAccessException} if the value of the
+     * {@code state} parameter is {@code false}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param state The conditional to verify
+     * @throws IllegalPluginAccessException if {@code state} is {@code false}
+     */
     public static void illegalPluginAccess(boolean state) {
         Exceptions.illegalPluginAccess(state, null);
     }
 
-    public static class IllegalPluginAccessException extends RuntimeException {
-
-        public IllegalPluginAccessException(String message) {
-            super(message);
-        }
-
-        public IllegalPluginAccessException() {
-        }
-
-        public IllegalPluginAccessException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public IllegalPluginAccessException(Throwable cause) {
-            super(cause);
-        }
-
-    }
 }
