@@ -17,8 +17,9 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.util;
+package com.codelanx.codelanxlib.util.coverage;
 
+import com.codelanx.codelanxlib.util.Debugger;
 import com.codelanx.codelanxlib.util.number.Single;
 import com.google.common.io.Files;
 import java.io.BufferedReader;
