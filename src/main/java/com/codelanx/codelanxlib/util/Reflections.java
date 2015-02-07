@@ -100,6 +100,46 @@ public final class Reflections {
    }
 
     /**
+     * Returns the {@link JavaPlugin} that immediately called the method in the
+     * current context. Useful for finding out which plugins accessed static API
+     * methods. This method is equivalent to calling
+     * {@code Reflections.getCallingPlugin(0)}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @see Reflections#getCallingPlugin(int)
+     * @return The relevant {@link JavaPlugin}, or {@code null} if not called
+     *         from a {@link JavaPlugin} class (either through an alternative
+     *         Classloader, executing code directly, or some voodoo magic)
+     */
+    public static JavaPlugin getCallingPlugin() {
+        return Reflections.getCallingPlugin(0);
+    }
+
+    /**
+     * Returns the {@link JavaPlugin} that immediately called the method in the
+     * current context. Useful for finding out which plugins accessed static API
+     * methods
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param offset The number of additional methods to look back
+     * @return The relevant {@link JavaPlugin}, or {@code null} if not called
+     *         from a {@link JavaPlugin} class (either through an alternative
+     *         Classloader, executing code directly, or some voodoo magic)
+     */
+    public static JavaPlugin getCallingPlugin(int offset) {
+        StackTraceElement[] elems = Thread.currentThread().getStackTrace();
+        if (elems.length < 3 + offset) {
+            //We shouldn't be able to get this high on the stack at offset 0
+            throw new UnsupportedOperationException("Must be called from a class loaded from a plugin!");
+        }
+        return JavaPlugin.getProvidingPlugin(elems[2 + offset].getClass());
+    }
+
+    /**
      * Returns a "default value" of -1 or {@code false} for a default type's
      * class or autoboxing class. Will return {@code null} if not relevant to
      * primitives
