@@ -41,8 +41,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Class description for {@link CoverageUtil}
+ * Allows for implementing a coverage utility into Bukkit plugins. Note that
+ * this class lacks the ability to account for method overloading as it does not
+ * account for parameters, but instead solely the method and class names. There
+ * is also a lack of internal abstraction, so this class will be overhauled as
+ * of version 0.3.0.
+ * <br><br>
+ * For more information see the
+ * <a href="https://github.com/CodeLanx/CodelanxLib/issues/2">Github ticket</a>
+ * on the issue.
  *
+ * @deprecated To return in version 0.3.0
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
