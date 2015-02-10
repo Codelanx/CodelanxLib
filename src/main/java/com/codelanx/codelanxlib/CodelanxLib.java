@@ -36,26 +36,8 @@ import org.mcstats.Metrics;
  */
 public class CodelanxLib extends JavaPlugin {
 
-    /**
-     * Registers any serializables to Bukkit
-     * 
-     * @since 0.0.1
-     * @version 0.1.0
-     */
-    public CodelanxLib() {
-        SerializationFactory.registerClasses(false,
-                SerializationFactory.getNativeSerializables());
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @since 0.0.1
-     * @version 0.0.1
-     */
-    @Override
-    public void onLoad() {
-        SerializationFactory.registerToBukkit();
+    static {
+        SerializationFactory.registerClasses(SerializationFactory.getNativeSerializables());
     }
 
     /**
