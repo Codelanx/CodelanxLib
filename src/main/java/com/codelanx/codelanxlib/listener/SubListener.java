@@ -58,7 +58,9 @@ public abstract class SubListener<T extends Plugin> implements Listener {
          has finished initializing), in this specific case events should not
          be firing before the Listener has finished running
          */
-        ListenerManager.registerListener(this);
+        if (!ListenerManager.isRegistered(this.getClass())) {
+            ListenerManager.registerListener(this);
+        }
     }
 
     /**
