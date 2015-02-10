@@ -349,7 +349,7 @@ public final class Debugger {
             this.prefix = plugin.getDescription().getPrefix() == null
                     ? plugin.getName()
                     : plugin.getDescription().getPrefix();
-            this.output = true;
+            this.output = this.plugin.getClass() == CodelanxLib.class; //false except for CodelanxLib
             if (plugin.getDescription().getMain().startsWith("com.codelanx.")) {
                 this.url = "http://blooper.codelanx.com/report"; //Hook specifically for codelanx plugins
             } else {
