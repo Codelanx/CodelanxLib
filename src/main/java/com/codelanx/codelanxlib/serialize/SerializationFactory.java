@@ -19,48 +19,27 @@
  */
 package com.codelanx.codelanxlib.serialize;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 /**
- * Class description for {@link SerializationFactory}
+ * Holds a queue of {@link ConfigurationSerializable} classes and registers them
+ * to Bukkit when 
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public class SerializationFactory {
 
-    private final static Set<Class<? extends ConfigurationSerializable>> notRegistered = new LinkedHashSet<>();
-
-    public static void registerClass(boolean toBukkit, Class<? extends ConfigurationSerializable> clazz) {
-        if (!toBukkit) {
-            SerializationFactory.notRegistered.add(clazz);
-        } else {
-            ConfigurationSerialization.registerClass(clazz);
-        }
-    }
-
-    public static void registerClasses(boolean toBukkit, Class<? extends ConfigurationSerializable>... clazz) {
-        for (Class<? extends ConfigurationSerializable> c : clazz) {
-            SerializationFactory.registerClass(toBukkit, c);
-        }
-    }
-    
     public static void registerClass(Class<? extends ConfigurationSerializable> clazz) {
-        SerializationFactory.registerClass(true, clazz);
+        ConfigurationSerialization.registerClass(clazz);
     }
 
     public static void registerClasses(Class<? extends ConfigurationSerializable>... clazz) {
-        SerializationFactory.registerClasses(true, clazz);
-    }
-
-    //Static does not imply synchronization, wheeee
-    public static synchronized void registerToBukkit() {
-        notRegistered.forEach(ConfigurationSerialization::registerClass);
-        notRegistered.clear();
+        for (Class<? extends ConfigurationSerializable> c : clazz) {
+            ConfigurationSerialization.registerClass(c);
+        }
     }
 
     @SuppressWarnings("rawtypes")
