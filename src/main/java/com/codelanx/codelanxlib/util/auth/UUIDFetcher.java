@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 evilmidget38
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -34,7 +36,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 /**
- * All credit to evilmidget38! A small bit of cleanup for Java 8
+ * All credit to evilmidget38! A small bit of cleanup for Java 8. This class can
+ * dynamically retrieve the relevant {@link UUID}s for one or multiple players
+ * on the server
  *
  * @since 0.0.1
  * @author evilmidget38
@@ -49,15 +53,47 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     private final List<String> names;
     private final boolean rateLimiting;
 
+    /**
+     * Makes a copy of the names to be retrieved
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param names The player names to retrieve
+     * @param rateLimiting Whether or not to rate limit requests to Mojang 
+     */
     public UUIDFetcher(List<String> names, boolean rateLimiting) {
         this.names = ImmutableList.copyOf(names);
         this.rateLimiting = rateLimiting;
     }
 
+    /**
+     * Passes the names to the other constructor, and {@code true} for rate
+     * limiting
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @see UUIDFetcher#UUIDFetcher(List, boolean) 
+     * @param names The names to convert
+     */
     public UUIDFetcher(List<String> names) {
         this(names, true);
     }
 
+    /**
+     * Makes a request to mojang's servers of a sublist of at most 100 player's
+     * names.
+     * <br><br> {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @return A {@link Map} of player names to their {@link UUID}s
+     * @throws IOException If there's a problem sending or receiving the request
+     * @throws ParseException If the request response cannot be read
+     * @throws InterruptedException If the thread is interrupted while sleeping
+     */
     @Override
     public Map<String, UUID> call() throws IOException, ParseException, InterruptedException {
         Map<String, UUID> uuidMap = new HashMap<>();
@@ -79,6 +115,16 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return uuidMap;
     }
 
+    /**
+     * Writes a JSON payload an {@link HttpURLConnection} object
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param connection The {@link HttpURLConnection} object to write to
+     * @param body The JSON payload to write
+     * @throws IOException If there is an error closing the stream
+     */
     private static void writeBody(HttpURLConnection connection, String body) throws IOException {
         try (OutputStream stream = connection.getOutputStream()) {
             stream.write(body.getBytes());
@@ -86,6 +132,16 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         }
     }
 
+    /**
+     * Opens the connection to Mojang's profile API
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The {@link HttpURLConnection} object to the API server
+     * @throws IOException If there is a problem opening the stream, a malformed
+     *                     URL, or if there is a ProtocolException
+     */
     private static HttpURLConnection createConnection() throws IOException {
         URL url = new URL(UUIDFetcher.PROFILE_URL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -97,6 +153,15 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return connection;
     }
 
+    /**
+     * Returns a {@link UUID} formatted from Mojang's server to include dashes
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param id The UUID in a "raw" format without dashes
+     * @return The newly constructed {@link UUID} object
+     */
     private static UUID getUUID(String id) {
         return UUID.fromString(id.substring(0, 8)
                 + "-" + id.substring(8, 12)
@@ -105,6 +170,15 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
                 + "-" +id.substring(20, 32));
     }
 
+    /**
+     * Converts a {@link UUID} into bytes
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param uuid The {@link UUID} to convert
+     * @return The new byte array
+     */
     public static byte[] toBytes(UUID uuid) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
         byteBuffer.putLong(uuid.getMostSignificantBits());
@@ -112,6 +186,16 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return byteBuffer.array();
     }
 
+    /**
+     * Returns a {@link UUID} from a byte array
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param array The byte array to convert
+     * @return The new {@link UUID} object
+     * @throws IllegalArgumentException if the array length is not 16
+     */
     public static UUID fromBytes(byte[] array) {
         Validate.isTrue(array.length == 16, "Illegal byte array length: " + array.length);
         ByteBuffer byteBuffer = ByteBuffer.wrap(array);
@@ -128,10 +212,10 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
      * @version 0.0.1
      * 
      * @param name The username of the player to fetch a {@link UUID} for
-     * @return
-     * @throws IOException
-     * @throws ParseException
-     * @throws InterruptedException 
+     * @return The {@link UUID} of the player name that is passed
+     * @throws IOException If there's a problem sending or receiving the request
+     * @throws ParseException If the request response cannot be read
+     * @throws InterruptedException If the thread is interrupted while sleeping
      */
     public static UUID getUUIDOf(String name) throws IOException, ParseException, InterruptedException {
         return new UUIDFetcher(Arrays.asList(name)).call().get(name);
