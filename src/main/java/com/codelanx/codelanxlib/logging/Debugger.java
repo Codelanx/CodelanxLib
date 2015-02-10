@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.logging;
 
 import com.codelanx.codelanxlib.util.exception.Exceptions;
 import com.codelanx.codelanxlib.CodelanxLib;
+import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.Scheduler;
 import com.codelanx.codelanxlib.util.exception.IllegalPluginAccessException;
@@ -58,10 +59,8 @@ public final class Debugger {
 
     private final static Map<Plugin, DebugOpts> opts = new HashMap<>();
     private final static Logger logger = Logger.getLogger(Debugger.class.getName());
-    private static boolean listenerHooked = false;
 
-    private Debugger() {
-    }
+    private Debugger() {}
 
     private static DebugOpts getOpts() {
         Plugin p = Reflections.getCallingPlugin(1);
@@ -93,23 +92,11 @@ public final class Debugger {
         Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class),
                 "Debugger#hookBukkit may only be called by CodelanxLib!");
         //end check - add hook
-        if (!Debugger.listenerHooked) {
+        Listener l = new BukkitPluginListener();
+        if (!ListenerManager.isRegisteredToBukkit(CodelanxLib.get(), l)) {
             //Add listener hook for new, incoming plugins
-            Bukkit.getServer().getPluginManager().registerEvents(new Listener() {
-
-                @EventHandler
-                public void onEnable(PluginEnableEvent event) {
-                    for (Handler h : event.getPlugin().getLogger().getHandlers()) {
-                        if (h instanceof ExceptionHandler) {
-                            return;
-                        }
-                    }
-                    event.getPlugin().getLogger().addHandler(new ExceptionHandler(event.getPlugin()));
-                }
-
-            }, CodelanxLib.get());
+            Bukkit.getServer().getPluginManager().registerEvents(l, CodelanxLib.get());
         }
-        Debugger.listenerHooked = true; //potential failure point on reload?
         //Hook any current plugins without a handler
         pluginLoop:
         for (Plugin p : Bukkit.getServer().getPluginManager().getPlugins()) {
@@ -342,7 +329,7 @@ public final class Debugger {
      * @author 1Rogue
      * @version 0.1.0
      */
-    private static class DebugOpts {
+    private final static class DebugOpts {
 
         private final Plugin plugin;
         private final String prefix;
@@ -509,6 +496,37 @@ public final class Debugger {
          */
         @Override
         public void close() throws SecurityException {} //nothing to close
+
+    }
+
+    /**
+     * A {@link Listener} for adding an {@link ExceptionHandler} to a
+     * {@link Plugin}'s {@link Logger} upon it being enabled
+     * 
+     * @since 0.1.0
+     * @author 1Rogue
+     * @version 0.1.0
+     */
+    private final static class BukkitPluginListener implements Listener {
+
+        /**
+         * Appends an {@link ExceptionHandler} to a {@link Plugin}'s
+         * {@link Logger}
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param event The relevant {@link PluginEnableEvent} from Bukkit
+         */
+        @EventHandler
+        public void onEnable(PluginEnableEvent event) {
+            for (Handler h : event.getPlugin().getLogger().getHandlers()) {
+                if (h instanceof ExceptionHandler) {
+                    return;
+                }
+            }
+            event.getPlugin().getLogger().addHandler(new ExceptionHandler(event.getPlugin()));
+        }
 
     }
 
