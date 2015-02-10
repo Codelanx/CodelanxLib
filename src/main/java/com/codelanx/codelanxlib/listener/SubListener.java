@@ -42,25 +42,15 @@ public abstract class SubListener<T extends Plugin> implements Listener {
     protected final T plugin;
 
     /**
-     * Stores the {@link Plugin} reference and registers the {@link SubListener}
-     * to CodelanxLib and Bukkit
+     * Stores the {@link Plugin} reference
      *
      * @since 0.0.1
      * @version 0.1.0
      *
-     * @param plugin The
+     * @param plugin The {@link Plugin} relevant to this {@link SubListener}
      */
-    @SuppressWarnings("LeakingThisInConstructor")
     public SubListener(T plugin) {
         this.plugin = plugin;
-        /*
-         While this would normally be an issue (registering before child class
-         has finished initializing), in this specific case events should not
-         be firing before the Listener has finished running
-         */
-        if (!ListenerManager.isRegistered(this.getClass())) {
-            ListenerManager.registerListener(this);
-        }
     }
 
     /**
@@ -70,8 +60,7 @@ public abstract class SubListener<T extends Plugin> implements Listener {
      * @since 0.1.0
      * @version 0.1.0
      */
-    public void onDisable() {
-    }
+    public void onDisable() {}
 
     /**
      * Returns the {@link Plugin} used for this {@link SubListener}
@@ -84,4 +73,18 @@ public abstract class SubListener<T extends Plugin> implements Listener {
     public T getPlugin() {
         return this.plugin;
     }
+
+    /**
+     * Registers the listener to the {@link ListenerManager}. If the listener
+     * class is already registered, this method will do nothing.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
+    public final void register() {
+        if (!ListenerManager.isRegistered(this.getClass())) {
+            ListenerManager.registerListener(this);
+        }
+    }
+
 }
