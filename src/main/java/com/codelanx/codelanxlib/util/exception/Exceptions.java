@@ -108,7 +108,8 @@ public final class Exceptions {
      * @version 0.1.0
      *
      * @param state The conditional to verify
-     * @param message The message to include in an {@link UnsupportedOperation}
+     * @param message The message to include in an
+     *                {@link UnsupportedOperationException}
      * @throws UnsupportedOperationException if {@code state} is {@code false}
      */
     public static void unsupportedOperation(boolean state, String message) {
@@ -134,16 +135,17 @@ public final class Exceptions {
     /**
      * Provides a null check, and throws a custom {@link RuntimeException} as
      * specified by the passed class parameter
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param <T> The exception type
      * @param obj The object to check for {@code null}
      * @param message The message to add to the exception if {@code obj} is null
      * @param ex The {@link RuntimeException} class to instantiate
      */
     public static <T extends RuntimeException> void notNull(Object obj, String message, Class<T> ex) {
+        Exceptions.isTrue(obj != null, message, ex);
         if (obj == null) {
             throw Exceptions.newException(ex, message);
         }
@@ -152,10 +154,10 @@ public final class Exceptions {
     /**
      * Provides a null check, and throws a custom {@link RuntimeException} as
      * specified by the passed class parameter
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param <T> The exception type
      * @param obj The object to check for {@code null}
      * @param ex The {@link RuntimeException} class to instantiate
@@ -165,13 +167,46 @@ public final class Exceptions {
     }
 
     /**
+     * Validates a statement is {@code true}, and throws a custom
+     * {@link RuntimeException} as specified by the passed class parameter
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param <T> The exception type
+     * @param validate The {@code boolean} to evaluate
+     * @param message The message to add to the exception if {@code obj} is null
+     * @param ex The {@link RuntimeException} class to instantiate
+     */
+    public static <T extends RuntimeException> void isTrue(boolean validate, String message, Class<T> ex) {
+        if (!validate) {
+            throw Exceptions.newException(ex, message);
+        }
+    }
+
+    /**
+     * Validates a statement is {@code true}, and throws a custom
+     * {@link RuntimeException} as specified by the passed class parameter
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param <T> The exception type
+     * @param validate The {@code boolean} to evaluate
+     * @param ex The {@link RuntimeException} class to instantiate
+     */
+    public static <T extends RuntimeException> void isTrue(boolean validate, Class<T> ex) {
+        Exceptions.isTrue(validate, null, ex);
+    }
+
+    /**
      * Dynamically constructs a new instance of a {@link RuntimeException}
      * either via a {@link RuntimeException#RuntimeException(String)}
      * constructor or a no-argument constructor
-     * 
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @param <T> The {@link RuntimeException} type
      * @param ex The exception class to instantiate
      * @param message The message to add, {@code null} if there is no message
@@ -186,11 +221,7 @@ public final class Exceptions {
             } catch (NoSuchMethodException e) {
                 Debugger.print(Level.WARNING, String.format("Class '%s' does not have a String "
                         + "message constructor! Using default constructor...", ex.getName()));
-            } catch (SecurityException
-                    | InstantiationException
-                    | IllegalAccessException
-                    | IllegalArgumentException
-                    | InvocationTargetException e) {
+            } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 Debugger.error(e, "Error creating new exception instance");
             }
         }
@@ -202,6 +233,62 @@ public final class Exceptions {
         }
         throw new IllegalArgumentException(String.format("Class '%s' does not have the "
                 + "appropriate constructors to be instantiated!", ex.getName()));
+    }
+
+    /**
+     * Creates a readable stack trace from a passed {@link Throwable}. This
+     * method will reproduce the same output that
+     * {@link Throwable#printStackTrace()} would output
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param t The {@link Throwable} to make readable
+     * @return A string representing the entire stack trace
+     */
+    public static String readableStackTrace(Throwable t) {
+        StringBuilder sb = new StringBuilder();
+        StackTraceElement[] trace = t.getStackTrace();
+        for (StackTraceElement elem : trace) {
+            sb.append("\tat ").append(elem).append('\n');
+        }
+        if (t.getCause() != null) {
+            Exceptions.readableStackTraceAsCause(sb, t.getCause(), trace);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Recursive method for appending {@link Throwable] causes that are appended
+     * to a {@link Throwable}
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param sb The {@link StringBuilder} being appended to
+     * @param t The {@link Throwable} root
+     * @param causedTrace An array of already visited stack nodes
+     */
+    private static void readableStackTraceAsCause(StringBuilder sb, Throwable t, StackTraceElement[] causedTrace) {
+        // Compute number of frames in common between previous and caused
+        StackTraceElement[] trace = t.getStackTrace();
+        int m = trace.length - 1;
+        int n = causedTrace.length - 1;
+        while (m >= 0 && n >= 0 && trace[m].equals(causedTrace[n])) {
+            m--; n--;
+        }
+        int common = trace.length - 1 - m;
+
+        sb.append("Caused by: ").append(t).append('\n');
+        for (int i = 0; i <= m; i++) {
+            sb.append("\tat ").append(trace[i]).append('\n');
+        }
+        if (common != 0) {
+            sb.append("\t... ").append(common).append(" more\n");
+        }
+        if (t.getCause() != null) {
+            Exceptions.readableStackTraceAsCause(sb, t.getCause(), trace);
+        }
     }
 
 }
