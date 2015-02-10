@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.data;
 
-import com.codelanx.codelanxlib.util.Debugger;
+import com.codelanx.codelanxlib.logging.Debugger;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;

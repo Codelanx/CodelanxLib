@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2015 Codelanx
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -40,7 +38,7 @@ import org.json.simple.parser.ParseException;
  *
  * @since 0.0.1
  * @author evilmidget38
- * @author 1Rogue slight cleanup
+ * @author 1Rogue (Cleanup / Documentation)
  * @version 0.1.0
  */
 public class UUIDFetcher implements Callable<Map<String, UUID>> {
@@ -122,6 +120,19 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return new UUID(mostSignificant, leastSignificant);
     }
 
+    /**
+     * Returns the {@link UUID} of a player's username. Note that this is a
+     * blocking method
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param name The username of the player to fetch a {@link UUID} for
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     * @throws InterruptedException 
+     */
     public static UUID getUUIDOf(String name) throws IOException, ParseException, InterruptedException {
         return new UUIDFetcher(Arrays.asList(name)).call().get(name);
     }

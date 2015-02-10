@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.data;
 
-import com.codelanx.codelanxlib.util.Debugger;
+import com.codelanx.codelanxlib.logging.Debugger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

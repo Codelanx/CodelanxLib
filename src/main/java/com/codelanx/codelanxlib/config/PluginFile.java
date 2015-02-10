@@ -23,7 +23,7 @@ import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
 import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.util.Reflections;
-import com.codelanx.codelanxlib.util.Debugger;
+import com.codelanx.codelanxlib.logging.Debugger;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;

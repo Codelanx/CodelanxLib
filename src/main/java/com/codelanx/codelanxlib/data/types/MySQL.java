@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.data.types;
 
 import com.codelanx.codelanxlib.data.SQLDataType;
-import com.codelanx.codelanxlib.util.Debugger;
+import com.codelanx.codelanxlib.logging.Debugger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

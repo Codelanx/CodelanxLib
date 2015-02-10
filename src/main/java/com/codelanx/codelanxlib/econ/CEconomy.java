@@ -47,7 +47,7 @@ public class CEconomy extends Observable {
     /**
      * Constructor. Will check if the Vault {@link Economy} class is proxied and
      * if not, then it will manually call for it to be proxied.
-     * @param plugin 
+     * @param plugin The {@link Plugin} that instantiated this class
      */
     public CEconomy(Plugin plugin) {
         this.format = Lang.getFormat(plugin);
@@ -250,7 +250,7 @@ public class CEconomy extends Observable {
 
     /**
      * Returns the underlying {@link Economy} object that is backed by a
-     * {@link VaultProxy} {@link InvocationHandler}
+     * {@link VaultProxy} InvocationHandler
      * 
      * @since 0.0.1
      * @version 0.0.1

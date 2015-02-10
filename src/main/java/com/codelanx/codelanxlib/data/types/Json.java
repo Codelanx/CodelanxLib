@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.data.types;
 
 import com.codelanx.codelanxlib.data.FileDataType;
-import com.codelanx.codelanxlib.util.Debugger;
+import com.codelanx.codelanxlib.logging.Debugger;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;

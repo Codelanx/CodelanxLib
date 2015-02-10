@@ -19,7 +19,7 @@
  */
 package com.codelanx.codelanxlib.util.coverage;
 
-import com.codelanx.codelanxlib.util.Debugger;
+import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.util.number.Single;
 import com.google.common.io.Files;
 import java.io.BufferedReader;

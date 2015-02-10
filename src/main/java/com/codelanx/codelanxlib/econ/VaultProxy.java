@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
-import com.codelanx.codelanxlib.util.Debugger;
+import com.codelanx.codelanxlib.logging.Debugger;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

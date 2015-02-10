@@ -21,7 +21,7 @@ package com.codelanx.codelanxlib;
 
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.serialize.*;
-import com.codelanx.codelanxlib.util.Debugger;
+import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.util.Scheduler;
 import java.io.IOException;
 import org.bukkit.plugin.java.JavaPlugin;
