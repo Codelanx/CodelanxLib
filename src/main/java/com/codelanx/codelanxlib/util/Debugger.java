@@ -19,8 +19,9 @@
  */
 package com.codelanx.codelanxlib.util;
 
+import com.codelanx.codelanxlib.util.exception.Exceptions;
 import com.codelanx.codelanxlib.CodelanxLib;
-import com.codelanx.codelanxlib.util.Exceptions.IllegalPluginAccessException;
+import com.codelanx.codelanxlib.util.exception.IllegalPluginAccessException;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -38,13 +39,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
 
 /**
  * Provides toggleable logging supporting for debug statements and error
- * reporting to a webservice for easy bugfixing. Will find unreported
- * errors as well and submit them
+ * reporting to a webservice for easy bugfixing. Will find unreported errors as
+ * well and submit them. Note that this class is provided as a utility, it
+ * should not be used as a substitute for general logging statements that are
+ * <i>always</i> available. Use the {@link Logging} class instead.
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -60,7 +62,7 @@ public final class Debugger {
     }
 
     private static DebugOpts getOpts() {
-        Plugin p = Debugger.getDeclaringPlugin();
+        Plugin p = Reflections.getCallingPlugin(1);
         return Debugger.getOpts(p);
     }
 
@@ -73,28 +75,16 @@ public final class Debugger {
         return back;
     }
 
-    private static JavaPlugin getDeclaringPlugin() {
-        StackTraceElement[] elems = Thread.currentThread().getStackTrace();
-        if (elems.length < 5) {
-            throw new UnsupportedOperationException("Must be called from a class loaded from a plugin!");
-        }
-        JavaPlugin back = JavaPlugin.getProvidingPlugin(elems[4].getClass());
-        if (back == null) {
-            throw new UnsupportedOperationException("Must be called from a class loaded from a plugin!");
-        }
-        return back;
-    }
-
     /**
      * Hooks into Bukkit's plugin system and adds a handler to all plugin
-     * loggers to allow catching unreported exceptions. If already hooked,
-     * will do nothing.
-     * 
+     * loggers to allow catching unreported exceptions. If already hooked, will
+     * do nothing.
+     *
      * @since 0.1.0
      * @version 0.1.0
-     * 
+     *
      * @throws IllegalPluginAccessException If something other than
-     *                                {@link CodelanxLib} calls this method
+     * {@link CodelanxLib} calls this method
      */
     public static void hookBukkit() {
         //Check to make sure CodelanxLib is calling it
@@ -130,6 +120,18 @@ public final class Debugger {
         }
     }
 
+    /**
+     * Sets the URL to send a JSON payload of server information to as well as
+     * any other relevant information for when a stack trace occurs. This allows
+     * for a simple way of setting up error reporting. The default value for
+     * this is {@code null}, and as a result will not send any information upon
+     * errors occurring unless a target URL is set.
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param url The URL to send JSON payloads to
+     */
     public static void setReportingURL(String url) {
         DebugOpts opts = Debugger.getOpts();
         if (opts != null) {
@@ -137,6 +139,15 @@ public final class Debugger {
         }
     }
 
+    /**
+     * Sets whether or not to actually output any calls from your plugin to the
+     * Debugger. This defaults to {@code false}.
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param output {@code true} if calls to the Debugger should print out
+     */
     public static void toggleOutput(boolean output) {
         DebugOpts opts = Debugger.getOpts();
         if (opts != null) {
@@ -144,29 +155,76 @@ public final class Debugger {
         }
     }
 
+    /**
+     * Prints to the Debugging {@link Logger} if
+     * {@link Debugger#toggleOutput(boolean)} is set to {@code true}
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param level The {@link Level} to print at
+     * @param format The formatting string
+     * @param args The printf arguments
+     */
     public static void print(Level level, String format, Object... args) {
         DebugOpts opts = Debugger.getOpts();
         if (opts == null || !opts.doOutput()) {
             return;
         }
-        Debugger.logger.log(level, String.format("[%s#DEBUG]=> %s",
+        Debugger.logger.log(level, String.format("[%s]=> %s",
                 opts.getPrefix(), String.format(format, args)));
     }
 
+    /**
+     * Prints to the Debugging {@link Logger} at {@link Level#INFO} if
+     * {@link Debugger#toggleOutput(boolean)} is set to {@code true}
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param format The formatting string
+     * @param args The printf arguments
+     */
     public static void print(String format, Object... args) {
         Debugger.print(Level.INFO, format, args);
     }
 
+    /**
+     * Prints to the Debugging {@link Logger} at {@link Level#SEVERE} if
+     * {@link Debugger#toggleOutput(boolean)} is set to {@code true}. It will
+     * also report the error with the URL set via
+     * {@link Debugger#setReportingURL(String)}. If that is {@code null},
+     * nothing will be reported
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param error The {@link Throwable} to be printed
+     * @param message The formatting string
+     * @param args The formatting arguments
+     */
     public static void error(Throwable error, String message, Object... args) {
-        Debugger.logger.log(Level.SEVERE, String.format(message, args), error);
         DebugOpts opts = Debugger.getOpts();
-        if (opts == null || opts.getUrl() == null) {
+        if (opts == null) {
             return;
+        }
+        if (opts.doOutput()) {
+            Debugger.logger.log(Level.SEVERE, String.format(message, args), error);
         }
         //Send JSON payload
         Debugger.report(opts, error, String.format(message, args));
     }
 
+    /**
+     * Reports an error to a specific reporting URL
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param opts The {@link DebugOpts} relevant to the current plugin context
+     * @param error The {@link Throwable} to report
+     * @param message The message relevant to the error
+     */
     private static void report(DebugOpts opts, Throwable error, String message) {
         if (opts == null || opts.getUrl() == null) {
             return;
@@ -176,13 +234,25 @@ public final class Debugger {
             try {
                 Debugger.send(opts.getUrl(), out);
             } catch (IOException ex) {
-                Debugger.print(Level.WARNING, "Unable to report error!");
+                Debugger.logger.log(Level.WARNING, "Unable to report error!");
                 //Logger-generated errors should not be re-reported, and
                 //no ErrorManager is present for this instance
             }
         }, 0);
     }
 
+    /**
+     * Returns a JSON payload containing as much relevant server information as
+     * possible (barring anything identifiable) and the error itself
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param opts The {@link DebugOpts} relevant to the current plugin context
+     * @param error The {@link Throwable} to report
+     * @param message The message relevant to the error
+     * @return A new {@link JSONObject} payload
+     */
     private static JSONObject getPayload(DebugOpts opts, Throwable error, String message) {
         JSONObject back = new JSONObject();
         back.put("project-type", "bukkit-plugin");
@@ -236,10 +306,20 @@ public final class Debugger {
         java.put("bit", System.getProperty("sun.arch.data.model"));
         back.put("java", java);
         back.put("message", message);
-        back.put("error", Debugger.readableStackTrace(error));
+        back.put("error", Exceptions.readableStackTrace(error));
         return back;
     }
 
+    /**
+     * Sends a JSON payload to a URL specified by the string parameter
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param url The URL to report to
+     * @param payload The JSON payload to send via POST
+     * @throws IOException If the sending failed
+     */
     private static void send(String url, JSONObject payload) throws IOException {
         URL loc = new URL(url);
         HttpURLConnection http = (HttpURLConnection) loc.openConnection();
@@ -253,40 +333,13 @@ public final class Debugger {
         }
     }
 
-    private static String readableStackTrace(Throwable t) {
-        StringBuilder sb = new StringBuilder();
-        StackTraceElement[] trace = t.getStackTrace();
-        for (StackTraceElement elem : trace) {
-            sb.append("\tat ").append(elem).append('\n');
-        }
-        if (t.getCause() != null) {
-            Debugger.readableStackTraceAsCause(sb, t.getCause(), trace);
-        }
-        return sb.toString();
-    }
-
-    private static void readableStackTraceAsCause(StringBuilder sb, Throwable t, StackTraceElement[] causedTrace) {
-        // Compute number of frames in common between previous and caused
-        StackTraceElement[] trace = t.getStackTrace();
-        int m = trace.length - 1;
-        int n = causedTrace.length - 1;
-        while (m >= 0 && n >=0 && trace[m].equals(causedTrace[n])) {
-            m--; n--;
-        }
-        int common = trace.length - 1 - m;
-
-        sb.append("Caused by: ").append(t).append('\n');
-        for (int i = 0; i <= m; i++) {
-            sb.append("\tat ").append(trace[i]).append('\n');
-        }
-        if (common != 0) {
-            sb.append("\t... ").append(common).append(" more\n");
-        }
-        if (t.getCause() != null) {
-            Debugger.readableStackTraceAsCause(sb, t.getCause(), causedTrace);
-        }
-    }
-
+    /**
+     * Represents internally stored debugging options for specific plugins
+     * 
+     * @since 0.1.0
+     * @author 1Rogue
+     * @version 0.1.0
+     */
     private static class DebugOpts {
 
         private final Plugin plugin;
@@ -294,6 +347,14 @@ public final class Debugger {
         private boolean output;
         private String url;
 
+        /**
+         * Constructor. Determines the logging prefix and initializes fields
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param plugin The {@link Plugin} relevant to this instance
+         */
         public DebugOpts(Plugin plugin) {
             this.plugin = plugin;
             this.prefix = plugin.getDescription().getPrefix() == null
@@ -307,41 +368,118 @@ public final class Debugger {
             }
         }
 
+        /**
+         * Returns {@code true} if output is printed to the debug {@link Logger}
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return {@code true} if output is printed
+         */
         public boolean doOutput() {
             return this.output;
         }
 
+        /**
+         * Toggles whether or not to print information to the debugger
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param output {@code true} to enable output
+         */
         public void toggleOutput(boolean output) {
             this.output = output;
         }
 
+        /**
+         * Returns the URL that errors are reported to
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The error reporting URL
+         */
         public String getUrl() {
             return this.url;
         }
 
+        /**
+         * Sets the URL to report errors to
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param url The error reporting URL
+         */
         public void setUrl(String url) {
             this.url = url;
         }
 
+        /**
+         * Returns the logging prefix used for debug output. This is typically
+         * the plugin's name unless a prefix is specified in the plugin's
+         * {@code plugin.yml} file.
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The prefix used for debug output
+         */
         public String getPrefix() {
             return this.prefix;
         }
 
+        /**
+         * Returns the {@link Plugin} that this {@link DebugOpts} pertains to
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The relevant {@link Plugin} to this instance
+         */
         public Plugin getPlugin() {
             return this.plugin;
         }
 
     }
 
+    /**
+     * Attachable {@link Handler} used to catch any exceptions that are logged
+     * directly to a plugin's {@link Logger}
+     * 
+     * @since 0.1.0
+     * @author 1Rogue
+     * @version 0.1.0
+     */
     public static class ExceptionHandler extends Handler {
 
         private final Plugin plugin;
 
+        /**
+         * Constructor. Sets the plugin to a field and sets the filter for this
+         * {@link Handler} to {@link Level#SEVERE}
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param plugin The relevant {@link Plugin} to the {@link Logger}
+         */
         public ExceptionHandler(Plugin plugin) {
             this.plugin = plugin;
             super.setFilter((LogRecord record) -> record.getLevel() == Level.SEVERE);
         }
 
+        /**
+         * If {@link LogRecord#getThrown()} does not return {@code null}, then
+         * this will call {@link Debugger#report(DebugOpts, Throwable, String)}
+         * <br><br> {@inheritDoc}
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param record {@inheritDoc}
+         */
         @Override
         public void publish(LogRecord record) {
             if (record.getThrown() != null) {
@@ -350,9 +488,23 @@ public final class Debugger {
             }
         }
 
+        /**
+         * Does nothing
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         */
         @Override
         public void flush() {} //not buffered
 
+        /**
+         * Does nothing
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @throws SecurityException Never happens
+         */
         @Override
         public void close() throws SecurityException {} //nothing to close
 
