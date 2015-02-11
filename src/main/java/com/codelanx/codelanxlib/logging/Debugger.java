@@ -79,33 +79,26 @@ public final class Debugger {
     /**
      * Hooks into Bukkit's plugin system and adds a handler to all plugin
      * loggers to allow catching unreported exceptions. If already hooked, will
-     * do nothing.
+     * do nothing. This method will continue to hook new plugins via a listener
      *
      * @since 0.1.0
      * @version 0.1.0
      *
      * @throws IllegalPluginAccessException If something other than
-     * {@link CodelanxLib} calls this method
+     *                                      {@link CodelanxLib} calls this
+     *                                      method
      */
     public static void hookBukkit() {
         //Check to make sure CodelanxLib is calling it
         Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class),
                 "Debugger#hookBukkit may only be called by CodelanxLib!");
-        //end check - add hook
         Listener l = new BukkitPluginListener();
         if (!ListenerManager.isRegisteredToBukkit(CodelanxLib.get(), l)) {
-            //Add listener hook for new, incoming plugins
             Bukkit.getServer().getPluginManager().registerEvents(l, CodelanxLib.get());
         }
         //Hook any current plugins without a handler
-        pluginLoop:
-        for (Plugin p : Bukkit.getServer().getPluginManager().getPlugins()) {
-            for (Handler h : p.getLogger().getHandlers()) {
-                if (h instanceof ExceptionHandler) {
-                    continue pluginLoop;
-                }
-            }
-            p.getLogger().addHandler(new ExceptionHandler(p));
+        for (Plugin p : Bukkit.getServer().getPluginManager().getPlugins()) { //boo arrays
+            ExceptionHandler.apply(p);
         }
     }
 
@@ -497,6 +490,24 @@ public final class Debugger {
         @Override
         public void close() throws SecurityException {} //nothing to close
 
+        /**
+         * Applies a new {@link Handler} to the passed {@link Plugin}'s
+         * {@link Logger} if it is not already attached to it
+         * 
+         * @since 0.0.1
+         * @version 0.0.1
+         * 
+         * @param p The {@link Plugin} with the {@link Logger} to check
+         */
+        public static void apply(Plugin p) {
+            for (Handler h : p.getLogger().getHandlers()) {
+                if (h instanceof ExceptionHandler) {
+                    return;
+                }
+            }
+            p.getLogger().addHandler(new ExceptionHandler(p));
+        }
+
     }
 
     /**
@@ -520,12 +531,7 @@ public final class Debugger {
          */
         @EventHandler
         public void onEnable(PluginEnableEvent event) {
-            for (Handler h : event.getPlugin().getLogger().getHandlers()) {
-                if (h instanceof ExceptionHandler) {
-                    return;
-                }
-            }
-            event.getPlugin().getLogger().addHandler(new ExceptionHandler(event.getPlugin()));
+            ExceptionHandler.apply(event.getPlugin());
         }
 
     }
