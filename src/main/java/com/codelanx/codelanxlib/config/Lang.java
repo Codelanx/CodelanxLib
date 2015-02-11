@@ -70,9 +70,9 @@ public interface Lang extends PluginFile {
      */
     default public String format(Object... args) {
         if (this.getClass().isAnonymousClass()) {
-            return Lang.__(String.format(this.getDefault(), args));
+            return Lang.color(String.format(this.getDefault(), args));
         }
-        return Lang.__(String.format(String.valueOf(this.getConfig().get(this.getPath(), this.getDefault())), args));
+        return Lang.color(String.format(String.valueOf(this.getConfig().get(this.getPath(), this.getDefault())), args));
     }
 
     /**
@@ -101,7 +101,7 @@ public interface Lang extends PluginFile {
         }
         repl = repl.replaceAll("\\{PLURALA (.*)\\|(.*)\\}", amount == 1 ? "is " + amount + " $1" : "are " + amount + " $2");
         repl = repl.replaceAll("\\{PLURAL (.*)\\|(.*)\\}", amount == 1 ? "$1" : "$2");
-        return Lang.__(String.format(repl, args));
+        return Lang.color(String.format(repl, args));
     }
 
     /**
@@ -180,7 +180,7 @@ public interface Lang extends PluginFile {
      * @param color String with un-converted color codes
      * @return string with correct chat colors included
      */
-    public static String __(String color) {
+    public static String color(String color) {
         return ChatColor.translateAlternateColorCodes('&', color);
     }
 
@@ -236,7 +236,7 @@ public interface Lang extends PluginFile {
         if (message == null || target == null) {
             return;
         }
-        String s = Lang.__(message.format(args));
+        String s = Lang.color(message.format(args));
         if (!s.isEmpty()) {
             target.sendMessage(s);
         }
@@ -258,7 +258,7 @@ public interface Lang extends PluginFile {
         if (target == null || format == null) {
             return;
         }
-        target.sendMessage(Lang.__(String.format(format, args)));
+        target.sendMessage(Lang.color(String.format(format, args)));
     }
 
 }
