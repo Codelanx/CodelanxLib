@@ -7,6 +7,13 @@
     <packaging>jar</packaging>
     <name>CodelanxLib</name>
     <description>External plugin library for simplified plugin making</description>
+    <properties>
+        <prefix>CL-Lib</prefix>
+        <website>http://codelanx.com/</website>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
 
     <repositories>
         <repository>
@@ -126,9 +133,4 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
 </project>
