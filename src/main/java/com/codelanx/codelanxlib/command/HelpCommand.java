@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.internal.InternalLang;
+import com.codelanx.codelanxlib.util.Cache;
 import com.codelanx.codelanxlib.util.Paginator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,9 +44,14 @@ import org.bukkit.plugin.Plugin;
 public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
 
     /** Internal {@link Paginator} cache, used to pre-render and output pages */
-    private Paginator pages;
-    /** The time in milliseconds that a cache should be remade */
-    private long nextCache;
+    private final Cache<Paginator> pages = new Cache<Paginator>(TimeUnit.MINUTES.toMillis(5)) {
+
+        @Override
+        protected void update() {
+            this.setCurrentValue(HelpCommand.this.newPaginator());
+        }
+        
+    };
     /** The number of commands to show per page */
     private int factor = 5;
 
@@ -85,8 +91,7 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
         } catch (NumberFormatException ex) {
             return CommandStatus.BAD_ARGS;
         }
-        this.checkCache();
-        sender.sendMessage(this.pages.getPage(select));
+        sender.sendMessage(this.pages.get().getPage(select));
         return CommandStatus.SUCCESS;
     }
 
@@ -105,7 +110,7 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
         if (args.length < 1) {
             return new ArrayList<>();
         }
-        int size = this.pages.size();
+        int size = this.pages.get().size();
         int curr;
         try {
             curr = Integer.parseInt(args[0]);
@@ -123,29 +128,6 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
             }
         }
         return back;
-    }
-
-    /**
-     * Checks if the {@link Paginator} cache needs to be reset
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     */
-    private void checkCache() {
-        if (this.pages == null || System.currentTimeMillis() >= this.nextCache) {
-            this.setNextCache();
-        }
-    }
-
-    /**
-     * Resets the {@link Paginator} cache
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     */
-    private void setNextCache() {
-        this.nextCache = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
-        this.pages = this.newPaginator();
     }
 
     /**
@@ -192,7 +174,7 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
      */
     public void setItemsPerPage(int factor) {
         this.factor = factor;
-        this.setNextCache();
+        this.pages.forceRefresh();
     }
 
     /**
