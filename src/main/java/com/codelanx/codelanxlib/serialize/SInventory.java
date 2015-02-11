@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
@@ -40,26 +41,74 @@ import org.bukkit.inventory.ItemStack;
 @SerializableAs("Inventory")
 public class SInventory implements ConfigurationSerializable {
 
+    /**
+     * Represents a collection of the relevant inventory items
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     */
     protected final List<ItemStack> items = new ArrayList<>();
-    
+
+    /**
+     * Copies the passed {@link ItemStack} objects
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param contents The {@link ItemStack}s to copy
+     */
     public SInventory(ItemStack... contents) {
-        this.items.addAll(Arrays.asList(contents));
-        this.items.removeIf((i) -> {return i == null;});
+        this.items.addAll(Arrays.asList(contents).stream()
+                .map(i -> i.clone()).collect(Collectors.toList()));
     }
 
+    /**
+     * {@link ConfigurationSerializable} constructor. Should not be used by
+     * anything other than Bukkit.
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     */
     @SuppressWarnings("unchecked")
-    public SInventory(Map<String, Object> map) {
-        this.items.addAll((Collection<? extends ItemStack>) map.get("items"));
+    public SInventory(Map<String, Object> config) {
+        this.items.addAll((Collection<? extends ItemStack>) config.get("items"));
     }
 
+    /**
+     * Returns a copy of this instance's stored {@link ItemStack ItemStacks}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return A copy of the relevant {@link ItemStack ItemStacks}
+     */
     public List<ItemStack> getContents() {
-        return Collections.unmodifiableList(this.items);
+        return Collections.unmodifiableList(this.items.stream().map(i -> i.clone())
+                .collect(Collectors.toList()));
     }
 
+    /**
+     * Returns a copy of this instance's stored {@link ItemStack ItemStacks}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return A copy of the relevant {@link ItemStack ItemStacks}
+     */
     public ItemStack[] getContentsAsArray() {
-        return this.items.toArray(new ItemStack[this.items.size()]);
+        return this.getContents().toArray(new ItemStack[this.items.size()]);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return {@inheritDoc}
+     */
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> back = new HashMap<>();
@@ -67,12 +116,32 @@ public class SInventory implements ConfigurationSerializable {
         return back;
     }
 
-    public static SInventory valueOf(Map<String, Object> map) {
-        return new SInventory(map);
+    /**
+     * Creates a new {@link SInventory} object and returns it. Should only be
+     * used by Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     * @return A new {@link SInventory} object
+     */
+    public static SInventory valueOf(Map<String, Object> config) {
+        return new SInventory(config);
     }
 
-    public static SInventory deserialize(Map<String, Object> map) {
-        return new SInventory(map);
+    /**
+     * Creates a new {@link SInventory} object and returns it. Should only be
+     * used by Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     * @return A new {@link SInventory} object
+     */
+    public static SInventory deserialize(Map<String, Object> config) {
+        return new SInventory(config);
     }
 
 }

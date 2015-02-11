@@ -39,17 +39,31 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
      * The underlying {@link CommandHandler} in use by this
      * {@link org.bukkit.plugin.Plugin Plugin}
      * 
-     * @since 0.1.0
-     * @version 0.1.0
+     * @since 0.0.1
+     * @version 0.0.1
      */
     protected CommandHandler<E> commands;
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     */
     @Override
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Enabling command handler...");
         this.commands = new CommandHandler<>((E) this, this.getMainCommand());
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The {@link CommandHandler} for this instance
+     */
     @Override
     public CommandHandler<E> getCommandHandler() {
         return this.commands;

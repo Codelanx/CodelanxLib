@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.serialize;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
@@ -36,66 +37,142 @@ import org.bukkit.inventory.PlayerInventory;
 @SerializableAs("PlayerInventory")
 public class SPlayerInventory implements ConfigurationSerializable {
 
+    /** The {@link ItemStack} stored on the player's head */
     protected final ItemStack helmet;
+    /** The {@link ItemStack} stored on the player's torso */
     protected final ItemStack chest;
+    /** The {@link ItemStack} stored on the player's legs */
     protected final ItemStack legs;
+    /** The {@link ItemStack} stored on the player's feet */
     protected final ItemStack boots;
+    /** The general contents of the player's inventory */
     protected final SInventory inv;
 
+    /**
+     * Copies the contents of the passed {@link PlayerInventory}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param inv The {@link PlayerInventory} to copy
+     */
     public SPlayerInventory(PlayerInventory inv) {
-        if (inv == null) {
+        Validate.notNull(inv, "PlayerInventory cannot be null!");
+        this.helmet = inv.getHelmet();
+        this.chest = inv.getChestplate();
+        this.legs = inv.getLeggings();
+        this.boots = inv.getBoots();
+        this.inv = new SInventory(inv.getContents());
+    }
+
+    /**
+     * {@link ConfigurationSerializable} constructor. Should not be used by
+     * anything other than Bukkit.
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     */
+    public SPlayerInventory(Map<String, Object> config) {
+        if (config.isEmpty()) {
             this.helmet = this.chest = this.legs = this.boots = null;
             this.inv = null;
         } else {
-            this.helmet = inv.getHelmet();
-            this.chest = inv.getChestplate();
-            this.legs = inv.getLeggings();
-            this.boots = inv.getBoots();
-            this.inv = new SInventory(inv.getContents());
+            this.helmet = (ItemStack) config.get("helmet");
+            this.chest = (ItemStack) config.get("chest");
+            this.legs = (ItemStack) config.get("legs");
+            this.boots = (ItemStack) config.get("boots");
+            this.inv = (SInventory) config.get("contents");
         }
     }
 
-    public SPlayerInventory(Map<String, Object> map) {
-        if (map.isEmpty()) {
-            this.helmet = this.chest = this.legs = this.boots = null;
-            this.inv = null;
-        } else {
-            this.helmet = (ItemStack) map.get("helmet");
-            this.chest = (ItemStack) map.get("chest");
-            this.legs = (ItemStack) map.get("legs");
-            this.boots = (ItemStack) map.get("boots");
-            this.inv = (SInventory) map.get("contents");
-        }
-    }
-
+   /**
+     * Returns the item in the helmet slot of the {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The helmet in the {@link PlayerInventory}
+     */
     public ItemStack getHelmet() {
         return this.helmet;
     }
 
-    public ItemStack getChestPlate() {
+    /**
+     * Returns the item in the torso slot of the {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The torso in the {@link PlayerInventory}
+     */
+    public ItemStack getChestplate() {
         return this.chest;
     }
 
+    /**
+     * Returns the item in the pants slot of the {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The pants in the {@link PlayerInventory}
+     */
     public ItemStack getLeggings() {
         return this.legs;
     }
 
+    /**
+     * Returns the item in the boots slot of the {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The boots in the {@link PlayerInventory}
+     */
     public ItemStack getBoots() {
         return this.boots;
     }
 
+    /**
+     * Returns the underlying {@link SInventory} object that stores normal
+     * inventory items
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The underlying {@link SInventory} object
+     */
     public SInventory getInventory() {
         return this.inv;
     }
 
+    /**
+     * Sets the current contents of this class into a passed
+     * {@link PlayerInventory}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param inv The {@link PlayerInventory} to store into
+     */
     public void set(PlayerInventory inv) {
         inv.setContents(this.getInventory().getContentsAsArray());
         inv.setHelmet(this.getHelmet());
-        inv.setChestplate(this.getChestPlate());
+        inv.setChestplate(this.getChestplate());
         inv.setLeggings(this.getLeggings());
         inv.setBoots(this.getBoots());
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return {@inheritDoc}
+     */
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> back = new HashMap<>();
@@ -107,12 +184,32 @@ public class SPlayerInventory implements ConfigurationSerializable {
         return back;
     }
 
-    public static SPlayerInventory valueOf(Map<String, Object> map) {
-        return new SPlayerInventory(map);
+    /**
+     * Creates a new {@link SPlayerInventory} object and returns it. Should only
+     * be used by Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     * @return A new {@link SPlayerInventory} object
+     */
+    public static SPlayerInventory valueOf(Map<String, Object> config) {
+        return new SPlayerInventory(config);
     }
 
-    public static SPlayerInventory deserialize(Map<String, Object> map) {
-        return new SPlayerInventory(map);
+    /**
+     * Creates a new {@link SPlayerInventory} object and returns it. Should only
+     * be used by Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     * @return A new {@link SPlayerInventory} object
+     */
+    public static SPlayerInventory deserialize(Map<String, Object> config) {
+        return new SPlayerInventory(config);
     }
 
 }
