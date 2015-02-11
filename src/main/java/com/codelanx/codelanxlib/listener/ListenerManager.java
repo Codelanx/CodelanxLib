@@ -20,14 +20,16 @@
 package com.codelanx.codelanxlib.listener;
 
 import com.codelanx.codelanxlib.CodelanxLib;
-import com.codelanx.codelanxlib.util.Exceptions;
-import com.codelanx.codelanxlib.util.Exceptions.IllegalPluginAccessException;
+import com.codelanx.codelanxlib.logging.Logging;
+import com.codelanx.codelanxlib.util.exception.Exceptions;
+import com.codelanx.codelanxlib.util.exception.IllegalPluginAccessException;
 import com.codelanx.codelanxlib.util.Reflections;
-import com.codelanx.codelanxlib.util.Scheduler;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import org.apache.commons.lang.Validate;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -108,6 +110,27 @@ public final class ListenerManager {
     }
 
     /**
+     * Returns {@code true} if the passed {@link Listener} has another Listener
+     * of the same class type already registered for bukkit. This should not be
+     * used with any listeners that are from an anonymous class, as this will
+     * return {@code true} for any other anonymous classes as well
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param p The {@link Plugin} that registers this {@link Listener}
+     * @param l The {@link Listener} to check
+     * @return {@code true} if registered to bukkit
+     */
+    public static boolean isRegisteredToBukkit(Plugin p, Listener l) {
+        if (l.getClass().isAnonymousClass()) {
+            StackTraceElement t = Reflections.getCaller();
+            Logging.simple().here().print(Level.WARNING, "Passed an anonymous class from %s:%d", t.getClass().getName(), t.getLineNumber());
+        }
+        return HandlerList.getRegisteredListeners(p).stream().anyMatch(r -> r.getListener().getClass() == l.getClass());
+    }
+
+    /**
      * Registers a listener through Bukkit and {@link ListenerManager}
      *
      * @since 0.0.1
@@ -119,16 +142,12 @@ public final class ListenerManager {
      * @return The listener that was registered
      */
     public static <S extends SubListener<?>> S registerListener(S listener) {
-        Validate.isTrue(!ListenerManager.listeners.containsKey(listener.getClass()),
+        Validate.isTrue(!ListenerManager.isRegistered(listener.getClass()),
                 "Listener Map already contains key: " + listener.getClass().getName());
         ListenerManager.listeners.put(listener.getClass(), listener);
-        //SO HACKY - ensures object creation before Bukkit events will fire
-        Scheduler.runAsyncTask(() -> {
-            listener.getPlugin().getServer().getScheduler().callSyncMethod(listener.getPlugin(), () -> {
-                listener.getPlugin().getServer().getPluginManager().registerEvents(listener, listener.getPlugin());
-                return null;
-            });
-        }, 1);
+        if (!ListenerManager.isRegisteredToBukkit(listener.getPlugin(), listener)) {
+            listener.getPlugin().getServer().getPluginManager().registerEvents(listener, listener.getPlugin());
+        }
         return listener;
     }
 
