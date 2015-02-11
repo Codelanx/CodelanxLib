@@ -69,11 +69,25 @@ public abstract class SubCommand<E extends Plugin> implements Comparable<SubComm
      * @version 0.0.1
      *
      * @param sender The command executor
-     * @param args The command arguments, starting after the command name
+     * @param args The command arguments, starting after the subcommand name
      *
      * @return The {@link CommandStatus} representing the result of the command
      */
     public abstract CommandStatus execute(CommandSender sender, String... args);
+
+    /**
+     * Returns a {@link List} of possible strings that could be supplied for
+     * the next argument
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param sender The command "tabber"
+     * @param args The command arguments, starting after the subcommand name and
+     *             contains potentially unfinished arguments
+     * @return A {@link List} of strings that can be supplied for the next arg
+     */
+    public abstract List<String> tabComplete(CommandSender sender, String... args);
 
     /**
      * Returns the name of the command, used for storing a

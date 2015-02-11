@@ -23,6 +23,8 @@ import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.events.ReloadEvent;
 import com.codelanx.codelanxlib.implementers.Reloadable;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
@@ -73,6 +75,11 @@ public class ReloadCommand<E extends Plugin> extends SubCommand<E> {
             Lang.sendMessage(sender, InternalLang.COMMAND_RELOAD_UNSUPPORTED);
         }
         return CommandStatus.SUCCESS;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String... args) {
+        return new ArrayList<>();
     }
 
     /**

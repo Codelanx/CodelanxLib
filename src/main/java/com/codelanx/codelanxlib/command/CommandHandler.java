@@ -21,15 +21,18 @@ package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -41,7 +44,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @param <E> The specific {@link Plugin} to use
  */
-public class CommandHandler<E extends Plugin> implements CommandExecutor {
+public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCompleter { //More verbose, but clearer
 
     /** The format for output */
     protected final Lang name;
@@ -78,16 +81,16 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor {
 
     /**
      * Executes the proper {@link SubCommand}
+     * <br><br> {@inheritDoc}
      *
      * @since 0.0.1
      * @version 0.1.0
      *
-     * @param sender The command executor
-     * @param cmd The command instance
-     * @param commandLabel The command name
-     * @param args The command arguments
-     *
-     * @return Success of command, false if no command is found
+     * @param sender {@inheritDoc}
+     * @param cmd The command instance which was executed
+     * @param commandLabel {@inheritDoc}
+     * @param args {@inheritDoc}
+     * @return {@code false}
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -106,6 +109,31 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor {
         }
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param sender {@inheritDoc}
+     * @param command {@inheritDoc}
+     * @param alias {@inheritDoc}
+     * @param args {@inheritDoc}
+     * @return {@inheritDoc}
+     */
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length < 1) {
+            return new ArrayList<>(this.commands.keySet());
+        }
+        SubCommand<E> scommand = this.getCommand(args[0]);
+        if (scommand == null) {
+            return new ArrayList<>();
+        }
+        return scommand.tabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
+    }
+
 
     /**
      * Returns a subcommand, or {@code null} if none exists.

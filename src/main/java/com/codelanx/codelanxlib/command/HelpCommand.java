@@ -91,6 +91,41 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param sender {@inheritDoc}
+     * @param args {@inheritDoc}
+     * @return {@inheritDoc}
+     */
+    @Override
+    public List<String> tabComplete(CommandSender sender, String... args) {
+        if (args.length < 1) {
+            return new ArrayList<>();
+        }
+        int size = this.pages.size();
+        int curr;
+        try {
+            curr = Integer.parseInt(args[0]);
+        } catch (NumberFormatException ex) {
+            return new ArrayList<>();
+        }
+        if (curr > size) {
+            return new ArrayList<>();
+        }
+        List<String> back = new ArrayList<>();
+        for (int i = 1; i < size; i++) { //awful, spawns too many strings
+            String s = i + "";
+            if (s.startsWith(args[0])) {
+                back.add(s);
+            }
+        }
+        return back;
+    }
+
+    /**
      * Checks if the {@link Paginator} cache needs to be reset
      *
      * @since 0.1.0
