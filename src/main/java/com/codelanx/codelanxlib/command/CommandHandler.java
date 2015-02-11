@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.config.Lang;
-import com.codelanx.codelanxlib.util.Exceptions;
+import com.codelanx.codelanxlib.util.exception.Exceptions;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -99,7 +99,11 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor {
             scommand = this.getCommand("help");
             Exceptions.illegalState(scommand != null, "CommandHandler does not have a help command!");
         }
-        scommand.execute(sender, Arrays.copyOfRange(args, 1, args.length)).handle(sender, this.name, scommand);
+        try {
+            scommand.execute(sender, Arrays.copyOfRange(args, 1, args.length)).handle(sender, this.name, scommand);
+        } catch (Exception ex) {
+            CommandStatus.FAILED.handle(sender, this.name, scommand);
+        }
         return false;
     }
 
@@ -136,16 +140,13 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor {
      *
      * @param <T> The subcommand type
      * @param command The {@link SubCommand} to register
-     * @throws CommandInUseException If the command's name is already in use
+     * @throws IllegalArgumentException If the command's name is already in use
      * @return The registered subcommand
      */
-    public final <T extends SubCommand<E>> T registerSubCommand(T command) throws CommandInUseException {
-        if (this.commands.containsKey(command.getName())) {
-            throw new CommandInUseException("Command already in use: " + command.getName());
-        } else {
-            this.commands.put(command.getName(), command);
-            return command;
-        }
+    public final <T extends SubCommand<E>> T registerSubCommand(T command) {
+        Validate.isTrue(!this.isRegistered(command.getName()), "Command already in use: " + command.getName());
+        this.commands.put(command.getName(), command);
+        return command;
     }
 
     /**
@@ -158,14 +159,14 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor {
      *
      * @param <T> The subcommand type
      * @param commands The {@link SubCommand} instances to register
-     * @throws CommandInUseException If the command's name is already in use
+     * @throws IllegalArgumentException If the command's name is already in use
      */
-    public final <T extends SubCommand<E>> void registerSubCommands(T... commands) throws CommandInUseException {
-        CommandInUseException ex = null;
+    public final <T extends SubCommand<E>> void registerSubCommands(T... commands) {
+        IllegalArgumentException ex = null;
         for (T scommand : commands) {
             try {
                 this.registerSubCommand(scommand);
-            } catch (CommandInUseException e) {
+            } catch (IllegalArgumentException e) {
                 if (ex == null) {
                     ex = e;
                 }
