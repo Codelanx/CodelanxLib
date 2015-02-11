@@ -46,7 +46,7 @@ public abstract class Cache<E> {
      */
     public Cache(long timeMS) {
         this.timeMS = timeMS;
-        this.setNextCache();
+        this.forceRefresh();
     }
 
     /**
@@ -118,4 +118,15 @@ public abstract class Cache<E> {
     protected void setCurrentValue(E value) {
         this.value = value;
     }
+
+    /**
+     * Forcibly refreshes the current value of this {@link Cache}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
+    public final void forceRefresh() {
+        this.setNextCache();
+    }
+
 }
