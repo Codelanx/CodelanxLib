@@ -159,7 +159,7 @@ public final class Logging {
          */
         public LoggingFacade here() {
             StackTraceElement e = Reflections.getCaller();
-            this.prefix = "[" + e.getClass().getSimpleName() + ":" + e.getLineNumber() + "] ";
+            this.prefix = "[" + e.getClass().getSimpleName() + "#" + e.getMethodName() + ":" + e.getLineNumber() + "] ";
             return this;
         }
 
