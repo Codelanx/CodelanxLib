@@ -92,6 +92,8 @@ public final class Logging {
 
         /** The {@link Logger} to print to */
         private final Logger log;
+        /** A potential prefix to print out */
+        private String prefix = "";
 
         /**
          * Constructor. Assigns a passed {@link Logger} to an internal field
@@ -115,7 +117,7 @@ public final class Logging {
          * @param args The formatting arguments
          */
         public void print(String format, Object... args) {
-            this.log.log(Level.INFO, String.format(format, args));
+            this.print(Level.INFO, format, args);
         }
 
         /**
@@ -129,7 +131,7 @@ public final class Logging {
          * @param args The formatting arguments
          */
         public void print(Level level, String format, Object... args) {
-            this.log.log(level, String.format(format, args));
+            this.log.log(level, (this.prefix + String.format(format, args))); //Hate concatenation warnings
         }
 
         /**
@@ -143,7 +145,22 @@ public final class Logging {
          * @param args The formatting arguments
          */
         public void error(Throwable ex, String format, Object... args) {
-            this.log.log(Level.SEVERE, String.format(format, args), ex);
+            this.log.log(Level.SEVERE, this.prefix + String.format(format, args), ex);
+        }
+
+        /**
+         * Sets a prefix in the {@link LoggingFacade} for the current context
+         * from which the {@link Logger} is called
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return The current {@link LoggingFacade}
+         */
+        public LoggingFacade here() {
+            StackTraceElement e = Reflections.getCaller();
+            this.prefix = "[" + e.getClass().getSimpleName() + ":" + e.getLineNumber() + "] ";
+            return this;
         }
 
     }
