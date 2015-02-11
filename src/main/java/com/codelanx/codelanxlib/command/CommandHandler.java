@@ -97,7 +97,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor {
         SubCommand<E> scommand = this.getCommand(args[0]);
         if (scommand == null) {
             scommand = this.getCommand("help");
-            Exceptions.illegalState(scommand != null, "CommandHandler does not have a help command!");
+            Exceptions.notNull(scommand, "CommandHandler does not have a help command!", IllegalStateException.class);
         }
         try {
             scommand.execute(sender, Arrays.copyOfRange(args, 1, args.length)).handle(sender, this.name, scommand);
