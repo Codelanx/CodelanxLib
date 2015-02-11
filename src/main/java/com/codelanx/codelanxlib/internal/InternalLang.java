@@ -24,9 +24,12 @@ import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
 import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.data.types.Yaml;
+import com.codelanx.codelanxlib.util.Paginator;
+import com.codelanx.codelanxlib.command.HelpCommand;
+import com.codelanx.codelanxlib.command.ReloadCommand;
 
 /**
- * Class description for {@link InternalLang}
+ * Internal {@link Lang} enum for CodelanxLib
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -36,28 +39,85 @@ import com.codelanx.codelanxlib.data.types.Yaml;
 @RelativePath("lang.yml")
 public enum InternalLang implements Lang {
 
+    /**
+     * Used to relay the usage of a command
+     */
     COMMAND_STATUS_USAGE("command.status.usage", "Usage: %s"),
+    /**
+     * Relayed if a CommandSender does not have permissions to use the command
+     */
     COMMAND_STATUS_NOPERM("command.status.noperm", "&cYou do not have permission for this!"),
+    /**
+     * Relayed when a command execution fail (exceptions or the like)
+     */
     COMMAND_STATUS_FAILED("command.status.failed", "Command execution failed :("),
+    /**
+     * Relayed upon an unknown/unsupported command
+     */
     COMMAND_STATUS_UNSUPPORTED("command.status.unsupported", "Unknown commmand."),
+    /**
+     * Relayed when an inappropriate CommandSender is used for a command
+     */
     COMMAND_STATUS_RESTRICTED("command.status.restricted", "This command should only be used by %s!"),
+    /**
+     * Title for the {@link HelpCommand}'s internal {@link Paginator}
+     */
     COMMAND_HELP_TITLEFORMAT("command.help.format.title", "/%s help"),
+    /**
+     * Format for listing a command in {@link HelpCommand}
+     */
     COMMAND_HELP_ITEMFORMAT("command.help.format.item", "&9%s &f- &7%s"),
+    /**
+     * Help information for {@link HelpCommand}
+     */
     COMMAND_HELP_INFO("command.help.info", "Displays help information about this plugin"),
+    /**
+     * Relayed if reloading is not supported
+     */
     COMMAND_RELOAD_UNSUPPORTED("command.reload.unsupported", "This plugin does not support reloading!"),
+    /**
+     * Output of a finished {@link ReloadCommand}
+     */
     COMMAND_RELOAD_DONE("command.reload.done", "&9%s&f v&9%s&f reloaded!"),
+    /**
+     * Info for {@link ReloadCommand}
+     */
     COMMAND_RELOAD_INFO("command.reload.info", "Reloads the plugin"),
+    /**
+     * Relayed if funds for an economy transaction are insufficient
+     */
     ECONOMY_INSUFF("economy.insufficient", "You do not have enough money for this! (Required: %.2f)"),
+    /**
+     * Relayed if a player is refunded money
+     */
     ECONOMY_REFUND("economy.refund", "Refunded amount &7.2f&9"),
+    /**
+     * Relayed if an economy transaction failed
+     */
     ECONOMY_FAILED("economy.trans-failed", "&cError:&7 Failed to charge your account!"),
+    /**
+     * Character to use for the {@link Paginator} bars
+     */
     PAGINATOR_BARCHAR("utils.paginator.barchar", "-"),
+    /**
+     * Bar color for the {@link Paginator} class
+     */
     PAGINATOR_BARCOLOR("utils.paginator.barcolor", "&f"),
+    /**
+     * Color of the title for the {@link Paginator} class
+     */
     PAGINATOR_TITLECOLOR("utils.paginator.titlecolor", "&c"),
     /**
      * Accept a bar color first, title color second, then the title itself third
      */
     PAGINATOR_TITLECONTAINER("utils.paginator.title-container", "%1$s[ %2$s%3$s %1$s]"),
+    /**
+     * The format specified for displaying page count
+     */
     PAGINATOR_PAGEFORMAT("utils.paginator.page-format", "Page (%d/%d)"),
+    /**
+     * Format for CodelanxLib
+     */
     FORMAT("format", "&f[&9CL-Lib&f] %s");
 
     private static Yaml yaml;

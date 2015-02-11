@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.util.number;
 
 /**
- * Class description for {@link Single}
+ * Holds a single reference to a stored object
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -31,15 +31,39 @@ package com.codelanx.codelanxlib.util.number;
 public class Single<E> {
 
     private E val;
-    
+
+    /**
+     * Constructor. Assigns the value to an internal field
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param val The value to set
+     */
     public Single(E val) {
         this.val = val;
     }
 
+    /**
+     * Retrieves the stored value
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The stored object
+     */
     public E getValue() {
         return this.val;
     }
 
+    /**
+     * Sets the stored value
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     *  
+     * @param val The value to set
+     */
     public void setValue(E val) {
         this.val = val;
     }

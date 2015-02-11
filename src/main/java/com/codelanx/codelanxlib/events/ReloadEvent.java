@@ -64,6 +64,14 @@ public class ReloadEvent<E extends Plugin> extends Event {
         return this.plugin;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return {@inheritDoc} 
+     */
     @Override
     public HandlerList getHandlers() {
         return handlers;

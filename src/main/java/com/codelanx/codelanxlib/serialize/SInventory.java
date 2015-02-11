@@ -31,7 +31,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Class description for {@link SInventory}
+ * Represents an Inventory which is ready to be serialized
  *
  * @since 0.0.1
  * @author 1Rogue

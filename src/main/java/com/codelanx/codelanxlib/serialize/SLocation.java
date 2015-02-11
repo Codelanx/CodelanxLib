@@ -30,7 +30,8 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.Vector;
 
 /**
- * Class description for {@link SLocation}
+ * Represents a {@link ConfigurationSerializable} {@link Location} with a lazily
+ * initialized world
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -43,16 +44,41 @@ public class SLocation implements ConfigurationSerializable {
     private final UUID uuid;
     private World world;
 
+    /**
+     * Creates a new {@link SLocation} object from the passed {@link Location}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param loc The {@link Location} to serialize
+     */
     public SLocation(Location loc) {
         this.loc = loc.toVector();
         this.uuid = loc.getWorld().getUID();
     }
 
+    /**
+     * {@link ConfigurationSerializable} constructor. Should not be used by
+     * anything other than Bukkit.
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     */
     public SLocation(Map<String, Object> config) {
         this.loc = (Vector) config.get("location");
         this.uuid = UUID.fromString((String) config.get("world"));
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return {@inheritDoc}
+     */
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> back = new HashMap<>();
@@ -61,14 +87,44 @@ public class SLocation implements ConfigurationSerializable {
         return back;
     }
 
-    public SLocation valueOf(Map<String, Object> config) {
+    /**
+     * Creates a new {@link SLocation} object and returns it. Should only be
+     * used by Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     * @return A new {@link SLocation} object
+     */
+    public static SLocation valueOf(Map<String, Object> config) {
         return new SLocation(config);
     }
 
-    public SLocation deserialize(Map<String, Object> config) {
+    /**
+     * Creates a new {@link SLocation} object and returns it. Should only be
+     * used by Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param config A serialized {@link Map} of this object
+     * @return A new {@link SLocation} object
+     */
+    public static SLocation deserialize(Map<String, Object> config) {
         return new SLocation(config);
     }
 
+    /**
+     * Retrieves the {@link World} object relevant to this instance. This is
+     * lazily-initialized, so until this method is called the class will not
+     * attempt to retrieve the {@link World} value
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The relevant {@link World} object, or {@code null} if not found
+     */
     public World getWorld() {
         if (this.world == null) {
             this.world = Bukkit.getWorld(this.uuid);
@@ -76,10 +132,27 @@ public class SLocation implements ConfigurationSerializable {
         return this.world;
     }
 
+    /**
+     * Returns the relevant {@link Vector} object to this instance
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The relevant {@link Vector} object
+     */
     public Vector getVector() {
         return this.loc;
     }
 
+    /**
+     * Converts this instance into a {@link Location} object. This method will
+     * fail if called before Bukkit has loaded any worlds
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return This instance in the context of a {@link Location} object
+     */
     public Location toLocation() {
         return this.getVector().toLocation(this.getWorld());
     }

@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.inventory;
 
 import com.codelanx.codelanxlib.CodelanxLib;
-import com.codelanx.codelanxlib.util.Inventories;
+import com.codelanx.codelanxlib.util.inventory.Inventories;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Bukkit;

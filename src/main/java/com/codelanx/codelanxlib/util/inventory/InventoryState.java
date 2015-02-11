@@ -25,7 +25,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Class description for {@link InventoryState}
+ * An immutable class that represents the state of an {@link Inventory}
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -35,6 +35,14 @@ public class InventoryState {
 
     private final ItemStack[] contents;
 
+    /**
+     * Constructor. Copies the contents of the passed inventory
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param i The {@link Inventory} to copy
+     */
     public InventoryState(Inventory i) {
         ItemStack[] arr = i.getContents();
         this.contents = Arrays.copyOf(arr, arr.length);
@@ -67,10 +75,26 @@ public class InventoryState {
         return this.contents[index];
     }
 
+    /**
+     * Returns the length of the underlying {@link ItemStack} array
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The length of the underlying contents array 
+     */
     public int size() {
         return this.contents.length;
     }
 
+    /**
+     * Sets the contents of this state into an {@link InventoryHolder}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param holder The {@link InventoryHolder} to set the contents of
+     */
     public void setContents(InventoryHolder holder) {
         holder.getInventory().setContents(this.getContents());
     }

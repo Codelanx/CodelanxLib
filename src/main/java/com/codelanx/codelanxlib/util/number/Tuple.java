@@ -20,26 +20,54 @@
 package com.codelanx.codelanxlib.util.number;
 
 /**
- * Class description for {@link Tuple}
+ * Represents a wrapper class for a pair of objects
  *
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
+ * 
+ * @param <E> The first object type
+ * @param <T> The second object type
  */
 public class Tuple<E, T> {
     
     private final E one;
     private final T two;
 
+    /**
+     * Constructor. Stores the two values
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param one The first parameter
+     * @param two The second parameter
+     */
     public Tuple(E one, T two) {
         this.one = one;
         this.two = two;
     }
 
+    /**
+     * Retrieves the first parameter
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The first parameter
+     */
     public E getFirst() {
         return this.one;
     }
 
+    /**
+     * Retrieves the second parameter
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The second parameter
+     */
     public T getSecond() {
         return this.two;
     }

@@ -35,7 +35,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public final class Inventories {
 
@@ -61,9 +61,10 @@ public final class Inventories {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @throws IllegalStateException if the item is modified during the method
      * @param p The player to get the item slot from
      * @return The non-raw slot number of the item being held
+     * @throws IllegalStateException if the item is modified during the method
+     *                               execution
      */
     public static synchronized int getHeldItemSlot(Player p) {
         byte[] b = new byte[32];

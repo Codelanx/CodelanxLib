@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public final class Players {
 
@@ -76,6 +76,16 @@ public final class Players {
         return back;
     }
 
+    /**
+     * Returns the closest {@link Player} adjacent to another {@link Player}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param p The {@link Player} at the origin to search around
+     * @return The closest {@link Player}, or {@code null} if no one else is in
+     *         the world
+     */
     public static Player getClosestPlayer(Player p) {
         Location loc = p.getLocation();
         return p.getWorld().getPlayers().stream()
@@ -86,6 +96,16 @@ public final class Players {
                 .orElse(null);
     }
 
+    /**
+     * Returns the closest {@link Player} to a specific {@link Location}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param loc The {@link Location} representing the origin to search from
+     * @return The closest {@link Player}, or {@code null} if no one is in the
+     *         world
+     */
     public static Player getClosestPlayer(Location loc) {
         return loc.getWorld().getPlayers().stream().min((o1, o2) -> {
             return Double.compare(o1.getLocation().distanceSquared(loc), o2.getLocation().distanceSquared(loc));

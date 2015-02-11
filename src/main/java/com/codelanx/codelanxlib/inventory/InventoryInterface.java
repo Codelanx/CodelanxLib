@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.inventory;
 
 import com.codelanx.codelanxlib.config.Config;
-import com.codelanx.codelanxlib.util.Exceptions;
+import com.codelanx.codelanxlib.util.exception.Exceptions;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -102,7 +102,7 @@ public final class InventoryInterface {
      * @throws IllegalStateException if no root panel is set
      */
     public void openInterface(Player p) {
-        Exceptions.illegalState(this.getRootPanel() != null, "Root panel cannot be null!");
+        Exceptions.notNull(this.getRootPanel(), "Root panel cannot be null!", IllegalStateException.class);
         this.getRootPanel().open(p);
     }
 

@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.internal;
 import com.codelanx.codelanxlib.permission.Permissions;
 
 /**
- * Class description for {@link CLPerms}
+ * Internal {@link Permissions} enum for CodelanxLib
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -30,6 +30,13 @@ import com.codelanx.codelanxlib.permission.Permissions;
  */
 public enum CLPerms implements Permissions {
 
+    /**
+     * Allows bypassing protection provided by the
+     * {@link com.codelanx.codelanxlib.util.Protections Protections} class
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     PROTECTION_OVERRIDE("protect.override");
 
     private final String permission;
@@ -44,9 +51,8 @@ public enum CLPerms implements Permissions {
     }
 
     @Override
-    public String getPermission() {
+    public String getNode() {
         return this.permission;
     }
-
 
 }

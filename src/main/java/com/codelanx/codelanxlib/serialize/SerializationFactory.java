@@ -23,8 +23,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 /**
- * Holds a queue of {@link ConfigurationSerializable} classes and registers them
- * to Bukkit when 
+ * Façade for registering {@link ConfigurationSerializable} classes to Bukkit
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -32,16 +31,53 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
  */
 public class SerializationFactory {
 
+    /**
+     * Registers a single {@link ConfigurationSerializable} class to Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param clazz The class to register
+     */
     public static void registerClass(Class<? extends ConfigurationSerializable> clazz) {
         ConfigurationSerialization.registerClass(clazz);
     }
 
+    /**
+     * Registers multiple {@link ConfigurationSerializable} class to Bukkit
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param clazz The classes to register
+     */
     public static void registerClasses(Class<? extends ConfigurationSerializable>... clazz) {
         for (Class<? extends ConfigurationSerializable> c : clazz) {
-            ConfigurationSerialization.registerClass(c);
+            SerializationFactory.registerClass(c);
         }
     }
 
+    /**
+     * Registers multiple {@link ConfigurationSerializable} class to Bukkit
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param clazz The classes to register
+     */
+    public static void registerClasses(Iterable<? extends Class<? extends ConfigurationSerializable>> clazz) {
+        clazz.forEach(SerializationFactory::registerClass);
+    }
+
+    /**
+     * Returns the native {@link ConfigurationSerializable} classes that are
+     * provided by CodelanxLib
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The native serializable types
+     */
     @SuppressWarnings("rawtypes")
     public static Class[] getNativeSerializables() {
         return new Class[] {

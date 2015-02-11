@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 /**
- * Class description for {@link PlayerInventoryState}
+ * An immutable class that represents the state of a {@link PlayerInventory}
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -39,6 +39,14 @@ public class PlayerInventoryState extends InventoryState {
     private final ItemStack leggings;
     private final ItemStack boots;
 
+    /**
+     * Copies the contents of the passed {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param i The {@link PlayerInventory} to copy
+     */
     public PlayerInventoryState(PlayerInventory i) {
         super(i);
         this.helmet = i.getHelmet();
@@ -47,22 +55,64 @@ public class PlayerInventoryState extends InventoryState {
         this.boots = i.getBoots();
     }
 
+    /**
+     * Returns the item in the helmet slot of the {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The helmet in the {@link PlayerInventory}
+     */
     public ItemStack getHelmet() {
         return this.helmet;
     }
 
+    /**
+     * Returns the item in the torso slot of the {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The torso in the {@link PlayerInventory}
+     */
     public ItemStack getChestplate() {
         return this.chestplate;
     }
 
+    /**
+     * Returns the item in the pants slot of the {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The pants in the {@link PlayerInventory}
+     */
     public ItemStack getLeggings() {
         return this.leggings;
     }
 
+    /**
+     * Returns the item in the boots slot of the {@link PlayerInventory}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The boots in the {@link PlayerInventory}
+     */
     public ItemStack getBoots() {
         return this.boots;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param holder {@inheritDoc}
+     * @throws IllegalArgumentException If the {@link InventoryHolder} is not a
+     *                                  {@link HumanEntity}
+     */
     @Override
     public void setContents(InventoryHolder holder) {
         Validate.isTrue(holder instanceof HumanEntity, "InventoryHolder is not a HumanEntity!");

@@ -23,6 +23,7 @@ import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.Lang;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,14 +38,57 @@ public class Paginator {
     private final String BAR;
     private final List<String> pages = new ArrayList<>();
 
+    /**
+     * Constructor. Splits the {@code wholeText} parameter by a newline
+     * character ({@code \n}) and forwards it to
+     * {@link Paginator#Paginator(String, int, List)}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @see Paginator#Paginator(String, int, List)
+     * @param title The title for the pages
+     * @param itemsPerPage The number of items from the content parameter to
+     *                     display on a page
+     * @param wholeText A string to be split by the newline character {@code \n}
+     */
     public Paginator(String title, int itemsPerPage, String wholeText) {
         this(title, itemsPerPage, wholeText.split("\n"));
     }
 
+    /**
+     * Constructor. Converts the passed {@code itr} parameter into a 
+     * {@link List} and forwards it to
+     * {@link Paginator#Paginator(String, int, List)}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @see Paginator#Paginator(String, int, List)
+     * @param title The title for the pages
+     * @param itemsPerPage The number of items from the content parameter to
+     *                     display on a page
+     * @param itr An iterable collection of strings
+     */
     public Paginator(String title, int itemsPerPage, String... itr) {
         this(title, itemsPerPage, Arrays.asList(itr));
     }
 
+    /**
+     * Constructor. Takes a {@link List} of strings and creates formatted
+     * pages which can be output to a
+     * {@link org.bukkit.command.CommandSender CommandSender}. These pages
+     * should be considered immutable as they are only rendered once and then
+     * subsequently stored.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param title The title for the pages
+     * @param itemsPerPage The number of items from the content parameter to
+     *                     display on a page
+     * @param content A {@link List} of strings to display
+     */
     public Paginator(String title, int itemsPerPage, List<String> content) {
         String s = InternalLang.PAGINATOR_BARCHAR.format();
         if (s.isEmpty()) {
@@ -110,7 +154,7 @@ public class Paginator {
         String line = barcolor + this.BAR;
         int pivot = line.length() / 2;
         String center = InternalLang.PAGINATOR_TITLECONTAINER.format(barcolor, titlecolor, title);
-        return Lang.__(line.substring(0, pivot - center.length() / 2)
+        return Lang.color(line.substring(0, pivot - center.length() / 2)
                 + center
                 + line.substring(0, pivot - center.length() / 2));
     }
@@ -126,7 +170,31 @@ public class Paginator {
      */
     private String formatFooter(String barcolor) {
         String back = barcolor + this.BAR;
-        return Lang.__(back.substring(0, back.length() - 11));
+        return Lang.color(back.substring(0, back.length() - 11));
+    }
+
+    /**
+     * Returns the number of pages in this instance
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The number of pages
+     */
+    public int size() {
+        return this.pages.size();
+    }
+
+    /**
+     * Returns a copy of all the pages in this instance
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return A copy of the pages
+     */
+    public List<String> getPages() {
+        return Collections.unmodifiableList(this.pages);
     }
 
 }
