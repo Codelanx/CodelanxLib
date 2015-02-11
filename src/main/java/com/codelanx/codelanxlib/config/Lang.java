@@ -242,23 +242,4 @@ public interface Lang extends PluginFile {
         }
     }
 
-    /**
-     * Sends a formatted string to the player without using the Lang interface
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     *
-     * @deprecated
-     *
-     * @param target The target to send to
-     * @param format The format to use
-     * @param args The message arguments
-     */
-    public static void sendRawMessage(CommandSender target, String format, Object... args) {
-        if (target == null || format == null) {
-            return;
-        }
-        target.sendMessage(Lang.color(String.format(format, args)));
-    }
-
 }
