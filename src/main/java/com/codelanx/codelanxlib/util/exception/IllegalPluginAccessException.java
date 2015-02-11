@@ -20,25 +20,58 @@
 package com.codelanx.codelanxlib.util.exception;
 
 /**
- * Class description for {@link IllegalPluginAccessException}
- *
- * @since 1.0.0
+ * Represents an exception for when a plugin calls a method that it should
+ * not have access to
+ * 
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public class IllegalPluginAccessException extends RuntimeException {
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param message {@inheritDoc}
+     */
     public IllegalPluginAccessException(String message) {
         super(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     public IllegalPluginAccessException() {
+        super();
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param message {@inheritDoc}
+     * @param cause {@inheritDoc}
+     */
     public IllegalPluginAccessException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param cause {@inheritDoc}
+     */
     public IllegalPluginAccessException(Throwable cause) {
         super(cause);
     }
