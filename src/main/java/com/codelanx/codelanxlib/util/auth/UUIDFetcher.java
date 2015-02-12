@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import org.apache.commons.lang.Validate;
 import org.json.simple.JSONArray;
@@ -97,7 +98,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
      */
     @Override
     public Map<String, UUID> call() throws IOException, ParseException, InterruptedException {
-        return this.callWithProgessOutput(false, null);
+        return this.callWithProgessOutput(false, null, null);
     }
 
     /**
@@ -109,12 +110,15 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
      * 
      * @param output Whether or not to print output
      * @param log The {@link Logger} to print to
+     * @param doOutput A {@link Predicate} representing when to output a number
      * @return A {@link Map} of player names to their {@link UUID}s
      * @throws IOException If there's a problem sending or receiving the request
      * @throws ParseException If the request response cannot be read
      * @throws InterruptedException If the thread is interrupted while sleeping
      */
-    public Map<String, UUID> callWithProgessOutput(boolean output, Logger log) throws IOException, ParseException, InterruptedException {
+    public Map<String, UUID> callWithProgessOutput(boolean output, Logger log,
+            Predicate<? super Integer> doOutput) throws IOException, ParseException, InterruptedException {
+        //Method start
         Map<String, UUID> uuidMap = new HashMap<>();
         int totalNames = this.names.size();
         int completed = 0;
@@ -134,8 +138,11 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
                 uuidMap.put((String) jsonProfile.get("name"), uuid);
             }
             if (output) {
-                log.info(String.format("[UUIDFetcher] Progress: %d/%d, %.2f%%, Failed names: %d",
-                        completed, totalNames, (double) completed/totalNames, failed));
+                int processed = completed + failed;
+                if (doOutput.test(processed) || processed == totalNames) {
+                    log.info(String.format("[UUIDFetcher] Progress: %d/%d, %.2f%%, Failed names: %d",
+                        processed, totalNames, ((double) processed / totalNames) * 100D, failed));
+                }
             }
             if (this.rateLimiting && i != requests - 1) {
                 Thread.sleep(100L);
