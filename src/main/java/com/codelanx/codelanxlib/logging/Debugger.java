@@ -90,6 +90,7 @@ public final class Debugger {
      */
     public static void hookBukkit() {
         //Check to make sure CodelanxLib is calling it
+        System.out.println("Accessed from CLL?: " + Reflections.accessedFrom(CodelanxLib.class));
         Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class),
                 "Debugger#hookBukkit may only be called by CodelanxLib!");
         Listener l = new BukkitPluginListener();
@@ -168,7 +169,13 @@ public final class Debugger {
      * @param args The printf arguments
      */
     public static void print(String format, Object... args) {
-        Debugger.print(Level.INFO, format, args);
+        //Note, do not overload methods. getOpts() depends on stack location
+        DebugOpts opts = Debugger.getOpts();
+        if (opts == null || !opts.doOutput()) {
+            return;
+        }
+        Debugger.logger.log(Level.INFO, String.format("[%s]=> %s",
+                opts.getPrefix(), String.format(format, args)));
     }
 
     /**
