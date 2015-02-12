@@ -60,6 +60,9 @@ public interface Config extends PluginFile {
         if (o == null) {
             return Reflections.defaultPrimitiveValue(c);
         }
+        if (c == String.class) {
+            return (T) o.toString();
+        }
         if (c.isInstance(o)) {
             return c.cast(o);
         }
