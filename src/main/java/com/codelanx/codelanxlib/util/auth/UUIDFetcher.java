@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
 import org.apache.commons.lang.Validate;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -96,17 +97,45 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
      */
     @Override
     public Map<String, UUID> call() throws IOException, ParseException, InterruptedException {
+        return this.callWithProgessOutput(false, null);
+    }
+
+    /**
+     * Makes a request to mojang's servers of a sublist of at most 100 player's
+     * names. Additionally can provide progress outputs
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param output Whether or not to print output
+     * @param log The {@link Logger} to print to
+     * @return A {@link Map} of player names to their {@link UUID}s
+     * @throws IOException If there's a problem sending or receiving the request
+     * @throws ParseException If the request response cannot be read
+     * @throws InterruptedException If the thread is interrupted while sleeping
+     */
+    public Map<String, UUID> callWithProgessOutput(boolean output, Logger log) throws IOException, ParseException, InterruptedException {
         Map<String, UUID> uuidMap = new HashMap<>();
+        int totalNames = this.names.size();
+        int completed = 0;
+        int failed = 0;
         int requests = (int) Math.ceil(this.names.size() / UUIDFetcher.PROFILES_PER_REQUEST);
         for (int i = 0; i < requests; i++) {
             HttpURLConnection connection = UUIDFetcher.createConnection();
-            String body = JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, this.names.size())));
+            List<String> request = names.subList(i * 100, Math.min((i + 1) * 100, this.names.size()));
+            String body = JSONArray.toJSONString(request);
             UUIDFetcher.writeBody(connection, body);
             JSONArray array = (JSONArray) this.jsonParser.parse(new InputStreamReader(connection.getInputStream()));
+            completed += array.size();
+            failed += request.size() - array.size();
             for (Object profile : array) {
                 JSONObject jsonProfile = (JSONObject) profile;
                 UUID uuid = UUIDFetcher.getUUID((String) jsonProfile.get("id"));
                 uuidMap.put((String) jsonProfile.get("name"), uuid);
+            }
+            if (output) {
+                log.info(String.format("[UUIDFetcher] Progress: %d/%d, %.2f%%, Failed names: %d",
+                        completed, totalNames, (double) completed/totalNames, failed));
             }
             if (this.rateLimiting && i != requests - 1) {
                 Thread.sleep(100L);
@@ -114,6 +143,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         }
         return uuidMap;
     }
+
 
     /**
      * Writes a JSON payload an {@link HttpURLConnection} object
