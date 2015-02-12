@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.annotation.PluginClass;
+import com.codelanx.codelanxlib.logging.Debugger;
 import com.google.common.primitives.Primitives;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -85,7 +86,7 @@ public final class Reflections {
      * @return {@code true} if accessed from a class that matches the regex
      */
     public static boolean accessedFrom(String regex) {
-        return Reflections.getCaller(1).getClass().getName().matches(regex);
+        return Reflections.getCaller(1).getClassName().matches(regex);
     }
 
     /**
@@ -100,7 +101,7 @@ public final class Reflections {
      * @return {@code true} if accessed from this class
      */
     public static boolean accessedFrom(Class<?> clazz) {
-        return Reflections.getCaller(1).getClass() == clazz;
+        return Reflections.getCaller(1).getClassName().equals(clazz.getName());
     }
 
     /**
@@ -112,7 +113,7 @@ public final class Reflections {
      * @return {@code true} if Bukkit is the direct invoker of the method
      */
     public static boolean accessedFromBukkit() {
-        return Reflections.accessedFrom("org\\.bukkit\\..*");
+        return Reflections.getCaller(1).getClassName().matches("org\\.bukkit\\..*");
     }
 
     /**
@@ -130,11 +131,18 @@ public final class Reflections {
      * executing code directly, or some voodoo magic)
      */
     public static JavaPlugin getCallingPlugin(int offset) {
-        JavaPlugin back = JavaPlugin.getProvidingPlugin(Reflections.getCaller(1 + offset).getClass());
-        if (back == null) {
-            throw new UnsupportedOperationException("Must be called from a class loaded from a plugin");
+        try {
+            Class<?> cl = Class.forName(Reflections.getCaller(1 + offset).getClassName());
+            JavaPlugin back = JavaPlugin.getProvidingPlugin(cl);
+            if (back == null) {
+                throw new UnsupportedOperationException("Must be called from a class loaded from a plugin");
+            }
+            return back;
+        } catch (ClassNotFoundException ex) {
+            //Potentially dangerous (Stackoverflow)
+            Debugger.error(ex,  "Error reflecting for plugin class!");
         }
-        return back;
+        return null;
     }
 
     /**
@@ -170,11 +178,11 @@ public final class Reflections {
     public static StackTraceElement getCaller(int offset) {
         Validate.isTrue(offset >= 0, "Offset must be a positive number");
         StackTraceElement[] elems = Thread.currentThread().getStackTrace();
-        if (elems.length < 3 + offset) {
-            //We shouldn't be able to get this high on the stack at offset 0
+        if (elems.length < 4 + offset) {
+            //We shouldn't be able to get this high on the stack at theoritical offset 0
             throw new IndexOutOfBoundsException("Offset too large for current stack");
         }
-        return elems[2 + offset];
+        return elems[3 + offset];
     }
 
     /**
