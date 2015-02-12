@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.data.types;
 
 import com.codelanx.codelanxlib.data.SQLDataType;
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.util.Cache;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -163,6 +164,39 @@ public class MySQL implements SQLDataType {
     }
 
     /**
+     * Returns a new cached MySQL connection, which will automatically renew
+     * itself at the specified interval via {@code keepAliveMS}, in
+     * milliseconds. Keep in mind, due to the way {@link Cache} works,
+     * until {@link Cache#get()} is called a connection may remain open past
+     * the specified keep-alive
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param prefs The {@link ConnectionPrefs} relevant to the connection
+     * @param keepAliveMS The time in milliseconds to keep a connection open
+     * @return 
+     */
+    public static Cache<MySQL> newCache(ConnectionPrefs prefs, long keepAliveMS) {
+        return new Cache<MySQL>(keepAliveMS) {
+            @Override
+            protected void update() {
+                if (this.getCurrentValue() != null && this.getCurrentValue().checkConnection()) {
+                    this.getCurrentValue().close();
+                }
+                MySQL set = new MySQL(prefs);
+                try {
+                    set.setAutoCommit(true);
+                    set.open();
+                } catch (SQLException ex) {
+                    Debugger.error(ex, "Error opening SQL connection!: (%d) %s", ex.getErrorCode(), ex.getMessage());
+                }
+                this.setCurrentValue(set);
+            }
+        };
+    }
+
+    /**
      * Subclass for managing connection preferences. Merely wraps data
      * in a single class with getters.
      * 
@@ -266,4 +300,5 @@ public class MySQL implements SQLDataType {
         }
 
     }
+
 }
