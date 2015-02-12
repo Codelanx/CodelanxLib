@@ -51,7 +51,8 @@ public interface Config extends PluginFile {
      * @return A casted value, or {@code null} if unable to cast. If the passed
      *         class parameter is of a primitive type or autoboxed primitive,
      *         then a casted value of -1 is returned, or {@code false} for
-     *         booleans
+     *         booleans. If the passed class parameter is for {@link String},
+     *         then {@link Object#toString()} is called on the value instead
      */
     default public <T> T as(Class<T> c) {
         Validate.notNull(c, "Cannot cast to null!");

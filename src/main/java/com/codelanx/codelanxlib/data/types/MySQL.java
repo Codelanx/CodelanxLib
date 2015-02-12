@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib.data.types;
 
+import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.data.SQLDataType;
 import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.util.Cache;
@@ -233,6 +234,31 @@ public class MySQL implements SQLDataType {
             this.pass = pass.toCharArray();
             this.database = database;
             this.port = port;
+        }
+
+        /**
+         * Class constructor. Takes {@link Config Configs} that are string-types
+         * (The {@code port} parameter can be an int or string) and retrieves
+         * the appropriate values for them
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param host The host name for this MySQL connection
+         * @param user The user to utilize when connecting
+         * @param pass The password for the user
+         * @param database The database to use in the cluster
+         * @param port The port of the database
+         */
+        public ConnectionPrefs(Config host, Config user, Config pass, Config database, Config port) {
+            if (host == null || user == null || pass == null || database == null || port == null) {
+                throw new IllegalArgumentException(this.getClass().getSimpleName() + " does not take null arguments in the constructor!");
+            }
+            this.host = host.as(String.class);
+            this.user = user.as(String.class);
+            this.pass = pass.as(String.class).toCharArray();
+            this.database = database.as(String.class);
+            this.port = port.as(String.class);
         }
 
         /**
