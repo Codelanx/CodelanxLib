@@ -23,6 +23,7 @@ import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.data.SQLDataType;
 import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.util.Cache;
+import com.codelanx.codelanxlib.util.Databases;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -190,7 +191,7 @@ public class MySQL implements SQLDataType {
                     set.setAutoCommit(true);
                     set.open();
                 } catch (SQLException ex) {
-                    Debugger.error(ex, "Error opening SQL connection!: (%d) %s", ex.getErrorCode(), ex.getMessage());
+                    Debugger.error(ex, "Error opening SQL connection!: %s", Databases.simpleErrorOutput(ex));
                 }
                 this.setCurrentValue(set);
             }
