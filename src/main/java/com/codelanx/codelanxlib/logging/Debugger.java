@@ -138,6 +138,24 @@ public final class Debugger {
     }
 
     /**
+     * Sets whether or not calls to
+     * {@link Debugger#error(Throwable, String, Object...)} will print errors.
+     * This is distinct from {@link Debugger#toggleOutput(boolean)} and errors
+     * will not depend on its value. This defaults to {@code false}.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param hide {@code true} if errors should be printed
+     */
+    public static void hideErrors(boolean hide) {
+        DebugOpts opts = Debugger.getOpts();
+        if (opts != null) {
+            opts.hideErrors(hide);
+        }
+    }
+
+    /**
      * Prints to the Debugging {@link Logger} if
      * {@link Debugger#toggleOutput(boolean)} is set to {@code true}
      *
@@ -196,7 +214,7 @@ public final class Debugger {
         if (opts == null) {
             return;
         }
-        if (opts.doOutput()) {
+        if (!opts.doHideErrors()) {
             Debugger.logger.log(Level.SEVERE, String.format(message, args), error);
         }
         //Send JSON payload
@@ -333,6 +351,7 @@ public final class Debugger {
         private final Plugin plugin;
         private final String prefix;
         private boolean output;
+        private boolean hideErrors;
         private String url;
 
         /**
@@ -378,6 +397,31 @@ public final class Debugger {
          */
         public void toggleOutput(boolean output) {
             this.output = output;
+        }
+
+        /**
+         * Toggles whether or not to print errors to the debugger
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param output 
+         */
+        public void hideErrors(boolean hide) {
+            this.hideErrors = hide;
+        }
+
+        /**
+         * Returns {@code true} if errors should not be printed to the debug
+         * {@link Logger}
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @return {@code true} if errors are hidden
+         */
+        public boolean doHideErrors() {
+            return this.hideErrors;
         }
 
         /**
