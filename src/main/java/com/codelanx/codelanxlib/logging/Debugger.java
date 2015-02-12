@@ -90,7 +90,6 @@ public final class Debugger {
      */
     public static void hookBukkit() {
         //Check to make sure CodelanxLib is calling it
-        System.out.println("Accessed from CLL?: " + Reflections.accessedFrom(CodelanxLib.class));
         Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class),
                 "Debugger#hookBukkit may only be called by CodelanxLib!");
         Listener l = new BukkitPluginListener();
