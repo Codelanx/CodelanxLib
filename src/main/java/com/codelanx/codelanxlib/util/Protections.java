@@ -42,8 +42,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Adds protection to specific locations. This should not be used for large
- * areas, but rather indescriminate points. Large-area protection will be added
- * later
+ * areas, but rather indiscriminate points. Large-area protection will be added
+ * later. Note that this will not protect from plugins dynamically modifying
+ * the block themselves, such as WorldEdit
  *
  * @since 0.1.0
  * @author 1Rogue
@@ -58,6 +59,14 @@ public final class Protections {
 
     }
 
+    /**
+     * Protects a single {@link Location} from being altered
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param loc The {@link Location} to protect
+     */
     public static void protect(Location loc) {
         if (!Protections.listenerRegistered) {
             Bukkit.getServer().getPluginManager().registerEvents(new ProtectionListener(), JavaPlugin.getPlugin(CodelanxLib.class));
@@ -66,10 +75,28 @@ public final class Protections {
         Protections.protect.add(loc);
     }
 
+    /**
+     * Removes protection from a single {@link Location}. Does nothing if the
+     * location was not protected in the first place.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param loc The {@link Location} to unprotect
+     */
     public static void unprotect(Location loc) {
         Protections.protect.remove(loc);
     }
 
+    /**
+     * Returns {@code true} if the passed {@link Location} is protected
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param loc The {@link Location} to check
+     * @return {@code true} if protected
+     */
     public static boolean isProtected(Location loc) {
         return Protections.protect.contains(loc);
     }
@@ -78,6 +105,7 @@ public final class Protections {
      * Provides total protection for blocks cached in {@link Protections}
      * 
      * @since 0.1.0
+     * @author 1Rogue
      * @version 0.1.0
      */
     public static class ProtectionListener implements Listener {
@@ -92,6 +120,14 @@ public final class Protections {
             return cancelled;
         }
 
+        /**
+         * Prevents pistons from pushing protected blocks
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param event The relevant {@link BlockPistonExtendEvent}
+         */
         @EventHandler
         public void onPistonExtend(BlockPistonExtendEvent event) {
             if (!this.handlePiston(event.getBlock(), event.getDirection(), 12)) {
@@ -99,6 +135,14 @@ public final class Protections {
             }
         }
 
+        /**
+         * Prevents sticky pistons from pulling protected blocks
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param event The relevant {@link BlockPistonRetractEvent}
+         */
         @EventHandler
         public void onPistonRetract(BlockPistonRetractEvent event) {
             if (event.isSticky()) {
@@ -108,6 +152,18 @@ public final class Protections {
             }
         }
 
+        /**
+         * Determines if a protected block will be affected by a piston
+         * movement in a specific direction
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param b The starting piston block
+         * @param dir The {@link BlockFace} direction to search in
+         * @param amount The amount of blocks to check
+         * @return {@code true} if no protected blocks will be affected
+         */
         private boolean handlePiston(Block b, BlockFace dir, int amount) {
             for (int i = amount; i > 0; i--) {
                 b = b.getRelative(dir);
@@ -121,30 +177,70 @@ public final class Protections {
             return true;
         }
 
+        /**
+         * Prevents protected blocks from being broken
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param event The relevant {@link BlockBreakEvent}
+         */
         @EventHandler
         public void onBlockBreak(BlockBreakEvent event) {
             event.setCancelled(this.doCancel(event.getBlock().getLocation(),
                     event.getPlayer(), event.isCancelled()));
         }
 
+        /**
+         * Prevents blocks from being burned
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param event The relevant {@link BlockBurnEvent}
+         */
         @EventHandler
         public void onBurn(BlockBurnEvent event) {
             event.setCancelled(this.doCancel(event.getBlock().getLocation(),
                     null, event.isCancelled()));
         }
 
+        /**
+         * Prevents blocks from being turned into entities (e.g. falling sand)
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param event The relevant {@link EntityChangeBlockEvent}
+         */
         @EventHandler
         public void onEntityBlock(EntityChangeBlockEvent event) {
             event.setCancelled(this.doCancel(event.getBlock().getLocation(),
                     null, event.isCancelled()));
         }
 
+        /**
+         * Prevents people from placing a block in the protected location
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param event The relevant {@link BlockPlaceEvent}
+         */
         @EventHandler
         public void onPlace(BlockPlaceEvent event) {
             event.setCancelled(this.doCancel(event.getBlock().getLocation(),
                     event.getPlayer(), event.isCancelled()));
         }
 
+        /**
+         * Prevents the block from exploding
+         * 
+         * @since 0.1.0
+         * @version 0.1.0
+         * 
+         * @param event The relevant {@link EntityExplodeEvent}
+         */
         @EventHandler
         public void onExplode(EntityExplodeEvent event) {
             event.blockList().removeIf(b -> Protections.isProtected(b.getLocation()));
