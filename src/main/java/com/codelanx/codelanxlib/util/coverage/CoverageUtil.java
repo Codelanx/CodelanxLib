@@ -20,6 +20,8 @@
 package com.codelanx.codelanxlib.util.coverage;
 
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.logging.Logging;
+import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.number.Single;
 import com.google.common.io.Files;
 import java.io.BufferedReader;
@@ -59,9 +61,25 @@ import org.bukkit.plugin.Plugin;
  */
 public final class CoverageUtil {
 
+    /**
+     * A method/constructor annotation. The value of this annotation should be
+     * the number of calls to {@link CoverageUtil#marker(Plugin)} in the method
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     */
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
     public static @interface Coverage {
+        
+        /**
+         * The number of calls to {@link CoverageUtil#marker(Plugin)}
+         * 
+         * @since 0.0.1
+         * @version 0.0.1
+         * 
+         * @return The number of calls to {@link CoverageUtil#marker(Plugin)}
+         */
         int value();
     }
 
@@ -292,15 +310,32 @@ public final class CoverageUtil {
     private CoverageUtil() {
     }
 
-    public static void marker(Plugin p) {
-        PluginMarker pm = CoverageUtil.marks.get(p);
+    /**
+     * Notes a point in code where a context has been visited, useful for unit
+     * testing on branching statements. Any calls to this method should come
+     * from a method context which has the {@link Coverage} annotation
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     */
+    public static void marker() {
+        PluginMarker pm = CoverageUtil.marks.get(Reflections.getCallingPlugin());
         if (pm != null) {
             StackTraceElement elem = Thread.currentThread().getStackTrace()[2];
             pm.addValue(elem.getClassName(), elem.getMethodName(), elem.getLineNumber(), true);
         }
     }
 
-    public static void registerClasses(Plugin p, Class<?>... classes) {
+    /**
+     * Registers classes that use {@link CoverageUtil}
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param classes The {@link Class classes} to register
+     */
+    public static void registerClasses(Class<?>... classes) {
+        Plugin p = Reflections.getCallingPlugin();
         PluginMarker pm = CoverageUtil.marks.get(p);
         if (pm != null) {
             Collection<ClassMarker> o = new PluginMarker(p, classes).getClassMarkers();
@@ -310,7 +345,15 @@ public final class CoverageUtil {
         }
     } 
 
-    public static void load(Plugin p) {
+    /**
+     * Loads a previous {@link CoverageUtil} report from the respective
+     * {@link Plugin} folder
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     */
+    public static void load() {
+        Plugin p = Reflections.getCallingPlugin();
         File data = new File(p.getDataFolder(), "coverage" + File.separator);
         File log = new File(data, "coverage-latest.log");
         if (log.exists()) {
@@ -329,17 +372,23 @@ public final class CoverageUtil {
                 Debugger.error(ex, "Error reading latest coverage log for plugin '%s'!", p.getName());
             }
         } else {
-            Debugger.print(Level.WARNING, "Plugin '%s' called CoverageUtil#load(Plugin), but no logfile was found", p.getName());
+            Logging.simple().print(Level.WARNING, "Plugin '%s' called CoverageUtil#load(Plugin), but no logfile was found", p.getName());
         }
     }
 
+    /**
+     * Prints out the current {@link CoverageUtil} report to the console
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     */
     public static void reportAll() {
-        Debugger.print("Current coverage report:");
+        Logging.simple().print("Current coverage report:");
         CoverageUtil.marks.values().forEach((pm) -> {
             pm.getClassMarkers().forEach((c) -> {
                 c.getMethodMarkers().forEach((m) -> {
                     m.getMarkers().forEach((mk) -> {
-                        Debugger.print("Plugin: %s\n\tClass: %s\n\tMethod: %s\n\tLine: %d\n\tValue: %B\n", pm.name, c.getName(), m.getName(), mk.getLine(), mk.isHit());
+                        Logging.simple().print("Plugin: %s\n\tClass: %s\n\tMethod: %s\n\tLine: %d\n\tValue: %B\n", pm.name, c.getName(), m.getName(), mk.getLine(), mk.isHit());
                     });
                 });
             });
