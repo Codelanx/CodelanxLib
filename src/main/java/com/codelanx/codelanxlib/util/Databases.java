@@ -19,7 +19,10 @@
  */
 package com.codelanx.codelanxlib.util;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Provides façade methods for making SQL interactions less verbose
@@ -42,6 +45,60 @@ public class Databases {
      */
     public static String simpleErrorOutput(SQLException ex) {
         return String.format("(%d) %s", ex.getErrorCode(), ex.getMessage());
+    }
+
+    /**
+     * Closes a passed {@link Statement} object and swallows any
+     * {@link SQLException} that occurs. Can handle null parameters
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param closable The {@link Statement} to close
+     */
+    public static void close(Statement closable) {
+        if (closable == null) {
+            return;
+        }
+        try {
+            closable.close();
+        } catch (SQLException ex) {}
+    }
+
+    /**
+     * Closes a passed {@link Connection} object and swallows any
+     * {@link SQLException} that occurs. Can handle null parameters
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param closable The {@link Connection} to close
+     */
+    public static void close(Connection closable) {
+        if (closable == null) {
+            return;
+        }
+        try {
+            closable.close();
+        } catch (SQLException ex) {}
+    }
+
+    /**
+     * Closes a passed {@link ResultSet} object and swallows any
+     * {@link SQLException} that occurs. Can handle null parameters
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param closable The {@link ResultSet} to close
+     */
+    public static void close(ResultSet closable) {
+        if (closable == null) {
+            return;
+        }
+        try {
+            closable.close();
+        } catch (SQLException ex) {}
     }
 
 }
