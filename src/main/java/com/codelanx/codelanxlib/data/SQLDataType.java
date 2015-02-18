@@ -155,7 +155,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
     }
 
     /**
-     * Runs a {@link PrepareStatement} using the provided {@code sql} parameter.
+     * Runs a {@link PreparedStatement} using the provided {@code sql} parameter.
      * The following {@link SQLFunction} will then be run using this constructed
      * statement
      * 
