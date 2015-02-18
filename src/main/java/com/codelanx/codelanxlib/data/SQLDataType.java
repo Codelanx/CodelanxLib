@@ -164,6 +164,12 @@ public interface SQLDataType extends DataType, AutoCloseable {
      */
     public Connection getConnection();
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     @Override
     default public void close() {
         try {
