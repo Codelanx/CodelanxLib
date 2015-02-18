@@ -19,19 +19,19 @@
  */
 package com.codelanx.codelanxlib.econ;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 /**
  * Packet used to describe a change in balance from a transaction with Vault
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public class EconomyChangePacket {
 
-    /** The relevant {@link Player} to this packet */
-    private final Player p;
+    /** The relevant {@link OfflinePlayer} to this packet */
+    private final OfflinePlayer p;
     /** The new balance */
     private final double amount;
 
@@ -39,25 +39,25 @@ public class EconomyChangePacket {
      * Constructor. Assigns parameters to fields
      * 
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      * 
-     * @param p The {@link Player} whose balance changed
+     * @param p The {@link OfflinePlayer} whose balance changed
      * @param amount The new balance
      */
-    public EconomyChangePacket(Player p, double amount) {
+    public EconomyChangePacket(OfflinePlayer p, double amount) {
         this.p = p;
         this.amount = amount;
     }
 
     /**
-     * The {@link Player} whose balance changed
+     * The {@link OfflinePlayer} whose balance changed
      * 
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      * 
-     * @return The relevant {@link Player} object 
+     * @return The relevant {@link OfflinePlayer} object 
      */
-    public Player getPlayer() {
+    public OfflinePlayer getPlayer() {
         return this.p;
     }
 

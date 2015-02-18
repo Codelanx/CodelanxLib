@@ -21,8 +21,8 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.serialize.SerializationFactory;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -37,6 +37,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -49,6 +50,22 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @version 0.1.0
  */
 public final class VaultProxy implements InvocationHandler {
+
+    static {
+        SerializationFactory.registerClasses(SerializationFactory.getNativeSerializables());
+        new Thread() {
+
+            @Override
+            public void run() {
+                ServicesManager sm = Bukkit.getServer().getServicesManager();
+                while (sm.getRegistration(Economy.class) == null) {
+                    //wait
+                }
+                VaultProxy.proxyVault();
+            }
+
+        }.start();
+    }
 
     /** The cached {@link Economy} class that Vault registered */
     private final Economy econ;
@@ -131,18 +148,20 @@ public final class VaultProxy implements InvocationHandler {
                 Debugger.print(Level.SEVERE, "No economy found, will not proxy Vault!");
                 return;
             }
+            ServicePriority priority = rsp.getPriority();
             Economy e = rsp.getProvider();
             if (e == null || Proxy.isProxyClass(e.getClass())) {
                 Debugger.print(Level.SEVERE, "Error proxying vault economy! No responsive updating");
                 return;
             }
-            ClassLoader l;
-            l = Economy.class.getClassLoader();
+            ClassLoader l = Economy.class.getClassLoader();
             Vault v = JavaPlugin.getPlugin(Vault.class);
+            if (v == null) {
+                Debugger.print(Level.SEVERE, "Vault not found even after retrieving economy class. Wizardry!");
+                return;
+            }
             if (l == null) {
-                Method m = v.getClass().getMethod("getClassLoader");
-                m.setAccessible(true);
-                l = (ClassLoader) m.invoke(v);
+                l = v.getClass().getClassLoader();
                 if (l == null) {
                     Debugger.print(Level.SEVERE, "Unable to retrieve economy classloader!");
                     return;
@@ -150,10 +169,10 @@ public final class VaultProxy implements InvocationHandler {
             }
             server.getServicesManager().unregister(Economy.class);
             server.getServicesManager().register(Economy.class,
-                    (Economy) Proxy.newProxyInstance(l, new Class[]{Economy.class}, new VaultProxy(e)),
+                    (Economy) Proxy.newProxyInstance(l, new Class<?>[]{Economy.class}, new VaultProxy(e)),
                     v,
-                    ServicePriority.Normal);
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    priority);
+        } catch (SecurityException | IllegalArgumentException ex) {
             Debugger.error(ex, "Error proxying vault economy class!");
         }
     }

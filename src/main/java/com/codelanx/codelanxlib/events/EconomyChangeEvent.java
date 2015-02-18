@@ -19,40 +19,54 @@
  */
 package com.codelanx.codelanxlib.events;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 
 /**
  * Fired when a player balance changes via Vault
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
-public class EconomyChangeEvent extends PlayerEvent {
+public class EconomyChangeEvent extends Event {
 
     /** {@link HandlerList} for this event */
     protected static final HandlerList handlers = new HandlerList();
     /** The new balance */
     private final double money;
+    /** The {@link OfflinePlayer} whose money changed */
+    private final OfflinePlayer p;
 
     /**
-     * Constructor. Assigns the {@link Player} and money to fields
+     * Constructor. Assigns the {@link OfflinePlayer} and money to fields
      * 
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.1.0
      * 
-     * @param p The {@link Player} whose balance changed
+     * @param p The {@link OfflinePlayer} whose balance changed
      * @param money The new balance
      */
-    public EconomyChangeEvent(Player p, double money) {
-        super(p);
+    public EconomyChangeEvent(OfflinePlayer p, double money) {
+        this.p = p;
         this.money = money;
     }
 
     /**
-     * Returns the new balance for the {@link Player}
+     * The {@link OfflinePlayer} whose balance changed
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @return The relevant {@link OfflinePlayer} object 
+     */
+    public OfflinePlayer getPlayer() {
+        return this.p;
+    }
+
+    /**
+     * Returns the new balance for the {@link OfflinePlayer}
      * 
      * @since 0.0.1
      * @version 0.0.1

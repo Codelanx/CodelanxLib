@@ -20,10 +20,11 @@
 package com.codelanx.codelanxlib;
 
 import com.codelanx.codelanxlib.listener.ListenerManager;
-import com.codelanx.codelanxlib.serialize.*;
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.serialize.SerializationFactory;
 import com.codelanx.codelanxlib.util.Scheduler;
 import java.io.IOException;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
@@ -40,6 +41,7 @@ public class CodelanxLib extends JavaPlugin {
         SerializationFactory.registerClasses(SerializationFactory.getNativeSerializables());
     }
 
+
     /**
      * Reports metrics to <a href="http://mcstats.org/">MCStats</a>, and hooks
      * the plugin loggers for {@link Debugger}
@@ -51,6 +53,7 @@ public class CodelanxLib extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        Bukkit.getServer().getServicesManager();
         try {
             new Metrics(this).start();
         } catch (IOException ex) {

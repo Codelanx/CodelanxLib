@@ -63,7 +63,7 @@ public final class CoverageUtil {
 
     /**
      * A method/constructor annotation. The value of this annotation should be
-     * the number of calls to {@link CoverageUtil#marker(Plugin)} in the method
+     * the number of calls to {@link CoverageUtil#marker()} in the method
      * 
      * @since 0.0.1
      * @version 0.0.1
@@ -73,12 +73,12 @@ public final class CoverageUtil {
     public static @interface Coverage {
         
         /**
-         * The number of calls to {@link CoverageUtil#marker(Plugin)}
+         * The number of calls to {@link CoverageUtil#marker()}
          * 
          * @since 0.0.1
          * @version 0.0.1
          * 
-         * @return The number of calls to {@link CoverageUtil#marker(Plugin)}
+         * @return The number of calls to {@link CoverageUtil#marker()}
          */
         int value();
     }

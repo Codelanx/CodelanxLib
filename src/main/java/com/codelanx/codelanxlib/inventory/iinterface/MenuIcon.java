@@ -87,13 +87,13 @@ public class MenuIcon {
     }
 
     /**
-     * Sets the {@link Executable} function that is called when this icon is
+     * Sets the {@link Execution} function that is called when this icon is
      * clicked. Can be set to {@code null} to not execute anything
      *
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param onExec The {@link Executable} to be used
+     * @param onExec The {@link Execution} to be used
      */
     public void setExecutable(Execution onExec) {
         this.onExec = onExec;

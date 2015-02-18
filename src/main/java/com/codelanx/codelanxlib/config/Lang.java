@@ -172,7 +172,8 @@ public interface Lang extends PluginFile {
     }
 
     /**
-     * Converts pre-made strings to have chat colors in them
+     * Automatically translates strings that contain color codes using the
+     * '{@code &}' symbol
      *
      * @since 0.1.0
      * @version 0.1.0

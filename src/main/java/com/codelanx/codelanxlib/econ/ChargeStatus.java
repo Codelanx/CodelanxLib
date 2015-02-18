@@ -21,7 +21,7 @@ package com.codelanx.codelanxlib.econ;
 
 /**
  * Represents the result of a call to
- * {@link CEconomy#canCharge(org.bukkit.entity.Player, double) CEconomy#canCharge}
+ * {@link CEconomy#canCharge(org.bukkit.OfflinePlayer, double) CEconomy#canCharge}
  *
  *
  * @since 0.0.1
