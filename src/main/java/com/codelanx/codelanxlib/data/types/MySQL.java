@@ -177,7 +177,7 @@ public class MySQL implements SQLDataType {
      * 
      * @param prefs The {@link ConnectionPrefs} relevant to the connection
      * @param keepAliveMS The time in milliseconds to keep a connection open
-     * @return 
+     * @return A new self-renewing {@link Cache} object with an instance of this
      */
     public static Cache<MySQL> newCache(ConnectionPrefs prefs, long keepAliveMS) {
         return new Cache<MySQL>(keepAliveMS) {
