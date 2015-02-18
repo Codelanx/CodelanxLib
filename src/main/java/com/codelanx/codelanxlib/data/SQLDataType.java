@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.data;
 
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.util.Databases;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -151,6 +152,32 @@ public interface SQLDataType extends DataType, AutoCloseable {
         if (this.getConnection() != null) {
             this.getConnection().rollback();
         }
+    }
+
+    /**
+     * Runs a {@link PrepareStatement} using the provided {@code sql} parameter.
+     * The following {@link SQLFunction} will then be run using this constructed
+     * statement
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <R> The type of the return value
+     * @param oper The {@link SQLFunction} operation to use
+     * @param sql The sql statement to execute
+     * @return The returned result of the {@link SQLFunction}
+     */
+    default public <R> R operate(SQLFunction<? super PreparedStatement, R> oper, String sql) {
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.prepare(sql);
+            return oper.apply(stmt);
+        } catch (SQLException ex) {
+            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+        } finally {
+            Databases.close(stmt);
+        }
+        return null;
     }
 
     /**
