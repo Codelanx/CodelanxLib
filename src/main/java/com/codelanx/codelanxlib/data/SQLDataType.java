@@ -181,6 +181,37 @@ public interface SQLDataType extends DataType, AutoCloseable {
     }
 
     /**
+     * Runs a {@link PreparedStatement} using the provided {@code sql} parameter.
+     * The following {@link SQLFunction} will then be run using this constructed
+     * statement. This is typically more-so for use in one-time executed
+     * statements
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <R> The type of the return value
+     * @param oper The {@link SQLFunction} operation to use
+     * @param sql The SQL statement to execute
+     * @param params Parameters to pass to the {@link PreparedStatement}
+     * @return The returned result of the {@link SQLFunction}
+     */
+    default public <R> R operate(SQLFunction<? super PreparedStatement, R> oper, String sql, Object... params) {
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.prepare(sql);
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            return oper.apply(stmt);
+        } catch (SQLException ex) {
+            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+        } finally {
+            Databases.close(stmt);
+        }
+        return null;
+    }
+
+    /**
      * Returns the {@link Connection} object for ease of use in exposing more
      * internal API
      * 
