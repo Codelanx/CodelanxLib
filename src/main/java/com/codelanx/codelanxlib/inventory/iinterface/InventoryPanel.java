@@ -36,7 +36,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.1.0
  */
 public final class InventoryPanel {
 
@@ -61,28 +61,86 @@ public final class InventoryPanel {
         this.rows = rows;
     }
 
+    /**
+     * Returns a new {@link MenuIcon} stored in this panel
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param item The {@link ItemStack} to use for displaying the icon
+     * @param onExec The {@link Execution} to use when the icon is clicked
+     * @param options A mapping of metadata options for the icon
+     * @return The new {@link MenuIcon}
+     */
     public MenuIcon newIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
         MenuIcon icon = new MenuIcon(item, onExec, options);
         this.locations.put(this.index++, icon);
         return icon;
     }
 
+    /**
+     * Returns a new {@link MenuIcon} stored in this panel
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param item The {@link ItemStack} to use for displaying the icon
+     * @param onExec The {@link Execution} to use when the icon is clicked
+     * @return The new {@link MenuIcon}
+     */
     public MenuIcon newIcon(ItemStack item, Execution onExec) {
         return this.newIcon(item, onExec, new HashMap<>());
     }
 
+    /**
+     * Links this panel to the passed {@link MenuIcon} such that clicking it
+     * will open this panel
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @see InventoryInterface#linkPanel(MenuIcon, InventoryPanel)
+     * @param icon The {@link MenuIcon} to link
+     */
     public void linkIcon(MenuIcon icon) {
         this.ii.linkPanel(icon, this);
     }
 
+    /**
+     * Sets the {@link Execution} for all {@link MenuIcon} objects held in this
+     * panel
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param onExec The {@link Execution} to set
+     */
     public void setAllExecutions(Execution onExec) {
         this.locations.values().forEach(i -> i.setExecutable(onExec));
     }
 
+    /**
+     * Returns the seed relevant to this specific panel
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The seed for this panel
+     */
     public String getSeed() {
         return this.seed;
     }
 
+    /**
+     * Called when a player clicks a {@link MenuIcon} inside of an
+     * {@link InventoryPanel}
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param p The {@link Player} who clicked
+     * @param slot The slot that was clicked
+     */
     public void click(Player p, int slot) {
         MenuIcon icon = this.locations.get(slot);
         if (icon != null && icon.hasPermission(p)) {
@@ -129,6 +187,14 @@ public final class InventoryPanel {
         }
     }
 
+    /**
+     * Opens this {@link InventoryPanel} for the passed {@link Player}
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param p The {@link Player} to open this panel for
+     */
     public void open(Player p) {
         String name = this.name;
         int maxLength = 32 - (InventoryInterface.SEED_LENGTH * 2) - (InventoryPanel.SEED_LENGTH * 2);
@@ -142,11 +208,28 @@ public final class InventoryPanel {
         p.openInventory(back);
     }
 
+    /**
+     * Sets the serialized name for this panel
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @param name The name to set
+     * @return The current instance (chained)
+     */
     public InventoryPanel setSerializedName(String name) {
         this.serializer = name;
         return this;
     }
 
+    /**
+     * Returns the serialized name for this panel
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The serialized name
+     */
     public String getSerializedName() {
         return this.serializer;
     }
@@ -160,6 +243,14 @@ public final class InventoryPanel {
         return back;
     }
 
+    /**
+     * Returns the name/title used for the {@link Inventory} in this panel
+     * 
+     * @since 0.0.1
+     * @version 0.0.1
+     * 
+     * @return The name for this panel 
+     */
     public String getName() {
         return this.name;
     }

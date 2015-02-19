@@ -48,6 +48,15 @@ public class VaultProxyListener extends SubListener<CodelanxLib> {
         super(null);
     }
 
+    /**
+     * Listens for registration of Vault's {@link Economy} class and replaces it
+     * with a {@link VaultProxy}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param event The relevant {@link ServiceRegisterEvent}
+     */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEconomy(ServiceRegisterEvent event) {
         RegisteredServiceProvider<?> rsp = event.getProvider();

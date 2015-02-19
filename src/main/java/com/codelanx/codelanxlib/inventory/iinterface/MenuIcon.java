@@ -36,7 +36,7 @@ import org.bukkit.inventory.ItemStack;
  * Represents an {@link ItemStack} in an {@link InventoryPanel}'s inventory that
  * will execute code when clicked.
  *
- * @since 0.1.0
+ * @since 0.0.1
  * @author 1Rogue
  * @version 0.1.0
  */
