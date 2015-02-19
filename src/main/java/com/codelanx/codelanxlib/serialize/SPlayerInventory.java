@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 /**
- * Class description for {@link SPlayerInventory}
+ * Represents a {@link PlayerInventory} that is capable of being serialized
  *
  * @since 0.0.1
  * @author 1Rogue

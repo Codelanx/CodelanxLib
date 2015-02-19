@@ -27,7 +27,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Class description for {@link Paginator}
+ * Wraps text in formatted bars with a title, and allows for paging through
+ * text content
  *
  * @since 0.1.0
  * @author 1Rogue

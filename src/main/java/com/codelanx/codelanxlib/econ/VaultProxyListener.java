@@ -29,14 +29,21 @@ import org.bukkit.event.server.ServiceRegisterEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 /**
- * Class description for {@link VaultProxyListener}
+ * Listens for when Vault registers its {@link Economy} service provider and
+ * replaces it with a {@link VaultProxy}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public class VaultProxyListener extends SubListener<CodelanxLib> {
 
+    /**
+     * Useless, just follows contract for {@link SubListener}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     public VaultProxyListener() {
         super(null);
     }

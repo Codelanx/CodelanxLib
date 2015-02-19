@@ -38,7 +38,10 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Class description for {@link Reflections}
+ * Represents utility functions that utilize either java's reflection api,
+ * analysis of the current Stack in use, low-level operations, primitives, or
+ * other methods that deal with operations outside the norm of Java or Bukkit's
+ * own system
  *
  * @since 0.1.0
  * @author 1Rogue

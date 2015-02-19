@@ -29,7 +29,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * Class description for {@link PluginFile}
+ * Represents a file containing mappings that is owned by a plugin, and can
+ * be automatically initialized
  *
  * @since 0.1.0
  * @author 1Rogue

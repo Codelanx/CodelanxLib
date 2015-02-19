@@ -25,7 +25,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
- * Class description for {@link Players}
+ * Represents utility functions to simplify or clarify common operations
+ * with Bukkit's {@link Player} object
  *
  * @since 0.0.1
  * @author 1Rogue

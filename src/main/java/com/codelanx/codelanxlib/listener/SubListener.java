@@ -23,7 +23,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Class description for {@link SubListener}
+ * Handles events that are called by Bukkit's event system. On an implementation
+ * level, this is relatively the same as Bukkit's {@link Listener} class (and
+ * even implements said interface), however it also provides methods for simpler
+ * registration as well as a simple constructor to ensure a plugin instance is
+ * available
  *
  * @since 0.0.1
  * @author 1Rogue

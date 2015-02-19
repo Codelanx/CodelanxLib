@@ -31,7 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 /**
- * Main class
+ * Main class. Ensures any services are initialized properly
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -43,6 +43,12 @@ public class CodelanxLib extends JavaPlugin {
         SerializationFactory.registerClasses(SerializationFactory.getNativeSerializables());
     }
 
+    /**
+     * Registers a {@link VaultProxyListener}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
     @Override
     public void onLoad() {
         new VaultProxyListener().register();
