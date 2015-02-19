@@ -21,8 +21,6 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
 import com.codelanx.codelanxlib.logging.Debugger;
-import com.codelanx.codelanxlib.util.Reflections;
-import com.codelanx.codelanxlib.util.exception.Exceptions;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -124,9 +122,7 @@ public final class VaultProxy implements InvocationHandler {
      * @since 0.0.1
      * @version 0.0.1
      */
-    public static void proxyVault() {
-        Exceptions.illegalPluginAccess(Reflections.accessedFrom(VaultProxyListener.class),
-                "VaultProxy#proxyVault can only be called by " + VaultProxyListener.class.getSimpleName());
+    static void proxyVault() {
         try {
             Server server = Bukkit.getServer();
             RegisteredServiceProvider<Economy> rsp = server.getServicesManager().getRegistration(Economy.class);
