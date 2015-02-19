@@ -44,8 +44,6 @@ import org.bukkit.plugin.Plugin;
 
 /**
  * A collection of {@link InventoryPanel} objects with an opening reference
- * 
- * TODO: Find way to persist menu linkings
  *
  * @since 0.0.1
  * @author 1Rogue

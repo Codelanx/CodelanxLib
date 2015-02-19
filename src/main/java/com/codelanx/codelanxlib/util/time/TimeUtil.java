@@ -24,9 +24,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Provides utility method for determining differences in time as well as
  * providing ways to utilize things such as timers
- * 
- * TODO: Refactor class in a way that works with time points in every time
- *       setting, and consider moving to use Java 8's Time API
  *
  * @since 0.0.1
  * @author 1Rogue

@@ -231,8 +231,6 @@ public class TimePoint implements Comparable<TimePoint> {
      * will modify its contents! However, if no values are found this method
      * will return null.
      *
-     * TODO: Optimize to use binary search
-     *
      * @since 0.1.0
      * @version 0.1.0
      *

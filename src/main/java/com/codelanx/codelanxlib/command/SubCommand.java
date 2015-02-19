@@ -129,8 +129,6 @@ public abstract class SubCommand<E extends Plugin> implements Comparable<SubComm
      * permissions by passing tokens to append to the end of the permission
      * string
      * 
-     * TODO: Figure out catch for multiple CommandHandlers
-     * 
      * @since 0.0.1
      * @version 0.1.0
      * 
