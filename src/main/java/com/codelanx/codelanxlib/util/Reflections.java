@@ -21,9 +21,19 @@ package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.util.exception.Exceptions;
 import com.google.common.primitives.Primitives;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -198,6 +208,54 @@ public final class Reflections {
      */
     public static StackTraceElement getCaller() {
         return Reflections.getCaller(1);
+    }
+    /**
+     * Checks whether or not there is a plugin on the server with the name of
+     * the passed {@code name} paramater. This method achieves this by scanning
+     * the plugins folder and reading the {@code plugin.yml} files of any
+     * respective jarfiles in the directory.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param name The name of the plugin as specified in the {@code plugin.yml}
+     * @return The {@link File} for the plugin jarfile, or {@code null} if not
+     *         found
+     */
+    public static File findPluginJarfile(String name) {
+        File plugins = new File("plugins");
+        Exceptions.illegalState(plugins.isDirectory(), "'plugins' isn't a directory! (wat)");
+        for (File f : plugins.listFiles((File pathname) -> {
+            return pathname.getPath().endsWith(".jar");
+        })) {
+            try (InputStream is = new FileInputStream(f); ZipInputStream zi = new ZipInputStream(is)) {
+                ZipEntry ent = null;
+                while((ent = zi.getNextEntry()) != null) {
+                    if (ent.getName().equalsIgnoreCase("plugin.yml")) {
+                        break;
+                    }
+                }
+                if (ent == null) {
+                    continue; //no plugin.yml found
+                }
+                ZipFile z = new ZipFile(f);
+                try (InputStream fis = z.getInputStream(ent);
+                        InputStreamReader fisr = new InputStreamReader(fis);
+                        BufferedReader scan = new BufferedReader(fisr)) {
+                    String in;
+                    while ((in = scan.readLine()) != null) {
+                        if (in.startsWith("name: ")) {
+                            if (in.substring(6).equalsIgnoreCase("Vault")) {
+                                return f;
+                            }
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                Debugger.error(ex, "Error reading plugin jarfiles!");
+            }
+        }
+        return null;
     }
 
     /**

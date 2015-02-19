@@ -5,6 +5,5 @@ load: STARTUP
 author: 1Rogue
 website: ${website}
 main: ${project.groupId}.${project.artifactId}.${project.name}
-loadbefore: [Vault]
 soft-depend: [Vault]
 prefix: ${prefix}

@@ -21,13 +21,8 @@ package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -35,9 +30,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -46,7 +38,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -59,21 +50,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @version 0.1.0
  */
 public final class VaultProxy implements InvocationHandler {
-
-    static {
-        if (VaultProxy.hasVault()) {
-            System.out.println("[CL-Lib] Vault found! Waiting to hook...");
-            new Thread(() -> {
-                ServicesManager sm = Bukkit.getServer().getServicesManager();
-                while (sm.getRegistration(Economy.class) == null) {
-                    //wait
-                }
-                VaultProxy.proxyVault();
-            }).start();
-        } else {
-            System.out.println("[CL-Lib] No vault found! CEconomy class will not work");
-        }
-    }
 
     /** The cached {@link Economy} class that Vault registered */
     private final Economy econ;
@@ -149,6 +125,8 @@ public final class VaultProxy implements InvocationHandler {
      * @version 0.0.1
      */
     public static void proxyVault() {
+        Exceptions.illegalPluginAccess(Reflections.accessedFrom(VaultProxyListener.class),
+                "VaultProxy#proxyVault can only be called by " + VaultProxyListener.class.getSimpleName());
         try {
             Server server = Bukkit.getServer();
             RegisteredServiceProvider<Economy> rsp = server.getServicesManager().getRegistration(Economy.class);
@@ -198,53 +176,6 @@ public final class VaultProxy implements InvocationHandler {
      */
     public static <T extends CEconomy> boolean register(T econ) {
         return VaultProxy.econs.add(econ);
-    }
-
-    /**
-     * Checks whether or not there is a plugin on the server with the name of
-     * '{@code Vault}'. This method achieves this by scanning the plugins folder
-     * and reading the {@code plugin.yml} files of any respective jarfiles in
-     * the directory.
-     * 
-     * @since 0.1.0
-     * @version 0.1.0
-     * 
-     * @return {@code true} if the server has a plugin named {@code Vault}.
-     */
-    private static boolean hasVault() {
-        File plugins = new File("plugins");
-        Exceptions.illegalState(plugins.isDirectory(), "'plugins' isn't a directory! (wat)");
-        for (File f : plugins.listFiles((File pathname) -> {
-            return pathname.getPath().endsWith(".jar");
-        })) {
-            try (InputStream is = new FileInputStream(f); ZipInputStream zi = new ZipInputStream(is)) {
-                ZipEntry ent = null;
-                while((ent = zi.getNextEntry()) != null) {
-                    if (ent.getName().equalsIgnoreCase("plugin.yml")) {
-                        break;
-                    }
-                }
-                if (ent == null) {
-                    continue; //no plugin.yml found
-                }
-                ZipFile z = new ZipFile(f);
-                try (InputStream fis = z.getInputStream(ent);
-                        InputStreamReader fisr = new InputStreamReader(fis);
-                        BufferedReader scan = new BufferedReader(fisr)) {
-                    String in;
-                    while ((in = scan.readLine()) != null) {
-                        if (in.startsWith("name: ")) {
-                            if (in.substring(6).equalsIgnoreCase("Vault")) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                System.out.println("[CL-Lib] Error checking for vault, CEconomy disabled");
-            }
-        }
-        return false;
     }
 
 }

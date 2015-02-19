@@ -19,6 +19,8 @@
  */
 package com.codelanx.codelanxlib;
 
+import com.codelanx.codelanxlib.econ.VaultProxy;
+import com.codelanx.codelanxlib.econ.VaultProxyListener;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.serialize.SerializationFactory;
@@ -41,6 +43,10 @@ public class CodelanxLib extends JavaPlugin {
         SerializationFactory.registerClasses(SerializationFactory.getNativeSerializables());
     }
 
+    @Override
+    public void onLoad() {
+        new VaultProxyListener().register();
+    }
 
     /**
      * Reports metrics to <a href="http://mcstats.org/">MCStats</a>, and hooks
