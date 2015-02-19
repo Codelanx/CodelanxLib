@@ -28,7 +28,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -97,7 +96,7 @@ public class CEconomy extends Observable {
         cost *= this.bonus();
         if (cost < 0) {
             if (p.isOnline()) {
-                Lang.sendMessage((Player) p, this.format, InternalLang.ECONOMY_FAILED);
+                Lang.sendMessage(p.getPlayer(), this.format, InternalLang.ECONOMY_FAILED);
             }
             return new ChargeStatus(false, -1);
         }
@@ -136,7 +135,7 @@ public class CEconomy extends Observable {
         }
         if (cost < 0) {
             if (p.isOnline()) {
-                Lang.sendMessage((Player) p, this.format, InternalLang.ECONOMY_FAILED);
+                Lang.sendMessage(p.getPlayer(), this.format, InternalLang.ECONOMY_FAILED);
             }
             return false;
         }
@@ -145,7 +144,7 @@ public class CEconomy extends Observable {
         boolean bad = r.type == EconomyResponse.ResponseType.FAILURE;
         if (bad) {
             if (p.isOnline()) {
-                Lang.sendMessage((Player) p, this.format, InternalLang.ECONOMY_INSUFF, cost);
+                Lang.sendMessage(p.getPlayer(), this.format, InternalLang.ECONOMY_INSUFF, cost);
             }
         }
         this.setChanged();
