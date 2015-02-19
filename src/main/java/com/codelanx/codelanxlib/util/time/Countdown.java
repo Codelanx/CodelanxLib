@@ -39,9 +39,9 @@ import org.bukkit.scoreboard.Scoreboard;
  * or one of Bukkit's {@link Scoreboard} objects. Additionally, can run
  * code provided through the {@link Countdown#start(long, Runnable)} method
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  */
 public class Countdown {
 
