@@ -232,7 +232,7 @@ public final class Exceptions {
             Debugger.error(e, "Error creating new exception instance");
         }
         throw new IllegalArgumentException(String.format("Class '%s' does not have the "
-                + "appropriate constructors to be instantiated!", ex.getName()));
+                + "appropriate constructors to be instantiated", ex.getName()));
     }
 
     /**

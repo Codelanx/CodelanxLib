@@ -100,7 +100,7 @@ public final class InventoryInterface {
      * @throws IllegalStateException if no root panel is set
      */
     public void openInterface(Player p) {
-        Exceptions.notNull(this.getRootPanel(), "Root panel cannot be null!", IllegalStateException.class);
+        Exceptions.notNull(this.getRootPanel(), "Root panel cannot be null", IllegalStateException.class);
         this.getRootPanel().open(p);
     }
 
@@ -193,7 +193,7 @@ public final class InventoryInterface {
      */
     public void setRootPanel(InventoryPanel panel) {
         Validate.notNull(panel, "");
-        Validate.isTrue(this.panels.containsValue(panel), "Must use a registered panel as root!");
+        Validate.isTrue(this.panels.containsValue(panel), "Must use a registered panel as root");
         this.root = panel;
     }
 
@@ -235,7 +235,7 @@ public final class InventoryInterface {
      * @return {@code true} if the passed panel object is the root panel
      */
     protected boolean isRoot(InventoryPanel panel) {
-        Validate.notNull(panel, "InventoryPanel cannot be null!");
+        Validate.notNull(panel, "InventoryPanel cannot be null");
         if (this.root == null) {
             return false;
         }
@@ -303,15 +303,15 @@ public final class InventoryInterface {
      * @throws IllegalArgumentException If a null parameter is provided
      */
     public static InventoryInterface deserialize(Plugin p, File f) {
-        Validate.notNull(f, "File cannot be null!");
-        Validate.notNull(p, "Plugin cannot be null!");
-        Validate.isTrue(f.exists(), "File must exist!");
+        Validate.notNull(f, "File cannot be null");
+        Validate.notNull(p, "Plugin cannot be null");
+        Validate.isTrue(f.exists(), "File must exist");
         InventoryInterface ii = new InventoryInterface();
         if (f.exists()) {
             FileConfiguration yml = YamlConfiguration.loadConfiguration(f);
             Map<String, Object> panes = Config.getConfigSectionValue(yml.get("panels"));
             if (panes == null) {
-                p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'!", f.getName()));
+                p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'", f.getName()));
                 return ii;
             }
             panes.entrySet().stream()
@@ -319,7 +319,7 @@ public final class InventoryInterface {
                     .filter(ip -> ip != null)
                     .forEach(ip -> ii.panels.put(ip.getSeed(), ip));
             if (ii.getRootPanel() == null) {
-                p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'!", f.getName()));
+                p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'", f.getName()));
             }
         }
         return ii;
@@ -336,7 +336,7 @@ public final class InventoryInterface {
      * @throws IOException If the method failed to save to the file
      */
     public static void serialize(InventoryInterface ii, File save) throws IOException {
-        Validate.notNull(save, "File cannot be null!");
+        Validate.notNull(save, "File cannot be null");
         FileConfiguration f = YamlConfiguration.loadConfiguration(save);
         f.set("panels", ii.panels.values().stream().collect(Collectors.toMap(
                 InventoryPanel::getSerializedName,

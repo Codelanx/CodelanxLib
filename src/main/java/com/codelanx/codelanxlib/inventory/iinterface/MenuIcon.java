@@ -65,7 +65,7 @@ public class MenuIcon {
      */
     MenuIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
         if (item == null || options == null) {
-            throw new IllegalArgumentException("Constructor parameters cannot be null!");
+            throw new IllegalArgumentException("Constructor parameters cannot be null");
         }
         this.item = item;
         this.seed = RNG.THREAD_LOCAL().nextLong();

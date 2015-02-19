@@ -135,7 +135,7 @@ public class Paginator {
     public String getPage(int page) {
         page--;
         if (page < 0 || page > this.pages.size()) {
-            throw new IndexOutOfBoundsException("Page " + ++page + " does not exist!");
+            throw new IndexOutOfBoundsException("Page " + ++page + " does not exist");
         }
         return this.pages.get(page);
     }

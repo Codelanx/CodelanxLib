@@ -69,7 +69,7 @@ public class CodelanxLib extends JavaPlugin {
         try {
             new Metrics(this).start();
         } catch (IOException ex) {
-            Debugger.error(ex, "Error reporting metrics!");
+            Debugger.error(ex, "Error reporting metrics");
         }
 
         Debugger.hookBukkit();

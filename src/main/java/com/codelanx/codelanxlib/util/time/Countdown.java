@@ -176,7 +176,7 @@ public class Countdown {
      */
     public Countdown assignScoreboard(Scoreboard s, String format) {
         if (format == null) {
-            throw new IllegalArgumentException("Format cannot be null!");
+            throw new IllegalArgumentException("Format cannot be null");
         }
         if (!format.matches("(?!.*%[^sd])(?!.*%d.*%d)(?!.*%s.*%s.*%s)(?!.*%s.*%d)(?=.*%s)(?=.*%d).*")) {
             throw new IllegalArgumentException("Countdown format must follow contract! (See javadoc)");

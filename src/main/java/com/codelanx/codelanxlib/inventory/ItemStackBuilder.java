@@ -186,7 +186,7 @@ public class ItemStackBuilder {
      */
     public ItemStack build() {
         if (this.type == null || this.amount <= 0 || this.amount > this.type.getMaxStackSize()) {
-            throw new IllegalArgumentException("Illegal fields in " + this.getClass().getSimpleName() + "!");
+            throw new IllegalArgumentException("Illegal fields in " + this.getClass().getSimpleName());
         }
         String name;
         List<String> lore = new ArrayList<>(this.lore).stream().map(l -> this.lorePrefix + l).collect(Collectors.toList());

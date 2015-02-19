@@ -82,7 +82,7 @@ public interface Permissions {
      * @return {@code true} if the player has the permissions
      */
     default public boolean has(Player p) {
-        Validate.notNull(p, "Player cannot be null!");
+        Validate.notNull(p, "Player cannot be null");
         //Register permission to conform to Bukkit API
         String fullPerm = this.build();
         PluginManager pm = Bukkit.getServer().getPluginManager();

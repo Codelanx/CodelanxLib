@@ -57,7 +57,7 @@ public class SPlayerInventory implements ConfigurationSerializable {
      * @param inv The {@link PlayerInventory} to copy
      */
     public SPlayerInventory(PlayerInventory inv) {
-        Validate.notNull(inv, "PlayerInventory cannot be null!");
+        Validate.notNull(inv, "PlayerInventory cannot be null");
         this.helmet = inv.getHelmet();
         this.chest = inv.getChestplate();
         this.legs = inv.getLeggings();

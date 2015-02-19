@@ -91,7 +91,7 @@ public final class Debugger {
     public static void hookBukkit() {
         //Check to make sure CodelanxLib is calling it
         Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class),
-                "Debugger#hookBukkit may only be called by CodelanxLib!");
+                "Debugger#hookBukkit may only be called by CodelanxLib");
         Listener l = new BukkitPluginListener();
         if (!ListenerManager.isRegisteredToBukkit(CodelanxLib.get(), l)) {
             Bukkit.getServer().getPluginManager().registerEvents(l, CodelanxLib.get());
@@ -240,7 +240,7 @@ public final class Debugger {
             try {
                 Debugger.send(opts.getUrl(), out);
             } catch (IOException ex) {
-                Debugger.logger.log(Level.WARNING, "Unable to report error!");
+                Debugger.logger.log(Level.WARNING, "Unable to report error");
                 //Logger-generated errors should not be re-reported, and
                 //no ErrorManager is present for this instance
             }

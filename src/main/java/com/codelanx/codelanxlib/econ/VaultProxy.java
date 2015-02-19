@@ -127,7 +127,7 @@ public final class VaultProxy implements InvocationHandler {
             Server server = Bukkit.getServer();
             RegisteredServiceProvider<Economy> rsp = server.getServicesManager().getRegistration(Economy.class);
             if (rsp == null) {
-                Debugger.print(Level.SEVERE, "No economy found, will not proxy Vault!");
+                Debugger.print(Level.SEVERE, "No economy found, will not proxy Vault");
                 return;
             }
             ServicePriority priority = rsp.getPriority();
@@ -145,7 +145,7 @@ public final class VaultProxy implements InvocationHandler {
             if (l == null) {
                 l = v.getClass().getClassLoader();
                 if (l == null) {
-                    Debugger.print(Level.SEVERE, "Unable to retrieve economy classloader!");
+                    Debugger.print(Level.SEVERE, "Unable to retrieve economy classloader");
                     return;
                 }
             }
@@ -155,7 +155,7 @@ public final class VaultProxy implements InvocationHandler {
                     v,
                     priority);
         } catch (SecurityException | IllegalArgumentException ex) {
-            Debugger.error(ex, "Error proxying vault economy class!");
+            Debugger.error(ex, "Error proxying vault economy class");
         }
     }
 

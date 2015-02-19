@@ -59,7 +59,7 @@ public class Json implements FileDataType {
         try {
             root = (JSONObject) parser.parse(new FileReader(this.location));
         } catch (IOException ex) {
-            Debugger.error(ex, "Error loading JSON file!");
+            Debugger.error(ex, "Error loading JSON file");
         }
         this.root = root;
     }

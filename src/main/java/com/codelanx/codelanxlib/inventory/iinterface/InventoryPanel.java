@@ -51,7 +51,7 @@ public final class InventoryPanel {
     private final Map<Integer, MenuIcon> locations = new HashMap<>();
 
     InventoryPanel(InventoryInterface ii, String name, int rows) {
-        Validate.notNull(ii, "InventoryInterface cannot be null!");
+        Validate.notNull(ii, "InventoryInterface cannot be null");
         if (name == null) {
             name = "Choose an option!";
         }

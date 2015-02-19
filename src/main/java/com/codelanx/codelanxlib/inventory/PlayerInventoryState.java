@@ -115,7 +115,7 @@ public class PlayerInventoryState extends InventoryState {
      */
     @Override
     public void setContents(InventoryHolder holder) {
-        Validate.isTrue(holder instanceof HumanEntity, "InventoryHolder is not a HumanEntity!");
+        Validate.isTrue(holder instanceof HumanEntity, "InventoryHolder is not a HumanEntity");
         super.setContents(holder);
         HumanEntity e = (HumanEntity) holder;
         e.getInventory().setHelmet(this.helmet);

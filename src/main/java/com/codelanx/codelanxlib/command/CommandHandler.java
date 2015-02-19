@@ -73,7 +73,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
         //this.root = new RootToken<>(plugin, this.command);
         final CommandHandler<E> chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
-        Validate.notNull(cmd, "Attempted to register a non-existant command!");
+        Validate.notNull(cmd, "Attempted to register a non-existant command");
         cmd.setExecutor(chand);
         this.registerSubCommands(new HelpCommand<>(this.plugin, this),
                 new ReloadCommand<>(this.plugin, this));
@@ -100,7 +100,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
         SubCommand<E> scommand = this.getCommand(args[0]);
         if (scommand == null) {
             scommand = this.getCommand("help");
-            Exceptions.notNull(scommand, "CommandHandler does not have a help command!", IllegalStateException.class);
+            Exceptions.notNull(scommand, "CommandHandler does not have a help command", IllegalStateException.class);
         }
         try {
             scommand.execute(sender, Arrays.copyOfRange(args, 1, args.length)).handle(sender, this.name, scommand);

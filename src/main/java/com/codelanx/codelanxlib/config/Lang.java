@@ -134,7 +134,7 @@ public interface Lang extends PluginFile {
 
             @Override
             public FileDataType getConfig() {
-                throw new UnsupportedOperationException("A dynamic Lang does not have a FileDataType associated with it!");
+                throw new UnsupportedOperationException("An anonymous Lang does not have a FileDataType associated with it");
             }
         };
     }

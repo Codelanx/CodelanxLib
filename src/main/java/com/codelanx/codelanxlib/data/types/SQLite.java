@@ -91,12 +91,12 @@ public class SQLite implements SQLDataType {
      */
     public Connection open(File folder, String name) throws SQLException {
         if (folder == null || !folder.exists() || !folder.isDirectory()) {
-            throw new IllegalArgumentException("Folder must be a non-null, existing directory!");
+            throw new IllegalArgumentException("Folder must be a non-null, existing directory");
         }
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException ex) {
-            Debugger.error(ex, "Error loading SQLite drivers!");
+            Debugger.error(ex, "Error loading SQLite drivers");
         }
         this.con = DriverManager.getConnection("jdbc:sqlite:" + folder.getAbsolutePath() + File.separatorChar + name + ".db");
         Debugger.print("Open SQLite connections: %d", ++connections);

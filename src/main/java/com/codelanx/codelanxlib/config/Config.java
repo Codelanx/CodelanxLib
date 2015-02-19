@@ -55,8 +55,8 @@ public interface Config extends PluginFile {
      *         then {@link Object#toString()} is called on the value instead
      */
     default public <T> T as(Class<T> c) {
-        Validate.notNull(c, "Cannot cast to null!");
-        Validate.isTrue(Primitives.unwrap(c) != void.class, "Cannot cast to a void type!");
+        Validate.notNull(c, "Cannot cast to null");
+        Validate.isTrue(Primitives.unwrap(c) != void.class, "Cannot cast to a void type");
         Object o = this.get();
         if (o == null) {
             return Reflections.defaultPrimitiveValue(c);
@@ -70,7 +70,7 @@ public interface Config extends PluginFile {
         if (c.isInstance(this.getDefault())) {
             return c.cast(this.getDefault());
         }
-        throw new ClassCastException("Unable to cast config value!");
+        throw new ClassCastException("Unable to cast config value");
     }
 
     /**

@@ -84,7 +84,7 @@ public final class Inventories {
             }
         }
         p.getItemInHand().getItemMeta().setLore(oldLore);
-        throw new IllegalStateException("Race conflict with other plugin while running method!");
+        throw new IllegalStateException("Race conflict with other plugin while running method");
     }
 
     /**

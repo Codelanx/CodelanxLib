@@ -153,7 +153,7 @@ public final class Reflections {
             return back;
         } catch (ClassNotFoundException ex) {
             //Potentially dangerous (Stackoverflow)
-            Debugger.error(ex,  "Error reflecting for plugin class!");
+            Debugger.error(ex,  "Error reflecting for plugin class");
         }
         return null;
     }
@@ -255,7 +255,7 @@ public final class Reflections {
                     }
                 }
             } catch (IOException ex) {
-                Debugger.error(ex, "Error reading plugin jarfiles!");
+                Debugger.error(ex, "Error reading plugin jarfiles");
             }
         }
         return null;

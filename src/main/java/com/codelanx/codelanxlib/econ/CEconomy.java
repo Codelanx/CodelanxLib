@@ -262,7 +262,7 @@ public class CEconomy extends Observable {
         if (this.econ == null) {
             RegisteredServiceProvider<Economy> rsp
                     = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-            Exceptions.notNull(rsp, "No registered economy handler!", IllegalStateException.class);
+            Exceptions.notNull(rsp, "No registered economy handler", IllegalStateException.class);
             this.econ = rsp.getProvider();
         }
         return this.econ;

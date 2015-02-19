@@ -73,7 +73,7 @@ public final class ListenerManager {
      * @throws IllegalArgumentException If the listener isn't registered
      */
     public static <S extends SubListener<? extends Plugin>> S getListener(Class<S> listener) {
-        Validate.isTrue(ListenerManager.isRegistered(listener), "Class is not registered with listener manager!");
+        Validate.isTrue(ListenerManager.isRegistered(listener), "Class is not registered with listener manager");
         return (S) ListenerManager.listeners.get(listener);
     }
 
@@ -205,7 +205,7 @@ public final class ListenerManager {
      */
     public static void release() {
         Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class),
-                "ListenerManager#release may only be called by CodelanxLib!");
+                "ListenerManager#release may only be called by CodelanxLib");
         ListenerManager.listeners.values().forEach((l) -> {
             l.onDisable();
             HandlerList.unregisterAll(l);

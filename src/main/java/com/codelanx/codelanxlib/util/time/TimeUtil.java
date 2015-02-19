@@ -82,7 +82,7 @@ public final class TimeUtil {
      */
     public static String formatTime(long durationNS, TimeUnit min) {
         if (min == null) {
-            throw new IllegalArgumentException("Minimum TimeUnit cannot be null!");
+            throw new IllegalArgumentException("Minimum TimeUnit cannot be null");
         }
         TimePoint point = TimePoint.getTimePoint(durationNS);
         return TimeUtil.formatTime(point, min);

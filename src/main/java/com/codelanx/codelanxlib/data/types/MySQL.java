@@ -58,7 +58,7 @@ public class MySQL implements SQLDataType {
      */
     public MySQL(String host, String user, String pass, String database, String port) {
         if (host == null || user == null || pass == null || database == null || port == null) {
-            throw new IllegalArgumentException(this.getClass().getName() + " does not take null arguments in the constructor!");
+            throw new IllegalArgumentException(this.getClass().getName() + " does not take null arguments in the constructor");
         }
         this.prefs = new ConnectionPrefs(host, user, pass, database, port);
     }
@@ -227,9 +227,6 @@ public class MySQL implements SQLDataType {
          * @param port The port of the database
          */
         public ConnectionPrefs(String host, String user, String pass, String database, String port) {
-            if (host == null || user == null || pass == null || database == null || port == null) {
-                throw new IllegalArgumentException(this.getClass().getSimpleName() + " does not take null arguments in the constructor!");
-            }
             this.host = host;
             this.user = user;
             this.pass = pass.toCharArray();
@@ -252,9 +249,6 @@ public class MySQL implements SQLDataType {
          * @param port The port of the database
          */
         public ConnectionPrefs(Config host, Config user, Config pass, Config database, Config port) {
-            if (host == null || user == null || pass == null || database == null || port == null) {
-                throw new IllegalArgumentException(this.getClass().getSimpleName() + " does not take null arguments in the constructor!");
-            }
             this.host = host.as(String.class);
             this.user = user.as(String.class);
             this.pass = pass.as(String.class).toCharArray();

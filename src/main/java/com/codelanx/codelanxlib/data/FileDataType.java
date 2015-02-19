@@ -127,7 +127,7 @@ public interface FileDataType extends DataType {
                 | IllegalAccessException
                 | IllegalArgumentException
                 | InvocationTargetException ex) {
-            Debugger.error(ex, "Error parsing data file!");
+            Debugger.error(ex, "Error parsing data file");
         }
         return null;
     }
