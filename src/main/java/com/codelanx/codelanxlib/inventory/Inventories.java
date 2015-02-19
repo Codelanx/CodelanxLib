@@ -23,9 +23,12 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -82,6 +85,41 @@ public final class Inventories {
         }
         p.getItemInHand().getItemMeta().setLore(oldLore);
         throw new IllegalStateException("Race conflict with other plugin while running method!");
+    }
+
+    /**
+     * Returns the slot(s) that an {@link Item} would be placed into.
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param item The {@link Item} being placed into an {@link Inventory}
+     * @param inv The {@link Inventory} being placed into
+     * @return The slot(s) that would be affected by this placement
+     */
+    public Integer[] findPlacement(Item item, Inventory inv) {
+        ItemStack stack = item.getItemStack();
+        int amount = stack.getAmount();
+        List<Integer> back = new ArrayList<>();
+        Map<Integer, ? extends ItemStack> items = inv.all(stack.getType());
+        for (Map.Entry<Integer, ? extends ItemStack> ent : items.entrySet()) {
+            if (amount <= 0) {
+                break;
+            }
+            back.add(ent.getKey());
+            ItemStack i = ent.getValue();
+            amount -= i.getMaxStackSize() - i.getAmount();
+        }
+        if (amount > 0) {
+            ItemStack[] inventory = inv.getContents();
+            for (int i = 0; i < inventory.length; i++) {
+                if (inventory[i] == null) {
+                    amount -= stack.getMaxStackSize();
+                    back.add(i);
+                }
+            }
+        }
+        return back.toArray(new Integer[back.size()]);
     }
 
 }
