@@ -97,7 +97,7 @@ public final class Inventories {
      * @param inv The {@link Inventory} being placed into
      * @return The slot(s) that would be affected by this placement
      */
-    public Integer[] findPlacement(Item item, Inventory inv) {
+    public static Integer[] findPlacement(Item item, Inventory inv) {
         ItemStack stack = item.getItemStack();
         int amount = stack.getAmount();
         List<Integer> back = new ArrayList<>();
