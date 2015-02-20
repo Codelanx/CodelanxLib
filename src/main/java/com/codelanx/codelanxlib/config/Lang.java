@@ -106,12 +106,7 @@ public interface Lang extends PluginFile {
      * @return The formatting string value for plurals
      */
     default public String pluralFormat(int amount, Object... args) {
-        String repl;
-        if (this.getClass().isAnonymousClass()) {
-            repl = this.getDefault();
-        } else {
-            repl = String.valueOf(this.getConfig().get(this.getPath(), this.getDefault()));
-        }
+        String repl = this.value();
         repl = repl.replaceAll("\\{PLURALA (.*)\\|(.*)\\}", amount == 1 ? "is " + amount + " $1" : "are " + amount + " $2");
         repl = repl.replaceAll("\\{PLURAL (.*)\\|(.*)\\}", amount == 1 ? "$1" : "$2");
         return Lang.color(String.format(repl, args));
