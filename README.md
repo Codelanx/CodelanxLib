@@ -52,7 +52,7 @@ Typically, the `PluginFile` interface should be applied to an enum, to allow for
 specifying multiple file keys within a single class file. The interface is
 completely legal to apply to a class instead, however if it is applied to a
 class, then the class must implement the `Iterable` interface from Java 8 in
-order for `PluginFile#init(Class<T extends FileDataType)` to work. The easiest
+order for `PluginFile#init(Class<T extends FileDataType>)` to work. The easiest
 way to think about it is that a `PluginFile` in reality specifies only a single
 value of a file, which is why a multi-instance class such as an enum helps to
 specify everything at once.
@@ -183,7 +183,7 @@ MyPluginFile.EXAMPLE_STRING.save();
 
 While `EXAMPLE_STRING` was used, the entire file is actually saved in this call.
 
-* `Config#retrieve(FileDataType, Config)` and `Config#fromOther(FileDataType)`
+* `Config#retrieve(FileDataType, Config)` and `Config#retrieve(FileDataType)`
 
 Sometimes, a `Config` should actually relate to more than one file. For this,
 methods are provided to retrieve an anonymous/dynamic `Config` value which uses
@@ -205,7 +205,7 @@ returns an anonymous `Config` class containing the relevant information for
 example can easily be written as:
 
 ```java
-String val = Config.retrieve(json, MyPluginFile.EXAMPLE_STRING);
+String val = Config.retrieve(json, MyPluginFile.EXAMPLE_STRING).as(String.class);
 ```
 
 This is useful for when you have a method which accepts a `Config` parameter and
@@ -280,7 +280,7 @@ public enum MyPluginFile implements Lang {
     }
 
     @Override
-    public Lang getFormat() {
+    public Lang getFormat() { //A new method we need to override
         return MyPluginFile.FORMAT; //Returning our format for output
     }
 
@@ -334,7 +334,7 @@ above. However, for methods not shown above:
 
 * `Lang#color(String)`
 
-Some of you might be familiar with the method:
+You might be familiar with the method:
 
 ```java
 String myString = /* some string with color codes */;
@@ -342,7 +342,7 @@ myString = ChatColor.translateAlternateColorCodes('&', myString);
 ```
 
 This method is _exhausting_ to write for such a simple operation as swapping
-color codes. For this, `Lang#color(String)` is provided as a facade for exactly
+color codes. For this, `Lang#color(String)` is provided as a façade for exactly
 that method:
 
 ```java
