@@ -86,6 +86,18 @@ public final class VaultProxy implements InvocationHandler {
         this.econ = econ;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 0.0.1
+     * @version 0.1.0
+     * 
+     * @param proxy {@inheritDoc}
+     * @param m {@inheritDoc}
+     * @param args {@inheritDoc}
+     * @return {@inheritDoc}
+     * @throws Throwable Any relevant errors resulting from a method call
+     */
     @Override
     public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
         Object back = m.invoke(this.econ, args);

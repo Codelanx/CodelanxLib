@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.data;
 
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.logging.Logging;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -121,8 +122,9 @@ public interface FileDataType extends DataType {
             Constructor r = clazz.getConstructor(File.class);
             r.setAccessible(true);
             return (T) r.newInstance(location);
-        } catch (NoSuchMethodException
-                | SecurityException
+        } catch (NoSuchMethodException ex) {
+            Logging.simple().error(ex, "No File constructor found in FileDataType '%s'", clazz.getName());
+        } catch (SecurityException
                 | InstantiationException
                 | IllegalAccessException
                 | IllegalArgumentException

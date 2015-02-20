@@ -138,7 +138,7 @@ public class Yaml implements FileDataType {
 
     /**
      * Returns the underlying {@link FileConfiguration} used in reading the YAML
-     * file.
+     * file
      *
      * @since 0.1.0
      * @version 0.1.0

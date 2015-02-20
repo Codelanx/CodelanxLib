@@ -19,7 +19,6 @@
  */
 package com.codelanx.codelanxlib;
 
-import com.codelanx.codelanxlib.econ.VaultProxy;
 import com.codelanx.codelanxlib.econ.VaultProxyListener;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.logging.Debugger;
@@ -51,7 +50,7 @@ public class CodelanxLib extends JavaPlugin {
      */
     @Override
     public void onLoad() {
-        new VaultProxyListener().register();
+        new VaultProxyListener(this).register();
     }
 
     /**

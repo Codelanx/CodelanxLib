@@ -49,7 +49,7 @@ public interface Lang extends PluginFile {
     public Lang getFormat();
 
     /**
-     * The default value of this YAML string
+     * The default value of this {@link Lang} string
      *
      * @since 0.1.0
      * @version 0.1.0

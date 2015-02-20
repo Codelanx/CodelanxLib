@@ -62,7 +62,7 @@ public interface PluginFile {
     }
 
     /**
-     * The YAML path to store this value in
+     * The {@link FileDataType} path to store this value in
      *
      * @since 0.1.0
      * @version 0.1.0
@@ -82,7 +82,7 @@ public interface PluginFile {
     public Object getDefault();
 
     /**
-     * Returns the relevant {@link FileDataType} for this config.
+     * Returns the relevant {@link FileDataType} for this file.
      * 
      * @since 0.1.0
      * @version 0.1.0
@@ -92,15 +92,15 @@ public interface PluginFile {
     public FileDataType getConfig();
 
     /**
-     * Loads the lang values from the configuration file. Safe to use for
-     * reloading.
+     * Loads the {@link PluginFile} values from the configuration file.
+     * Safe to use for reloading
      *
      * @since 0.1.0
      * @version 0.1.0
      *
      * @param <T> The type of {@link FileDataType} to return
      * @param clazz The {@link Class} of the returned {@link FileDataType}
-     * @return The relevant {@link FileDataType} for all the config info
+     * @return The relevant {@link FileDataType} for all the file info
      */
     default public <T extends FileDataType> T init(Class<T> clazz) {
         Class<? extends PluginFile> me = this.getClass();
@@ -136,7 +136,7 @@ public interface PluginFile {
     }
 
     /**
-     * Saves the current configuration from memory
+     * Saves the current file data from memory
      *
      * @since 0.1.0
      * @version 0.1.0
@@ -148,7 +148,7 @@ public interface PluginFile {
     }
 
     /**
-     * Saves the current configuration from memory to a specific {@link File}
+     * Saves the current file data from memory to a specific {@link File}
      *
      * @since 0.1.0
      * @version 0.1.0

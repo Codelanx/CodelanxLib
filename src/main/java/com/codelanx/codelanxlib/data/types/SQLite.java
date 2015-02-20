@@ -45,8 +45,8 @@ public class SQLite implements SQLDataType {
 
     /**
      * Opens a connection to the SQLite database. Make sure to call
-     * SQLite.close() after you are finished working with the database for your
-     * segment of your code.
+     * {@link SQLite#close()} after you are finished working with the database
+     * for your segment of your code.
      *
      * @since 0.1.0
      * @version 0.1.0
@@ -61,8 +61,8 @@ public class SQLite implements SQLDataType {
 
     /**
      * Opens a connection to the SQLite database. Make sure to call
-     * SQLite.close() after you are finished working with the database for your
-     * segment of your code.
+     * {@link SQLite#close()} after you are finished working with the database
+     * for your segment of your code.
      *
      * @since 0.1.0
      * @version 0.1.0
@@ -78,8 +78,8 @@ public class SQLite implements SQLDataType {
 
     /**
      * Opens a connection to the SQLite database. Make sure to call
-     * SQLite.close() after you are finished working with the database for your
-     * segment of your code.
+     * {@link SQLite#close()} after you are finished working with the database
+     * for your segment of your code.
      *
      * @since 0.1.0
      * @version 0.1.0

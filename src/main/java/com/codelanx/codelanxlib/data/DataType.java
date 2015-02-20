@@ -21,7 +21,7 @@ package com.codelanx.codelanxlib.data;
 
 /**
  * Overall interface representing objects that handle and manage data in
- * relevance to files or databases.
+ * relevance to files or databases
  *
  * @since 0.1.0
  * @author 1Rogue

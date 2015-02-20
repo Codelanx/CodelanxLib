@@ -55,7 +55,6 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
     /** The primary command to access this {@link CommandHandler} in-game */
     protected String command;
 
-
     /**
      * {@link CommandHandler} constructor. Sets fields and registers the main
      * command through Bukkit to be executed by this handler.
@@ -70,7 +69,6 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
         this.plugin = plugin;
         this.command = command;
         this.name = Lang.getFormat(plugin);
-        //this.root = new RootToken<>(plugin, this.command);
         final CommandHandler<E> chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
         Validate.notNull(cmd, "Attempted to register a non-existant command");

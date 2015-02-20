@@ -23,7 +23,6 @@ package com.codelanx.codelanxlib.econ;
  * Represents the result of a call to
  * {@link CEconomy#canCharge(org.bukkit.OfflinePlayer, double) CEconomy#canCharge}
  *
- *
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.0.1
