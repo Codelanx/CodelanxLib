@@ -64,7 +64,7 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
      * @param plugin {@inheritDoc}
      * @param handler {@inheritDoc}
      */
-    public HelpCommand(E plugin, CommandHandler<E> handler) {
+    public HelpCommand(E plugin, CommandHandler handler) {
         super(plugin, handler);
     }
 
@@ -140,8 +140,9 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
      *
      * @return A new {@link Paginator} instance containing help information
      */
+    @SuppressWarnings("rawtypes")
     private Paginator newPaginator() {
-        List<SubCommand<E>> cmds = new ArrayList<>(this.handler.getCommands());
+        List<SubCommand> cmds = new ArrayList<>(this.handler.getCommands());
         Collections.sort(cmds);
         String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(
                 this.handler.getMainCommand());

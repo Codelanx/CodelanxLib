@@ -49,7 +49,7 @@ public class ReloadCommand<E extends Plugin> extends SubCommand<E> {
      * @param plugin {@inheritDoc}
      * @param handler {@inheritDoc}
      */
-    public ReloadCommand(E plugin, CommandHandler<E> handler) {
+    public ReloadCommand(E plugin, CommandHandler handler) {
         super(plugin, handler);
     }
 

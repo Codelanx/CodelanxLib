@@ -41,17 +41,15 @@ import org.bukkit.plugin.Plugin;
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.1.0
- *
- * @param <E> The specific {@link Plugin} to use
  */
-public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCompleter { //More verbose, but clearer
+public class CommandHandler implements CommandExecutor, TabCompleter { //More verbose, but clearer
 
     /** The format for output */
     protected final Lang name;
     /** Private {@link Plugin} instance */
-    protected final E plugin;
+    protected final Plugin plugin;
     /** Private {@link HashMap} of subcommands */
-    protected final Map<String, SubCommand<E>> commands = new HashMap<>();
+    protected final Map<String, SubCommand<? extends Plugin>> commands = new HashMap<>();
     /** The primary command to access this {@link CommandHandler} in-game */
     protected String command;
 
@@ -65,11 +63,11 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
      * @param plugin The main {@link Plugin} instance
      * @param command The command to write subcommands under
      */
-    public CommandHandler(E plugin, String command) {
+    public CommandHandler(Plugin plugin, String command) {
         this.plugin = plugin;
         this.command = command;
         this.name = Lang.getFormat(plugin);
-        final CommandHandler<E> chand = this;
+        final CommandHandler chand = this;
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
         Validate.notNull(cmd, "Attempted to register a non-existant command");
         cmd.setExecutor(chand);
@@ -95,7 +93,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
         if (args.length < 1 || (args.length == 1 && "help".equalsIgnoreCase(args[0]))) {
             args = new String[]{"help", "1"};
         }
-        SubCommand<E> scommand = this.getCommand(args[0]);
+        SubCommand<? extends Plugin> scommand = this.getCommand(args[0]);
         if (scommand == null) {
             scommand = this.getCommand("help");
             Exceptions.notNull(scommand, "CommandHandler does not have a help command", IllegalStateException.class);
@@ -125,7 +123,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
         if (args.length < 1) {
             return new ArrayList<>(this.commands.keySet());
         }
-        SubCommand<E> scommand = this.getCommand(args[0]);
+        SubCommand<? extends Plugin> scommand = this.getCommand(args[0]);
         if (scommand == null) {
             return new ArrayList<>();
         }
@@ -142,7 +140,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
      * @param name The name of the subcommand
      * @return A relevant {@link SubCommand}, or null if it does not exist
      */
-    public final SubCommand<E> getCommand(String name) {
+    public final SubCommand<? extends Plugin> getCommand(String name) {
         return this.commands.get(name);
     }
 
@@ -154,7 +152,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
      *
      * @return A {@link Collection} of all registered {@link SubCommand}
      */
-    public final Collection<SubCommand<E>> getCommands() {
+    public final Collection<SubCommand<? extends Plugin>> getCommands() {
         return this.commands.values();
     }
 
@@ -169,7 +167,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
      * @throws IllegalArgumentException If the command's name is already in use
      * @return The registered subcommand
      */
-    public final <T extends SubCommand<E>> T registerSubCommand(T command) {
+    public final <T extends SubCommand<? extends Plugin>> T registerSubCommand(T command) {
         Validate.isTrue(!this.isRegistered(command.getName()), "Command already in use: " + command.getName());
         this.commands.put(command.getName(), command);
         return command;
@@ -187,7 +185,7 @@ public class CommandHandler<E extends Plugin> implements CommandExecutor, TabCom
      * @param commands The {@link SubCommand} instances to register
      * @throws IllegalArgumentException If the command's name is already in use
      */
-    public final <T extends SubCommand<E>> void registerSubCommands(T... commands) {
+    public final <T extends SubCommand<? extends Plugin>> void registerSubCommands(T... commands) {
         IllegalArgumentException ex = null;
         for (T scommand : commands) {
             try {

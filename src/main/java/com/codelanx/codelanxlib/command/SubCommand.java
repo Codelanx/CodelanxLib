@@ -46,7 +46,7 @@ public abstract class SubCommand<E extends Plugin> implements Comparable<SubComm
     /** The main {@link Plugin} instance */
     protected final E plugin;
     /** The {@link CommandHandler} responsible for this command */
-    protected final CommandHandler<E> handler;
+    protected final CommandHandler handler;
 
     /**
      * {@link SubCommand} constructor
@@ -57,7 +57,7 @@ public abstract class SubCommand<E extends Plugin> implements Comparable<SubComm
      * @param plugin The {@link Plugin} associated with this command
      * @param handler The {@link CommandHandler} responsible for this command
      */
-    public SubCommand(E plugin, CommandHandler<E> handler) {
+    public SubCommand(E plugin, CommandHandler handler) {
         this.plugin = plugin;
         this.handler = handler;
     }
