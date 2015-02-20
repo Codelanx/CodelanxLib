@@ -31,7 +31,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Displays help information.
+ * Provides a listing of help information derived from all {@link SubCommand}
+ * objects that are registered to the {@link CommandHandler} that instantiated
+ * this class
  *
  * @since 0.0.1
  * @author 1Rogue

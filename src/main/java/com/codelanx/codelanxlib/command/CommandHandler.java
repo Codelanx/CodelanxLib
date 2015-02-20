@@ -71,7 +71,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter { //More ve
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
         Validate.notNull(cmd, "Attempted to register a non-existant command");
         cmd.setExecutor(chand);
-        this.registerSubCommands(new HelpCommand<>(this.plugin, this),
+        this.register(new HelpCommand<>(this.plugin, this),
                 new ReloadCommand<>(this.plugin, this));
     }
 
@@ -167,7 +167,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter { //More ve
      * @throws IllegalArgumentException If the command's name is already in use
      * @return The registered subcommand
      */
-    public final <T extends SubCommand<? extends Plugin>> T registerSubCommand(T command) {
+    public final <T extends SubCommand<? extends Plugin>> T register(T command) {
         Validate.isTrue(!this.isRegistered(command.getName()), "Command already in use: " + command.getName());
         this.commands.put(command.getName(), command);
         return command;
@@ -185,11 +185,11 @@ public class CommandHandler implements CommandExecutor, TabCompleter { //More ve
      * @param commands The {@link SubCommand} instances to register
      * @throws IllegalArgumentException If the command's name is already in use
      */
-    public final <T extends SubCommand<? extends Plugin>> void registerSubCommands(T... commands) {
+    public final <T extends SubCommand<? extends Plugin>> void register(T... commands) {
         IllegalArgumentException ex = null;
         for (T scommand : commands) {
             try {
-                this.registerSubCommand(scommand);
+                this.register(scommand);
             } catch (IllegalArgumentException e) {
                 if (ex == null) {
                     ex = e;
@@ -210,7 +210,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter { //More ve
      *
      * @param name The command to check for
      */
-    public void unregisterSubCommand(String name) {
+    public void unregister(String name) {
         if (this.isRegistered(name)) {
             this.commands.remove(name);
         }
