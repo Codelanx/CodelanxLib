@@ -140,6 +140,8 @@ public interface Config extends PluginFile {
      * @return An anonymous class wrapping of the configuration and keys
      */
     public static <T extends FileDataType> Config retrieve(T file, Config config) {
+        Validate.notNull(file, "File cannot be null");
+        Validate.notNull(config, "Config cannot be null");
         return new Config() {
 
             @Override
