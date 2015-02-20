@@ -130,7 +130,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter { //More ve
             return new ArrayList<>(this.commands.keySet());
         }
         SubCommand<? extends Plugin> scommand = this.getCommand(args[0]);
-        if (scommand == null) {
+        if (scommand == null && args.length == 1) {
             return new ArrayList<>(Reflections.matchClosestKeys(this.commands, args[0]));
         }
         return scommand.tabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
