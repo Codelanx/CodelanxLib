@@ -20,7 +20,6 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.config.Lang;
-import com.codelanx.codelanxlib.implementers.Commandable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,8 +37,7 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 0.1.0
  * 
- * @param <E> Represents a {@link Plugin} that implements the
- *            {@link Commandable} interface
+ * @param <E> The {@link Plugin} relevant to this {@link SubCommand} context
  */
 public abstract class SubCommand<E extends Plugin> implements Comparable<SubCommand<E>> {
 

@@ -20,7 +20,6 @@
 package com.codelanx.codelanxlib;
 
 import com.codelanx.codelanxlib.command.CommandHandler;
-import com.codelanx.codelanxlib.implementers.Commandable;
 import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,10 +29,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.1.0
- * 
- * @param <E> The implementing {@link org.bukkit.plugin.Plugin Plugin} type
  */
-public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPlugin implements Commandable {
+public abstract class CodelanxPlugin extends JavaPlugin {
 
     /**
      * The underlying {@link CommandHandler} in use by this
@@ -52,7 +49,7 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
      */
     @Override
     public void onEnable() {
-        this.getLogger().log(Level.INFO, "Enabling command handler...");
+        this.getLogger().info("Enabling command handler...");
         this.commands = new CommandHandler(this, this.getMainCommand());
     }
 
@@ -64,9 +61,10 @@ public abstract class CodelanxPlugin<E extends CodelanxPlugin<E>> extends JavaPl
      * 
      * @return The {@link CommandHandler} for this instance
      */
-    @Override
     public CommandHandler getCommandHandler() {
         return this.commands;
     }
+
+    protected abstract String getMainCommand();
 
 }

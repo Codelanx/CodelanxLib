@@ -19,7 +19,6 @@
  */
 package com.codelanx.codelanxlib.command;
 
-import com.codelanx.codelanxlib.implementers.Commandable;
 import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.util.Cache;
 import com.codelanx.codelanxlib.util.Paginator;
@@ -38,8 +37,7 @@ import org.bukkit.plugin.Plugin;
  * @author 1Rogue
  * @version 0.1.0
  *
- * @param <E> Represents a {@link Plugin} that implements the
- * {@link Commandable} interface
+ * @param <E> The {@link Plugin} that caused this class to be instantiated
  */
 public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
 
