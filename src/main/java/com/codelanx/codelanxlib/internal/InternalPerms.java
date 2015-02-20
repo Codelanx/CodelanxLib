@@ -28,7 +28,7 @@ import com.codelanx.codelanxlib.permission.Permissions;
  * @author 1Rogue
  * @version 0.1.0
  */
-public enum CLPerms implements Permissions {
+public enum InternalPerms implements Permissions {
 
     /**
      * Allows bypassing protection provided by the
@@ -41,7 +41,7 @@ public enum CLPerms implements Permissions {
 
     private final String permission;
 
-    private CLPerms(String permission) {
+    private InternalPerms(String permission) {
         this.permission = permission;
     }
 

@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.CodelanxLib;
-import com.codelanx.codelanxlib.internal.CLPerms;
+import com.codelanx.codelanxlib.internal.InternalPerms;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
@@ -115,7 +115,7 @@ public final class Protections {
                 if (p == null) {
                     return true;
                 }
-                return !CLPerms.PROTECTION_OVERRIDE.has(p) ? true : cancelled;
+                return !InternalPerms.PROTECTION_OVERRIDE.has(p) ? true : cancelled;
             }
             return cancelled;
         }
