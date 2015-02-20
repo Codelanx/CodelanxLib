@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.inventory.iinterface;
 
 import com.codelanx.codelanxlib.config.Config;
+import com.codelanx.codelanxlib.util.Lambdas;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -167,7 +168,7 @@ public final class InventoryPanel {
         if (objs != null && root != null) {
             List<MenuIcon> icons = objs.stream()
                     .map(obj -> MenuIcon.valueOf(ii, obj))
-                    .filter(i -> i != null)
+                    .filter(Lambdas::notNull)
                     .collect(Collectors.toList());
             int rows;
             if (map.get("rows") == null) {

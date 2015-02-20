@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.inventory.iinterface;
 
 import com.codelanx.codelanxlib.config.Config;
+import com.codelanx.codelanxlib.util.Lambdas;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
 import java.io.File;
 import java.io.IOException;
@@ -316,7 +317,7 @@ public final class InventoryInterface {
             }
             panes.entrySet().stream()
                     .map((ent) -> InventoryPanel.valueOf(ii, ent.getValue()).setSerializedName(ent.getKey()))
-                    .filter(ip -> ip != null)
+                    .filter(Lambdas::notNull)
                     .forEach(ip -> ii.panels.put(ip.getSeed(), ip));
             if (ii.getRootPanel() == null) {
                 p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'", f.getName()));
