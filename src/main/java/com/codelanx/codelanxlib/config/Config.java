@@ -59,10 +59,13 @@ public interface Config extends PluginFile {
         Validate.isTrue(Primitives.unwrap(c) != void.class, "Cannot cast to a void type");
         Object o = this.get();
         if (o == null) {
-            return Reflections.defaultPrimitiveValue(c);
+            T back = Reflections.defaultPrimitiveValue(c);
+            if (back != null) { //catch for non-primitive classes
+                return back;
+            }
         }
         if (c == String.class) {
-            return (T) o.toString();
+            return (T) String.valueOf(o);
         }
         if (c.isInstance(o)) {
             return c.cast(o);
