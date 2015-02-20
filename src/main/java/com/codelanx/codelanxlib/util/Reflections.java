@@ -31,6 +31,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -296,6 +300,39 @@ public final class Reflections {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns a {@link Set} of keys that closest match the passed in string
+     * value
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param map The {@link Map} with a string key to look through
+     * @param search The string to use as a base to search for
+     * @return A list of the closest matching keys, will be empty if no keys
+     *         begin with the search phrase
+     */
+    public static Set<String> matchClosestKeys(Map<String, ?> map, String search) {
+        return map.keySet().stream().filter(k -> k.startsWith(search)).collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns a {@link List} of values mapped from keys that closest match the
+     * passed in string value
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <T> The type of the values
+     * @param map The {@link Map} to look through
+     * @param search The string to use as a base to search for
+     * @return A list of the closest matching values, will be empty if no keys
+     *         begin with the search phrase
+     */
+    public static <T> List<T> matchClosestValues(Map<String, T> map, String search) {
+        return Reflections.matchClosestKeys(map, search).stream().map(map::get).collect(Collectors.toList());
     }
 
 }
