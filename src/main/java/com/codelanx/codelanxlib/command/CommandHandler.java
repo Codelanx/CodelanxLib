@@ -62,8 +62,11 @@ public class CommandHandler implements CommandExecutor, TabCompleter { //More ve
      *
      * @param plugin The main {@link Plugin} instance
      * @param command The command to write subcommands under
+     * @param autoRegister {@code true} if both {@link HelpCommand} and
+     *                     {@link ReloadCommand} should be automatically
+     *                     registered
      */
-    public CommandHandler(Plugin plugin, String command) {
+    public CommandHandler(Plugin plugin, String command, boolean autoRegister) {
         this.plugin = plugin;
         this.command = command;
         this.name = Lang.getFormat(plugin);
@@ -71,8 +74,10 @@ public class CommandHandler implements CommandExecutor, TabCompleter { //More ve
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(command);
         Validate.notNull(cmd, "Attempted to register a non-existant command");
         cmd.setExecutor(chand);
-        this.register(new HelpCommand<>(this.plugin, this),
+        if (autoRegister) {
+            this.register(new HelpCommand<>(this.plugin, this),
                 new ReloadCommand<>(this.plugin, this));
+        }
     }
 
     /**

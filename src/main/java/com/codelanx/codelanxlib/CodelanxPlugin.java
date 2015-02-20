@@ -50,7 +50,7 @@ public abstract class CodelanxPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getLogger().info("Enabling command handler...");
-        this.commands = new CommandHandler(this, this.getMainCommand());
+        this.commands = new CommandHandler(this, this.getMainCommand(), true);
     }
 
     /**
