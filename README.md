@@ -252,7 +252,7 @@ public class JoinCommand extends SubCommand<MyChannelPlugin> {
         }
         if (!this.channels.contains(args[0])) { //Make sure channel exists
             sender.sendMessage("That channel does not exist!");
-            return CommandStatus.SUCCESS; //Success? That seems odd... Explained below!
+            return CommandStatus.SUCCESS; //You thought I copy/pasted every line didn't you?
         }
         //At this point, we've confirmed the channel exists, and the sender is a player
         if (!sender.hasPermission("myplugin.channels." + args[0])) {
