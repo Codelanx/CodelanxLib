@@ -41,6 +41,25 @@ Library for Codelanx plugins. Public use is allowed, but must be credited.
   * __[Internal Classes](#internal)__
 
 
+##<a name="commands"></a> Commands
+
+Before I delve into the world of the command handling system, I want to preface
+this entire section that the current implementation is subject to extreme
+changes in the future (aiming for beta release 0.3.0). That all being said,
+the current system still comes with a few perks.
+
+Overall, you will only be dealing with three classes when making commands, and
+most/nearly all of the implementation for this is up to you as the developer.
+Those classes are:
+
+* `CommandHandler`
+* `CommandStatus`
+* `SubCommand`
+
+
+
+
+
 ##<a name="plugin-file"></a> Plugin Files
 
 Plugin files are the foundation of building interfaces to be applied for

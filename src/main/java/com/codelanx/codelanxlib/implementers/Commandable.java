@@ -28,10 +28,8 @@ import org.bukkit.plugin.Plugin;
  * @since 0.0.1
  * @author 1Rogue
  * @version 0.1.0
- *
- * @param <E> The {@link Plugin} relevant to the {@link CommandHandler}
  */
-public interface Commandable<E extends Plugin> extends Formatted {
+public interface Commandable extends Formatted {
 
     /**
      * Gets the {@link CommandHandler} for the {@link Plugin}
@@ -41,7 +39,7 @@ public interface Commandable<E extends Plugin> extends Formatted {
      *
      * @return The {@link CommandHandler} instance
      */
-    public abstract CommandHandler<E> getCommandHandler();
+    public abstract CommandHandler getCommandHandler();
 
     /**
      * Returns the main string to use as a command for the primary
