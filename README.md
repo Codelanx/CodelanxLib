@@ -52,12 +52,246 @@ Overall, you will only be dealing with three classes when making commands, and
 most/nearly all of the implementation for this is up to you as the developer.
 Those classes are:
 
-* `CommandHandler`
-* `CommandStatus`
-* `SubCommand`
+* `CommandHandler` - [Documentation](http://docs.codelanx.com/CodelanxLib/0.1.0/com/codelanx/codelanxlib/command/CommandHandler.html)
+* `CommandStatus` - [Documentation](http://docs.codelanx.com/CodelanxLib/0.1.0/com/codelanx/codelanxlib/command/CommandStatus.html)
+* `SubCommand` - [Documentation](http://docs.codelanx.com/CodelanxLib/0.1.0/com/codelanx/codelanxlib/command/SubCommand.html)
 
+A `CommandHandler` is an object that will handle a specific command in your
+plugin. For instance, let's say we had a channel plugin for chat, we could make
+our "channel" `CommandHandler` like so:
 
+```java
+Plugin p = /* our main plugin instance */;
+CommandHandler channel = new CommandHandler(p, "channel", true);
+```
 
+Great! That starts us off with a basic CommandHandler. This seems relatively
+simple, but under the hood a lot just happened. For starters, there are two
+reserved `SubCommand` classes that universally fill a specific purpose:
+
+* `HelpCommand` - [Documentation](http://docs.codelanx.com/CodelanxLib/0.1.0/com/codelanx/codelanxlib/command/HelpCommand.html)
+* `ReloadCommand` - [Documentation](http://docs.codelanx.com/CodelanxLib/0.1.0/com/codelanx/codelanxlib/command/ReloadCommand.html)
+
+What these commands do (if it isn't immediately obvious) is covered in the
+documentation for both of the classes. If you wish to unregister these commands
+from your handler so as to not allow reloading or help output from that specific
+command, you can use `CommandHandler#unregister(String)`. Continuing
+off our ticket example:
+
+```java
+channel.unregister("help"); //Note: 'channel' is a CommandHandler
+channel.unregister("reload");
+```
+
+Additionally, upon our original construction of the `CommandHandler`, we can
+specify that we do not want these classes automatically registered via the
+`boolean` that is passed:
+
+```java
+CommandHandler channel = new CommandHandler(p, "channel", false); //false, will not register
+```
+
+Now that we have our CommandHandler, we should add our own SubCommands! Say we
+want to have a command that allows a person to join a chat channel. The syntax,
+for our purposes, will be something like `/channel join <channel>`. To start,
+let's define our SubCommand:
+
+```java
+public class JoinCommand extends SubCommand<MyChannelPlugin> {
+
+    public JoinCommand(MyChannelPlugin plugin, CommandHandler handler) {
+        super(plugin, handler);
+    }
+
+}
+```
+
+Firstly, let's fill out the two simplest methods first for our command:
+
+```java
+    @Override
+    public String getName() {
+        return "join"; //This is the first argument for "channel", our subcommand's specific name
+    }
+
+    @Override
+    public Lang info() {
+        return Lang.createLang("Allows players to join a channel"); //We get to this later in the plugin file section!
+    }
+```
+
+If you're confused about the `Lang` part here, don't fret! It's completely
+covered under the [Lang section of this readme](#lang). Note that you wouldn't
+want to have a call to `Lang#createLang(String)` in a production environment
+for this method, but for now it helps convey the purpose.
+
+Something that the `SubCommand` class also has is a method for usage, however
+this isn't something you always have to override. By default, the usage printed
+will be `/<main-command> <subcommand-name>`, however if you remember we want
+to add a new argument for channel name, per `/channel join <channel>`, so let's
+do that now:
+
+```java
+    @Override
+    public String getUsage() {
+        return super.getUsage() + " <channel>";
+    }
+```
+
+And with that, it will now always return with the extra ` <channel>` on the end
+of the usage for our subcommand!
+
+Now we're left with the real meat of what your `SubCommand` class will be doing.
+For the purposes of this example, our class will have a `Set<String> channels`
+field which specifies which channels we can join.
+
+For starters, we should fill in the tab completion so that players have an
+easier time tab-completing our commands. That, and it's just cool to have!
+
+```java
+    @Override
+    public List<String> tabComplete(CommandSender sender, String... args) {
+        //From here, we need to return a list based on what has already been typed
+        //The main command and the subcommand name are not included in our arguments array!
+        if (args.length < 1) { //Empty arguments
+            //Return our available channels
+            return new ArrayList<>(this.channels);
+        } else if (args.length == 1) { //potentially auto-completing a word
+            //only return channels that start with the argument
+            return this.channels.stream().filter(c -> c.startsWith(search)).collect(Collectors.toList());
+        }
+        return new ArrayList<>(); //catch-all, we don't have anything to provide
+    }
+```
+
+Great! Now our command will auto-complete for anyone who attempts to tab a
+channel name. All this leaves us now is to implement the actual command
+execution. Remember that the concept of returning a boolean no longer exists
+in `SubCommand` objects, we use the `CommandStatus` enum to specify how the
+plugin will react to your command execution.
+
+```java
+    @Override
+    public CommandStatus execute(CommandSender sender, String... args) {
+        if (!(sender instanceof Player)) {
+            return CommandStatus.PLAYER_ONLY; //Only players use channels
+        }
+        //The main command and the subcommand name are not included in our arguments array!
+        if (args.length < 1) { //Empty arguments
+            return CommandStatus.BAD_ARGS;
+        }
+        if (!this.channels.contains(args[0])) { //Make sure channel exists
+            sender.sendMessage("That channel does not exist!");
+            return CommandStatus.SUCCESS; //Success? That seems odd... Explained below!
+        }
+        //At this point, we've confirmed the channel exists, and the sender is a player
+        if (!sender.hasPermission("myplugin.channels." + args[0])) {
+            //Hey! They can't join that channel!
+            return CommandStatus.NO_PERMISSION;
+        }
+        //Let's presume the main plugin has a #joinChannel(Player, String) method
+        this.plugin.joinChannel((Player) sender, args[0]);
+        return CommandStatus.SUCCESS;
+    }
+```
+
+And there you have it! You now have a complete `SubCommand` (to which I've
+placed at the bottom of this section). All you need to do now is register your
+`SubCommand` when you make your `CommandHandler`:
+
+```java
+Plugin p = /* our main plugin instance */;
+CommandHandler channel = new CommandHandler(p, "channel", true);
+channel.register(new JoinCommand<>(p, channel)); //Can pass multiple new SubCommand objects
+```
+
+> But why did you return `CommandStatus#SUCCESS` when the channel didn't exist?
+
+The thing about `CommandStatus#SUCCESS` and `CommandStatus#FAILED` is that it
+has nothing to do with the actual context of the command itself. When you
+reached the point where your command recognized the channel didn't exist, and
+sent a message to the player in response to that, you successfully handled that
+situation. If you were to have a totally different situation, say doing file
+I/O:
+
+```java
+File f = /* some file */;
+try {
+    f.createNewFile();
+} catch (Exception ex) {
+    //The file can't be made, we have no way to recover from this exception :(
+    return CommandStatus.FAILED;
+}
+```
+
+Notice here that our problem isn't that the user provided bad input, but rather
+that our code ran into a problem while attempting to execute, and we no longer
+have a reasonable way to continue. This is almost exclusively the case with
+exceptions, but it may come up in other contexts.
+
+And lastly, here is our completed SubCommand!
+
+```java
+public class JoinCommand extends SubCommand<MyChannelPlugin> {
+
+    public JoinCommand(MyChannelPlugin plugin, CommandHandler handler) {
+        super(plugin, handler);
+    }
+
+    @Override
+    public CommandStatus execute(CommandSender sender, String... args) {
+        if (!(sender instanceof Player)) {
+            return CommandStatus.PLAYER_ONLY; //Only players use channels
+        }
+        //The main command and the subcommand name are not included in our arguments array!
+        if (args.length < 1) { //Empty arguments
+            return CommandStatus.BAD_ARGS;
+        }
+        if (!this.channels.contains(args[0])) { //Make sure channel exists
+            sender.sendMessage("That channel does not exist!");
+            return CommandStatus.SUCCESS; //Success? That seems odd... Explained below!
+        }
+        //At this point, we've confirmed the channel exists, and the sender is a player
+        if (!sender.hasPermission("myplugin.channels." + args[0])) {
+            //Hey! They can't join that channel!
+            return CommandStatus.NO_PERMISSION;
+        }
+        //Let's presume the main plugin has a #joinChannel(Player, String) method
+        this.plugin.joinChannel((Player) sender, args[0]);
+        return CommandStatus.SUCCESS;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String... args) {
+        //From here, we need to return a list based on what has already been typed
+        //The main command and the subcommand name are not included in our arguments array!
+        if (args.length < 1) { //Empty arguments
+            //Return our available channels
+            return new ArrayList<>(this.channels);
+        } else if (args.length == 1) { //potentially auto-completing a word
+            //only return channels that start with the argument
+            return this.channels.stream().filter(c -> c.startsWith(search)).collect(Collectors.toList());
+        }
+        return new ArrayList<>(); //catch-all, we don't have anything to provide
+    }
+
+    @Override
+    public String getUsage() {
+        return super.getUsage() + " <channel>";
+    }
+
+    @Override
+    public String getName() {
+        return "join"; //This is the first argument for "channel", our subcommand's specific name
+    }
+
+    @Override
+    public Lang info() {
+        return Lang.createLang("Allows players to join a channel"); //We get to this later in the plugin file section!
+    }
+
+}
+```
 
 
 ##<a name="plugin-file"></a> Plugin Files
