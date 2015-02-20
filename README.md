@@ -76,7 +76,7 @@ What these commands do (if it isn't immediately obvious) is covered in the
 documentation for both of the classes. If you wish to unregister these commands
 from your handler so as to not allow reloading or help output from that specific
 command, you can use `CommandHandler#unregister(String)`. Continuing
-off our ticket example:
+off our channel example:
 
 ```java
 channel.unregister("help"); //Note: 'channel' is a CommandHandler
@@ -158,7 +158,7 @@ easier time tab-completing our commands. That, and it's just cool to have!
             return new ArrayList<>(this.channels);
         } else if (args.length == 1) { //potentially auto-completing a word
             //only return channels that start with the argument
-            return this.channels.stream().filter(c -> c.startsWith(search)).collect(Collectors.toList());
+            return this.channels.stream().filter(c -> c.startsWith(args[0])).collect(Collectors.toList());
         }
         return new ArrayList<>(); //catch-all, we don't have anything to provide
     }
@@ -234,8 +234,11 @@ And lastly, here is our completed SubCommand!
 ```java
 public class JoinCommand extends SubCommand<MyChannelPlugin> {
 
+    private final Set<String> channels = new HashSet<>(); //Our channels
+
     public JoinCommand(MyChannelPlugin plugin, CommandHandler handler) {
         super(plugin, handler);
+        this.channels.addAll(plugin.getChannelNames()); //Pretend method
     }
 
     @Override
@@ -270,7 +273,7 @@ public class JoinCommand extends SubCommand<MyChannelPlugin> {
             return new ArrayList<>(this.channels);
         } else if (args.length == 1) { //potentially auto-completing a word
             //only return channels that start with the argument
-            return this.channels.stream().filter(c -> c.startsWith(search)).collect(Collectors.toList());
+            return this.channels.stream().filter(c -> c.startsWith(args[0])).collect(Collectors.toList());
         }
         return new ArrayList<>(); //catch-all, we don't have anything to provide
     }
