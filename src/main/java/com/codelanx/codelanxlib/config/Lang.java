@@ -60,6 +60,22 @@ public interface Lang extends PluginFile {
     public String getDefault();
 
     /**
+     * Returns the string value used for this {@link Lang}. Color codes
+     * will not be automatically converted
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The formatting string to be used for sending a message
+     */
+    default public String value() {
+        if (this.getClass().isAnonymousClass()) {
+            return this.getDefault();
+        }
+        return String.valueOf(this.getConfig().get(this.getPath(), this.getDefault()));
+    }
+
+    /**
      * Formats a {@link Lang} enum constant with the supplied arguments
      *
      * @since 0.1.0
@@ -69,10 +85,7 @@ public interface Lang extends PluginFile {
      * @return The formatted string
      */
     default public String format(Object... args) {
-        if (this.getClass().isAnonymousClass()) {
-            return Lang.color(String.format(this.getDefault(), args));
-        }
-        return Lang.color(String.format(String.valueOf(this.getConfig().get(this.getPath(), this.getDefault())), args));
+        return Lang.color(String.format(this.value(), args));
     }
 
     /**
