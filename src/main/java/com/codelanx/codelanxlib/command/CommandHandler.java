@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.config.Lang;
+import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,7 +131,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter { //More ve
         }
         SubCommand<? extends Plugin> scommand = this.getCommand(args[0]);
         if (scommand == null) {
-            return new ArrayList<>();
+            return new ArrayList<>(Reflections.matchClosestKeys(this.commands, args[0]));
         }
         return scommand.tabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
     }
