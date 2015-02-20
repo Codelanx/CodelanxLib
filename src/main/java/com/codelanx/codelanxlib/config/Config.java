@@ -172,7 +172,7 @@ public interface Config extends PluginFile {
      * @see Config#retrieve(FileDataType, Config)
      * @return A config value that can be used to retrieve values from
      */
-    default public Config fromOther(FileDataType t) {
+    default public Config retrieve(FileDataType t) {
         return Config.retrieve(t, this);
     }
 
