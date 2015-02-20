@@ -54,8 +54,11 @@ public interface PluginFile {
                 && Reflections.hasAnnotation(clazz, RelativePath.class))) {
             throw new IllegalStateException("'" + clazz.getName() + "' is missing either PluginClass or RelativePath annotations");
         }
-        return new File(Reflections.getPlugin(clazz).getDataFolder(),
-                clazz.getAnnotation(RelativePath.class).value());
+        File folder = Reflections.getPlugin(clazz).getDataFolder();
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return new File(folder, clazz.getAnnotation(RelativePath.class).value());
     }
 
     /**
@@ -101,11 +104,6 @@ public interface PluginFile {
      */
     default public <T extends FileDataType> T init(Class<T> clazz) {
         Class<? extends PluginFile> me = this.getClass();
-        //Check Annotations
-        if (!(Reflections.hasAnnotation(me, PluginClass.class)
-                && Reflections.hasAnnotation(me, RelativePath.class))) {
-            throw new IllegalStateException("'" + me.getName() + "' is missing either PluginClass or RelativePath annotations");
-        }
         //Get fields
         Iterable<? extends PluginFile> itr;
         if (me.isEnum()) {
@@ -118,11 +116,7 @@ public interface PluginFile {
         //Initialize file
         String path = null;
         try {
-            File folder = Reflections.getPlugin(this.getClass()).getDataFolder();
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-            File ref = new File(folder, this.getClass().getAnnotation(RelativePath.class).value());
+            File ref = PluginFile.getFileLocation(this.getClass());
             path = ref.getPath();
             if (!ref.exists()) {
                 ref.createNewFile();
