@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.inventory.iinterface;
 
 import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.util.Lambdas;
+import com.codelanx.codelanxlib.util.RNG;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +31,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -285,9 +285,8 @@ public final class InventoryInterface {
     protected final String generateSeed(int length) {
         StringBuilder sb = new StringBuilder();
         ChatColor[] vals = ChatColor.values();
-        Random rand = new Random();
         for (int i = 0; i < length; i++) {
-            sb.append(vals[rand.nextInt(vals.length)]);
+            sb.append(vals[RNG.THREAD_LOCAL().nextInt(vals.length)]);
         }
         return sb.toString();
     }

@@ -19,12 +19,12 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
+import com.codelanx.codelanxlib.util.RNG;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -71,7 +71,7 @@ public final class Inventories {
      */
     public static synchronized int getHeldItemSlot(Player p) {
         byte[] b = new byte[32];
-        new Random().nextBytes(b);
+        RNG.THREAD_LOCAL().nextBytes(b);
         List<String> bitStr = new ArrayList<>(Arrays.asList(Base64.encode(b)));
         ItemStack[] contents = p.getInventory().getContents();
         //Time is of the essence now
