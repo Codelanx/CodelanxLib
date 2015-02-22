@@ -31,7 +31,7 @@ package com.codelanx.codelanxlib.util;
  */
 public abstract class Cache<E> {
 
-    private E value;
+    private volatile E value;
     private final long timeMS;
     private long nextCache = -1;
 
@@ -86,7 +86,7 @@ public abstract class Cache<E> {
      * @since 0.1.0
      * @version 0.1.0
      */
-    private void checkCache() {
+    private synchronized void checkCache() {
         if (this.nextCache < 0 || System.currentTimeMillis() > this.nextCache) {
             this.setNextCache();
         }
