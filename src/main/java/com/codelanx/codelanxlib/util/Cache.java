@@ -62,7 +62,9 @@ public abstract class Cache<E> {
      */
     public Cache(long timeMS, boolean forceRefresh) {
         this.timeMS = timeMS;
-        this.forceRefresh();
+        if (forceRefresh) {
+            this.forceRefresh();
+        }
     }
 
 
