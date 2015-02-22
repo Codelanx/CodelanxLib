@@ -45,9 +45,26 @@ public abstract class Cache<E> {
      * @param timeMS The time to wait between refreshes in milliseconds
      */
     public Cache(long timeMS) {
+        this(timeMS, false);
+    }
+
+    /**
+     * Notes the timed intervals in milliseconds for cache refreshing, and
+     * refreshes the cache for the first time
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param timeMS The time to wait between refreshes in milliseconds
+     * @param forceRefresh {@code true} to refresh and retrieve the cached
+     *                     instance upon construction, instead of on the first
+     *                     call to {@link Cache#get()}
+     */
+    public Cache(long timeMS, boolean forceRefresh) {
         this.timeMS = timeMS;
         this.forceRefresh();
     }
+
 
     /**
      * Calls a check to see if the cache needs to be updated, and returns the
