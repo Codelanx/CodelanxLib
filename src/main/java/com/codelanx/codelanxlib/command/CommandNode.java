@@ -59,6 +59,8 @@ import org.bukkit.plugin.SimplePluginManager;
  */
 public abstract class CommandNode<E extends Plugin> implements CommandExecutor, TabCompleter, Comparable<CommandNode<?>> {
 
+    /** Represents a blank {@link List} for returning no input from {@link #tabComplete(CommandSender, String...)} */
+    public static final List<String> BLANK_TAB_COMPLETE = Collections.unmodifiableList(new ArrayList<>());
     /** The {@link Plugin} relevant to this {@link CommandNode} */
     protected final E plugin;
     /** The format to output with */
@@ -156,7 +158,8 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     public final List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         Exceptions.illegalPluginAccess(Reflections.accessedFromBukkit(), "Only bukkit may call this method");
         CommandNode<? extends Plugin> child = this.getClosestChild(StringUtils.join(args, " "));
-        List<String> back = child.tabComplete(sender, args);
+        List<String> back = new ArrayList<>();
+        back.addAll(child.tabComplete(sender, args));
         if (!child.subcommands.isEmpty()) {
             if (args.length < 1) {
                 back.addAll(child.subcommands.keySet());
@@ -624,7 +627,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
 
             @Override
             public List<String> tabComplete(CommandSender sender, String... args) {
-                return new ArrayList<>();
+                return CommandNode.BLANK_TAB_COMPLETE;
             }
 
             @Override
