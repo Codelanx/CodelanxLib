@@ -21,7 +21,9 @@ package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.Lang;
+import java.util.Collection;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Represents the status of an executed command, and is returned upon the
@@ -46,7 +48,9 @@ public enum CommandStatus {
     /** Command is intended to be run by remote consoles (rcon) only */
     RCON_ONLY("remote consoles"),
     /** The user does not have the appropriate permissions to execute this */
-    NO_PERMISSION;
+    NO_PERMISSION,
+    /** The command is not meant to be an endpoint */
+    NOT_EXECUTABLE;
 
     /** Formatter arguments for output */
     private final Object[] args;
@@ -72,9 +76,9 @@ public enum CommandStatus {
      * 
      * @param sender The {@link CommandSender} object that executed the command
      * @param format The {@link Lang} being used as a format string
-     * @param cmd The {@link SubCommand} that was executed
+     * @param cmd The {@link CommandNode} that was executed
      */
-    public void handle(CommandSender sender, Lang format, SubCommand<?> cmd) {
+    public void handle(CommandSender sender, Lang format, CommandNode<?> cmd) {
         switch (this) {
             case FAILED:
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_FAILED);
@@ -85,10 +89,16 @@ public enum CommandStatus {
                 break;
             case PLAYER_ONLY:
             case CONSOLE_ONLY:
+            case RCON_ONLY:
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_RESTRICTED, this.args);
                 break;
             case NO_PERMISSION:
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_NOPERM);
+                break;
+            case NOT_EXECUTABLE:
+                Collection<CommandNode<? extends Plugin>> cmds = cmd.getChildren();
+                cmds.removeIf(c -> !c.isExecutable());
+                Lang.sendMessage(sender, format, Lang.createLang("Did you mean?:\n %s"), "some-help-info");
                 break;
         }
     }

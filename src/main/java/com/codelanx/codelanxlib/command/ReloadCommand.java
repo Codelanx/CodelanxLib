@@ -38,7 +38,7 @@ import org.bukkit.plugin.Plugin;
  * 
  * @param <E> The {@link Plugin} type
  */
-public class ReloadCommand<E extends Plugin> extends SubCommand<E> {
+public class ReloadCommand<E extends Plugin> extends CommandNode<E> {
 
     /**
      * {@link ReloadCommand} constructor
@@ -47,10 +47,9 @@ public class ReloadCommand<E extends Plugin> extends SubCommand<E> {
      * @version 0.0.1
      * 
      * @param plugin {@inheritDoc}
-     * @param handler {@inheritDoc}
      */
-    public ReloadCommand(E plugin, CommandHandler handler) {
-        super(plugin, handler);
+    public ReloadCommand(E plugin) {
+        super(plugin);
     }
 
     /**

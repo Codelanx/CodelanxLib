@@ -31,9 +31,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Provides a listing of help information derived from all {@link SubCommand}
- * objects that are registered to the {@link CommandHandler} that instantiated
- * this class
+ * Provides a listing of help information derived from all {@link CommandNode}
+ * objects that are returned from a call to a parent's
+ * {@link CCommand#traverse()} method
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -41,7 +41,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @param <E> The {@link Plugin} that caused this class to be instantiated
  */
-public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
+public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
 
     /** Internal {@link Paginator} cache, used to pre-render and output pages */
     private final Cache<Paginator> pages = new Cache<Paginator>(TimeUnit.MINUTES.toMillis(5)) {
@@ -62,16 +62,15 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
      * @version 0.1.0
      *
      * @param plugin {@inheritDoc}
-     * @param handler {@inheritDoc}
      */
-    public HelpCommand(E plugin, CommandHandler handler) {
-        super(plugin, handler);
+    protected HelpCommand(E plugin) {
+        super(plugin);
     }
 
     /**
-     * Displays help information about the various commands registered to and
-     * available from the {@link CommandHandler} instance that instantiated this
-     * class.
+     * Displays help information from all linked child {@link CommandNode} nodes
+     * for the parent {@link CommandNode} relevant to this {@link HelpCommand}
+     * instance
      *
      * @since 0.0.1
      * @version 0.1.0
@@ -91,7 +90,7 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
         } catch (NumberFormatException ex) {
             return CommandStatus.BAD_ARGS;
         }
-        sender.sendMessage(this.pages.get().getPage(select));
+        sender.sendMessage(this.getPages().getPage(select));
         return CommandStatus.SUCCESS;
     }
 
@@ -110,7 +109,7 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
         if (args.length < 1) {
             return new ArrayList<>();
         }
-        int size = this.pages.get().size();
+        int size = this.getPages().size();
         int curr;
         try {
             curr = Integer.parseInt(args[0]);
@@ -140,27 +139,35 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
      *
      * @return A new {@link Paginator} instance containing help information
      */
-    @SuppressWarnings("rawtypes")
     private Paginator newPaginator() {
-        List<SubCommand> cmds = new ArrayList<>(this.handler.getCommands());
+        List<CommandNode<? extends Plugin>> cmds = new ArrayList<>(this.getParent().traverseCommands());
+        List<CommandNode<? extends Plugin>> aliases = new ArrayList<>(this.getParent().traverseAliases());
         Collections.sort(cmds);
-        String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(
-                this.handler.getMainCommand());
-        Paginator back = new Paginator(title, this.factor,
-                cmds.stream().map(this::toHelpInfo).collect(Collectors.toList()));
-        return back;
+        Collections.sort(aliases);
+        String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(this.getParent().getUsage());
+        List<String> out = cmds.stream().map(this::toHelpInfo).collect(Collectors.toList());
+        if (!aliases.isEmpty()) {
+            int blanks = this.getItemsPerPage() - (cmds.size() % this.getItemsPerPage());
+            for (; blanks > 0; blanks--) {
+                out.add("");
+            }
+            out.add("Aliases:");
+            out.addAll(cmds.stream().map(this::toHelpInfo).collect(Collectors.toList()));
+        }
+        return new Paginator(title, this.factor, out);
     }
 
+
     /**
-     * Converts a {@link SubCommand} into a readable format for help output
+     * Converts a {@link CommandNode} into a readable format for help output
      *
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param cmd The {@link SubCommand} to convert
+     * @param cmd The {@link CommandNode} to convert
      * @return The human-readable output of the command information
      */
-    private String toHelpInfo(SubCommand<?> cmd) {
+    private String toHelpInfo(CommandNode<?> cmd) {
         return InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info());
     }
 
@@ -199,8 +206,8 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
      * @return {@inheritDoc}
      */
     @Override
-    public String getUsage() {
-        return super.getUsage() + " [page-number]";
+    public String usage() {
+        return super.usage() + " [page-number]";
     }
 
     /**
@@ -228,6 +235,10 @@ public final class HelpCommand<E extends Plugin> extends SubCommand<E> {
     @Override
     public InternalLang info() {
         return InternalLang.COMMAND_HELP_INFO;
+    }
+
+    private Paginator getPages() {
+        return this.pages.get();
     }
 
 }
