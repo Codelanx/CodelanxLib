@@ -32,7 +32,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -102,7 +106,11 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         CommandNode<? extends Plugin> child = this.getClosestChild(StringUtils.join(args, " "));
         List<String> back = child.tabComplete(sender, args);
         if (!child.subcommands.isEmpty()) {
-            back.addAll(Reflections.matchClosestKeys(child.subcommands, args[0]));
+            if (args.length < 1) {
+                back.addAll(child.subcommands.keySet());
+            } else {
+                back.addAll(Reflections.matchClosestKeys(child.subcommands, args[0]));
+            }
         }
         return back;
     }
@@ -119,7 +127,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      *             contains potentially unfinished arguments
      * @return A {@link List} of strings that can be supplied for the next arg
      */
-    public abstract List<String> tabComplete(CommandSender sender, String... args);
+    protected abstract List<String> tabComplete(CommandSender sender, String... args);
 
     /**
      * Returns the name of the command, used for storing a
@@ -268,23 +276,22 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     public Collection<CommandNode<? extends Plugin>> traverse() {
         Collection<CommandNode<? extends Plugin>> back = new ArrayList<>();
         back.add(this);
-        back = this.subcommands.values().stream().map(CommandNode::traverse)
+        back = this.subcommands.values().stream()
+                .filter(c -> this == c.getParent())
+                .filter(c -> c.getClass() == HelpCommand.class)
+                .map(c -> c.traverse())
                 .reduce(back, (u, r) -> { u.addAll(r); return u; });
-        back.removeIf(c -> c.getClass() == HelpCommand.class);
         back.removeIf(c -> !c.isExecutable());
         return back;
     }
 
-    public final Collection<CommandNode<? extends Plugin>> traverseCommands() {
-        Collection<CommandNode<? extends Plugin>> back = this.traverse();
-        //implement
-        return back;
-    }
-
-    public final Collection<CommandNode<? extends Plugin>> traverseAliases() {
-        Collection<CommandNode<? extends Plugin>> back = this.traverse();
-        //implement
-        return back;
+    public final Map<String, CommandNode<? extends Plugin>> getAliases() {
+        return this.subcommands.entrySet().stream().filter(c -> {
+            return this != c.getValue().getParent();
+        }).collect(Collectors.<Map.Entry<String, CommandNode<? extends Plugin>>, String, CommandNode<? extends Plugin>>toMap(
+            (c) -> this.getUsage() + " " + c.getKey(),
+            (c) -> c.getValue()
+        ));
     }
 
     protected final void attachReloadCommand() {

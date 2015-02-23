@@ -195,7 +195,7 @@ public class TimePoint implements Comparable<TimePoint> {
      * @version 0.0.1
      * 
      * @see TimePoint#format(TimeUnit)
-     * @return 
+     * @return The formatted string
      */
     public String format() {
         return this.format(TimeUnit.NANOSECONDS);

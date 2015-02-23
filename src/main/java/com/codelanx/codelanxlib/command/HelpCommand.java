@@ -24,7 +24,10 @@ import com.codelanx.codelanxlib.util.Cache;
 import com.codelanx.codelanxlib.util.Paginator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
@@ -140,10 +143,10 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
      * @return A new {@link Paginator} instance containing help information
      */
     private Paginator newPaginator() {
-        List<CommandNode<? extends Plugin>> cmds = new ArrayList<>(this.getParent().traverseCommands());
-        List<CommandNode<? extends Plugin>> aliases = new ArrayList<>(this.getParent().traverseAliases());
+        List<CommandNode<? extends Plugin>> cmds = new ArrayList<>(this.getParent().traverse());
+        Map<String, CommandNode<? extends Plugin>> aliases = new HashMap<>();
+        cmds.forEach(c -> aliases.putAll(c.getAliases()));
         Collections.sort(cmds);
-        Collections.sort(aliases);
         String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(this.getParent().getUsage());
         List<String> out = cmds.stream().map(this::toHelpInfo).collect(Collectors.toList());
         if (!aliases.isEmpty()) {
@@ -151,12 +154,21 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
             for (; blanks > 0; blanks--) {
                 out.add("");
             }
-            out.add("Aliases:");
-            out.addAll(cmds.stream().map(this::toHelpInfo).collect(Collectors.toList()));
+            out.add(InternalLang.COMMAND_HELP_ALIASES.format());
+            List<String> aliasInfo = this.aliasInfo(aliases);
+            Collections.sort(aliasInfo);
+            out.addAll(aliasInfo);
         }
         return new Paginator(title, this.factor, out);
     }
 
+
+    private List<String> aliasInfo(Map<String, CommandNode<? extends Plugin>> aliases) {
+        List<String> back = new ArrayList<>();
+        aliases.entrySet().forEach(ent -> back.add(InternalLang.COMMAND_HELP_ITEMFORMAT.format(
+                ent.getKey(), "Aliased from " + ent.getValue().getUsage())));
+        return back;
+    }
 
     /**
      * Converts a {@link CommandNode} into a readable format for help output

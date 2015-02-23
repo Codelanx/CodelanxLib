@@ -42,7 +42,11 @@ public enum InternalLang implements Lang {
     /**
      * Used to relay the usage of a command
      */
-    COMMAND_STATUS_USAGE("command.status.usage", "Usage: %s"),
+    COMMAND_STATUS_USAGE("command.status.usage", "Usage: /%s"),
+    /**
+     * Displayed when a non-executable command is run
+     */
+    COMMAND_STATUS_NOTEXEC("command.status.not-executable", "Did you mean?:%s"),
     /**
      * Relayed if a CommandSender does not have permissions to use the command
      */
@@ -71,6 +75,10 @@ public enum InternalLang implements Lang {
      * Help information for {@link HelpCommand}
      */
     COMMAND_HELP_INFO("command.help.info", "Displays help information about this plugin"),
+    /**
+     * What to title command aliases as
+     */
+    COMMAND_HELP_ALIASES("command.help.format.aliases-title", "Aliases:"),
     /**
      * Relayed if reloading is not supported
      */
