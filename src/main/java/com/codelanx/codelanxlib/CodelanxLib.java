@@ -23,6 +23,7 @@ import com.codelanx.codelanxlib.econ.VaultProxyListener;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.serialize.SerializationFactory;
+import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.Scheduler;
 import java.io.IOException;
 import org.bukkit.Bukkit;
@@ -53,7 +54,9 @@ public class CodelanxLib extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        new VaultProxyListener(this).register();
+        if (Reflections.findPluginJarfile("Vault") != null) {
+            new VaultProxyListener(this).register();
+        }
         Bukkit.getServer().getServicesManager();
         try {
             new Metrics(this).start();
