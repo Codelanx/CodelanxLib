@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.config;
 
 import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.implementers.Formatted;
+import com.codelanx.codelanxlib.internal.InternalLang;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -127,7 +128,7 @@ public interface Lang extends PluginFile {
 
             @Override
             public Lang getFormat() {
-                return this;
+                return InternalLang.FORMAT.getFormat();
             }
 
             @Override
