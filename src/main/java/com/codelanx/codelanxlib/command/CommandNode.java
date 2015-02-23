@@ -294,11 +294,27 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         ));
     }
 
+    final Collection<CommandNode<? extends Plugin>> closestCommands() {
+        if (this.subcommands.isEmpty()) {
+            return new ArrayList<>();
+        } else if (this.subcommands.values().stream().noneMatch(CommandNode::isExecutable)) {
+            List<CommandNode<? extends Plugin>> back = new ArrayList<>();
+            this.subcommands.values().forEach(c -> back.addAll(c.closestCommands()));
+            if (back.size() > 3) {
+                return back.subList(0, 2);
+            }
+            return back;
+        } else {
+            return Collections.unmodifiableCollection(this.subcommands.values().stream()
+                    .filter(CommandNode::isExecutable).collect(Collectors.toList()));
+        }
+    }
+
     protected final void attachReloadCommand() {
         this.addChild(new ReloadCommand<>(this.plugin));
     }
 
-    public final void setExecutable(boolean executable) {
+    protected final void setExecutable(boolean executable) {
         this.executable = executable;
     }
 

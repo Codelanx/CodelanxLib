@@ -21,7 +21,8 @@ package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.Lang;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
@@ -96,9 +97,13 @@ public enum CommandStatus {
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_NOPERM);
                 break;
             case NOT_EXECUTABLE:
-                Collection<CommandNode<? extends Plugin>> cmds = cmd.getChildren();
-                cmds.removeIf(c -> !c.isExecutable());
-                Lang.sendMessage(sender, format, Lang.createLang("Did you mean?:\n %s"), "some-help-info");
+                List<CommandNode<? extends Plugin>> cmds = new ArrayList<>(cmd.closestCommands());
+                if (cmds.size() > 3) {
+                    cmds = cmds.subList(0, 2);
+                }
+                StringBuilder sb = new StringBuilder();
+                cmds.forEach(c -> sb.append('\n').append('/').append(c.getUsage()));
+                Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_NOTEXEC, sb.toString());
                 break;
         }
     }
