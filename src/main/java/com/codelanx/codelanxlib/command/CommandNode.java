@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -123,7 +124,13 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Exceptions.illegalPluginAccess(Reflections.accessedFromBukkit(), "Only bukkit may call this method");
         CommandNode<? extends Plugin> child = this.getClosestChild(StringUtils.join(args, " "));
-        CommandStatus stat = child.execute(sender, args);
+        CommandStatus stat;
+        try {
+            stat = child.execute(sender, args);
+        } catch (Throwable ex) {
+            stat = CommandStatus.FAILED;
+            child.plugin.getLogger().log(Level.SEVERE, String.format("Unhandled exception executing command '%s %s'", label, StringUtils.join(args, " ")), ex);
+        }
         stat.handle(sender, child.format, child);
         return stat != CommandStatus.FAILED;
     }
