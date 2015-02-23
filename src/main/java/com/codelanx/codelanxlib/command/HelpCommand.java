@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
@@ -36,7 +35,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Provides a listing of help information derived from all {@link CommandNode}
  * objects that are returned from a call to a parent's
- * {@link CCommand#traverse()} method
+ * {@link CommandNode#traverse()} method
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -163,6 +162,15 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
     }
 
 
+    /**
+     * Formats a mapping of aliases to {@link CommandNode} objects
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param aliases The aliases to format
+     * @return A {@link List} of the formatted aliases
+     */
     private List<String> aliasInfo(Map<String, CommandNode<? extends Plugin>> aliases) {
         List<String> back = new ArrayList<>();
         aliases.entrySet().forEach(ent -> back.add(InternalLang.COMMAND_HELP_ITEMFORMAT.format(

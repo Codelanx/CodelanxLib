@@ -97,7 +97,7 @@ public enum CommandStatus {
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_NOPERM);
                 break;
             case NOT_EXECUTABLE:
-                List<CommandNode<? extends Plugin>> cmds = new ArrayList<>(cmd.closestCommands());
+                List<CommandNode<? extends Plugin>> cmds = cmd.closestCommands();
                 if (cmds.size() > 3) {
                     cmds = cmds.subList(0, 2);
                 }
