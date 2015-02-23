@@ -6,5 +6,5 @@ author: 1Rogue
 website: ${website}
 main: ${project.groupId}.${project.artifactId}.${project.name}
 loadbefore: [Vault]
-soft-depend: [Vault]
+softdepend: [Vault]
 prefix: ${prefix}
