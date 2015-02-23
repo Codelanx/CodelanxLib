@@ -22,6 +22,7 @@ package com.codelanx.codelanxlib.econ;
 import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.listener.SubListener;
+import com.codelanx.codelanxlib.logging.Logging;
 import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
 import net.milkbowl.vault.economy.Economy;

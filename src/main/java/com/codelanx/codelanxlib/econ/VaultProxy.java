@@ -144,8 +144,11 @@ public final class VaultProxy implements InvocationHandler {
             }
             ServicePriority priority = rsp.getPriority();
             Economy e = rsp.getProvider();
-            if (e == null || Proxy.isProxyClass(e.getClass())) {
+            if (e == null) {
                 Debugger.print(Level.SEVERE, "Error proxying vault economy! No responsive updating");
+                return;
+            }
+            if (Proxy.isProxyClass(e.getClass())) {
                 return;
             }
             ClassLoader l = Economy.class.getClassLoader();

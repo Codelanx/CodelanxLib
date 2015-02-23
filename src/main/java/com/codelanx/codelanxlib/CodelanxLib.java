@@ -43,17 +43,6 @@ public class CodelanxLib extends JavaPlugin {
     }
 
     /**
-     * Registers a {@link VaultProxyListener}
-     * 
-     * @since 0.1.0
-     * @version 0.1.0
-     */
-    @Override
-    public void onLoad() {
-        new VaultProxyListener(this).register();
-    }
-
-    /**
      * Reports metrics to <a href="http://mcstats.org/">MCStats</a>, and hooks
      * the plugin loggers for {@link Debugger}
      * <br><br>
@@ -64,6 +53,7 @@ public class CodelanxLib extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        new VaultProxyListener(this).register();
         Bukkit.getServer().getServicesManager();
         try {
             new Metrics(this).start();
