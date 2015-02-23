@@ -54,17 +54,15 @@ public class CodelanxLib extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        Debugger.hookBukkit();
         if (Reflections.findPluginJarfile("Vault") != null) {
             new VaultProxyListener(this).register();
         }
-        Bukkit.getServer().getServicesManager();
         try {
             new Metrics(this).start();
         } catch (IOException ex) {
             Debugger.error(ex, "Error reporting metrics");
         }
-
-        Debugger.hookBukkit();
     }
 
     /**
