@@ -43,10 +43,8 @@ Library for Codelanx plugins. Public use is allowed, but must be credited.
 
 ##<a name="commands"></a> Commands
 
-Before I delve into the world of the command handling system, I want to preface
-this entire section that the current implementation is subject to extreme
-changes in the future (aiming for beta release 0.3.0). That all being said,
-the current system still comes with a few perks.
+__Note__: This section is now obsolete with the introduction of the new
+command system being introduced in the 0.1.0 release
 
 Overall, you will only be dealing with three classes when making commands, and
 most/nearly all of the implementation for this is up to you as the developer.
