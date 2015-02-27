@@ -212,7 +212,8 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      */
     public final String getUsage() {
         if (this.parent != null) {
-            return this.parent.getUsage().replaceAll("\\[.*\\]", "").trim() + " " + this.usage();
+            return this.parent.getUsage().replaceAll("\\[.*\\]", "")
+                    .replaceAll("\\<.*\\>", "").trim() + " " + this.usage();
         }
         return this.usage();
     }
@@ -226,7 +227,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @return The usage, defaults to {@link CommandNode#getName()}
      */
     protected String usage() {
-        return this.getName();
+        return this.getName() + " ";
     }
 
     /**
