@@ -619,9 +619,12 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         Validate.notNull(command, "Command cannot be null");
         Validate.notNull(plugin, "Plugin cannot be null");
         return new CommandNode<T>(plugin) {
+            
+            private final Lang lang;
 
             {
                 this.setExecutable(false);
+                this.lang = Lang.createLang("This is a linking node for '" + command + "'");
                 if (onConstruct != null) {
                     onConstruct.accept(this);
                 }
@@ -644,7 +647,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
 
             @Override
             public Lang info() {
-                return Lang.createLang("This is a linking node for '" + command + "'");
+                return this.lang;
             }
 
         };
