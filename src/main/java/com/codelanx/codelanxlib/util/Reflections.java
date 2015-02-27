@@ -31,6 +31,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -335,4 +337,18 @@ public final class Reflections {
         return Reflections.matchClosestKeys(map, search).stream().map(map::get).collect(Collectors.toList());
     }
 
+    /**
+     * Returns a new {@link ArrayList} of the passed parameters that is not
+     * fixed-size, akin to what {@link Arrays#asList(Object...)} returns
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <T> The type of the objects being passed in
+     * @param items The parameters to add to a list
+     * @return A new {@link List} of the items, or an empty list if no params
+     */
+    public static <T> List<T> nonFixedList(T... items) {
+        return new ArrayList<>(Arrays.asList(items));
+    }
 }
