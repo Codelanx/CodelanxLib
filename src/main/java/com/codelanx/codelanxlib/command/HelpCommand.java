@@ -20,7 +20,7 @@
 package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.internal.InternalLang;
-import com.codelanx.codelanxlib.util.Cache;
+import com.codelanx.codelanxlib.util.cache.Cache;
 import com.codelanx.codelanxlib.util.Paginator;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.data.types;
 import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.data.SQLDataType;
 import com.codelanx.codelanxlib.logging.Debugger;
-import com.codelanx.codelanxlib.util.Cache;
+import com.codelanx.codelanxlib.util.cache.Cache;
 import com.codelanx.codelanxlib.util.Databases;
 import java.sql.Connection;
 import java.sql.DriverManager;
