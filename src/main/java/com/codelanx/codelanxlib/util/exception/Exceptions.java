@@ -38,6 +38,39 @@ public final class Exceptions {
     }
 
     /**
+     * Throws an {@link IllegalArgumentException} if any of the passed arguments
+     * are {@code null}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param message The message to include in the exception
+     * @param check The objects to check
+     * @throws IllegalArgumentException if any checked passed argument is null
+     */
+    public static void allNotNull(String message, Object... check) {
+        for (Object o : check) {
+            if (o == null) {
+                throw Exceptions.newException(IllegalArgumentException.class, message);
+            }
+        }
+    }
+
+    /**
+     * Throws an {@link IllegalArgumentException} if any of the passed arguments
+     * are {@code null}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param check The objects to check
+     * @throws IllegalArgumentException if any passed argument is null
+     */
+    public static void allNotNull(Object... check) {
+        Exceptions.allNotNull(null, check);
+    }
+
+    /**
      * Throws an {@link IllegalStateException} if the value of the {@code state}
      * parameter is {@code false}
      *
