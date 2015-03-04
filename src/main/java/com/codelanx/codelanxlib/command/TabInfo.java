@@ -86,7 +86,7 @@ public class TabInfo {
      * @param argCount The number of arguments for these defaults
      * @param defaults A {@link Supplier} that returns a {@link List} of strings
      */
-    public void delegate(int argCount, Supplier<? extends List<String>> defaults) {
+    public void map(int argCount, Supplier<? extends List<String>> defaults) {
         Validate.notNull(defaults);
         this.defaults.put(argCount, new SupplierContainer(defaults));
     }
@@ -104,7 +104,7 @@ public class TabInfo {
      *                 that is being parsed, and returns a {@link List} of
      *                 possible strings for arguments
      */
-    public void act(int argCount, Function<String, ? extends List<String>> defaults) {
+    public void map(int argCount, Function<String, ? extends List<String>> defaults) {
         Validate.notNull(defaults);
         this.defaults.put(argCount, new SupplierContainer(defaults));
     }
@@ -123,7 +123,7 @@ public class TabInfo {
      *                 the relevant argument being tabbed (or null), and returns
      *                 a {@link List} of possible string arguments to fill with
      */
-    public void act(int argCount, BiFunction<CommandSender, String, ? extends List<String>> defaults) {
+    public void map(int argCount, BiFunction<CommandSender, String, ? extends List<String>> defaults) {
         Validate.notNull(defaults);
         this.defaults.put(argCount, new SupplierContainer(defaults));
     }
