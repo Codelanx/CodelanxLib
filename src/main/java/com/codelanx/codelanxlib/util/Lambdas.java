@@ -35,10 +35,23 @@ public class Lambdas {
      * @version 0.1.0
      * 
      * @param o The object to check
-     * @return {@code true} if not null
+     * @return {@code true} if not {@code null}
      */
     public static boolean notNull(Object o) {
         return o != null;
+    }
+
+    /**
+     * Returns {@code true} if the passed object is {@code null}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param o The object to check
+     * @return {@code true} if {@code null}
+     */
+    public static boolean isNull(Object o) {
+        return !Lambdas.notNull(o);
     }
 
 }
