@@ -218,6 +218,7 @@ public final class Reflections {
     public static StackTraceElement getCaller() {
         return Reflections.getCaller(1);
     }
+
     /**
      * Checks whether or not there is a plugin on the server with the name of
      * the passed {@code name} paramater. This method achieves this by scanning
@@ -254,7 +255,7 @@ public final class Reflections {
                     String in;
                     while ((in = scan.readLine()) != null) {
                         if (in.startsWith("name: ")) {
-                            if (in.substring(6).equalsIgnoreCase("Vault")) {
+                            if (in.substring(6).equalsIgnoreCase(name)) {
                                 return f;
                             }
                         }
