@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Allows using enum constants for permissions, up to 32 constants. In context
+ * Allows using enum constants for permissions, up to 64 constants. In context
  * of this documentation, "privilege" refers to any enum constant used in this
  * set
  *
@@ -37,7 +37,7 @@ import java.util.Set;
  */
 public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
 
-    private int level;
+    private long level;
 
     /**
      * Constructs an empty {@link PrivilegeSet}
@@ -71,7 +71,7 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
      * @return {@code true} if this set contains the privilege
      */
     public boolean has(E t) {
-        int val = this.level & this.powerfy(t);
+        long val = this.level & this.powerfy(t);
         return val > 0 || val == this.level;
     }
 
@@ -113,7 +113,7 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
      * 
      * @return The underlying level that represents this set
      */
-    public int getLevel() {
+    public long getLevel() {
         return this.level;
     }
 
@@ -126,7 +126,7 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
      * @param t The privilege to convert
      * @return The relevant power level
      */
-    private int powerfy(E t) {
+    private long powerfy(E t) {
         return 1 << t.ordinal();
     }
 
@@ -142,7 +142,7 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
      */
     public Set<E> toSet(Class<E> clazz) {
         E[] cn = clazz.getEnumConstants();
-        Exceptions.illegalState(cn.length > 32, "Cannot support enums with over 32 constants!");
+        Exceptions.illegalState(cn.length > 64, "Cannot support enums with over 32 constants!");
         Set<E> temp = new HashSet<>();
         for (E e : cn) {
             if (this.has(e)) {
