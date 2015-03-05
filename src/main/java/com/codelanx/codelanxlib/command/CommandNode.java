@@ -27,6 +27,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,8 +61,6 @@ import org.bukkit.plugin.SimplePluginManager;
  */
 public abstract class CommandNode<E extends Plugin> implements CommandExecutor, TabCompleter, Comparable<CommandNode<?>> {
 
-    /** Represents a blank {@link List} for returning no input from {@link #tabComplete(CommandSender, String...)} */
-    public static final List<String> BLANK_TAB_COMPLETE = Collections.unmodifiableList(new ArrayList<>());
     /** The {@link Plugin} relevant to this {@link CommandNode} */
     protected final E plugin;
     /** The format to output with */
@@ -123,10 +122,17 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     @Override
     public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Exceptions.illegalPluginAccess(Reflections.accessedFromBukkit(), "Only bukkit may call this method");
-        CommandNode<? extends Plugin> child = this.getClosestChild(StringUtils.join(args, " "));
+        CommandNode<? extends Plugin> child = this.getClosestChild(args);
+        int start = 0;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase(child.getName())) {
+                start = i;
+                break;
+            }
+        }
         CommandStatus stat;
         try {
-            stat = child.execute(sender, args);
+            stat = child.execute(sender, Arrays.copyOfRange(args, start, args.length));
         } catch (Throwable ex) {
             stat = CommandStatus.FAILED;
             child.plugin.getLogger().log(Level.SEVERE, String.format("Unhandled exception executing command '%s %s'", label, StringUtils.join(args, " ")), ex);
@@ -638,7 +644,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
 
             @Override
             public List<String> tabComplete(CommandSender sender, String... args) {
-                return CommandNode.BLANK_TAB_COMPLETE;
+                return TabInfo.BLANK_TAB_COMPLETE;
             }
 
             @Override

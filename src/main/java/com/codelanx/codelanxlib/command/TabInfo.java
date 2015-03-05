@@ -44,6 +44,8 @@ import org.bukkit.command.CommandSender;
  */
 public class TabInfo {
 
+    /** Represents a blank {@link List} for returning no input from {@link CommandNode#tabComplete(CommandSender, String...)} */
+    public static final List<String> BLANK_TAB_COMPLETE = Collections.unmodifiableList(new ArrayList<>());
     /** Represents a mapping of default arguments */
     private final Map<Integer, SupplierContainer> defaults = new HashMap<>();
 
@@ -173,7 +175,7 @@ public class TabInfo {
         }
         SupplierContainer back = this.defaults.get(get);
         if (back == null) {
-            return CommandNode.BLANK_TAB_COMPLETE;
+            return TabInfo.BLANK_TAB_COMPLETE;
         } else {
             List<String> fil = new ArrayList<>(back.apply(sender, arg)); //Potentially unknown return (unmodifiable)
             fil.removeIf(Lambdas::isNull);
