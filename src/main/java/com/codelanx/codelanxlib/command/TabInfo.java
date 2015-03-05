@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib.command;
 
+import com.codelanx.codelanxlib.util.Lambdas;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +29,9 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -172,8 +175,27 @@ public class TabInfo {
         if (back == null) {
             return CommandNode.BLANK_TAB_COMPLETE;
         } else {
-            return back.apply(sender, arg);
+            List<String> fil = new ArrayList<>(back.apply(sender, arg)); //Potentially unknown return (unmodifiable)
+            fil.removeIf(Lambdas::isNull);
+            if (arg != null) {
+                final String tempArg = arg;
+                fil.removeIf(s -> !s.startsWith(tempArg));
+            }
+            return fil;
         }
+    }
+
+    /**
+     * Returns a {@link Supplier} which will return a string {@link List} of
+     * online players
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return A {@link List} of online player's names
+     */
+    public static Supplier<List<String>> onlinePlayers() {
+        return () -> Bukkit.getOnlinePlayers().stream().map(p -> p.getName()).collect(Collectors.toList());
     }
 
     //Accepts anything (relevant) that will return a List<String> value
@@ -215,13 +237,7 @@ public class TabInfo {
         //While a bit messy, applies logic for each type
         public List<String> apply(CommandSender sender, String arg) {
             if (this.list != null) {
-                if (arg == null) {
-                    return this.list; //already unmodifiable
-                } else {
-                    List<String> back = new ArrayList<>(this.list);
-                    back.removeIf(s -> !s.startsWith(arg));
-                    return back;
-                }
+                return this.list; //unmodifiable
             } else if (this.supplier != null) {
                 return this.supplier.get();
             } else if (this.function != null) {
