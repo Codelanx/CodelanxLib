@@ -106,6 +106,16 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
     }
 
     /**
+     * Clears the current set of all privileges
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
+    public void clear() {
+        this.level = 0;
+    }
+
+    /**
      * Returns the underlying level representing this set, for use in storage
      * 
      * @since 0.1.0
