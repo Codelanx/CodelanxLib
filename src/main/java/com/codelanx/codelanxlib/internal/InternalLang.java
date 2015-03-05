@@ -26,7 +26,6 @@ import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.data.types.Yaml;
 import com.codelanx.codelanxlib.util.Paginator;
 import com.codelanx.codelanxlib.command.HelpCommand;
-import com.codelanx.codelanxlib.command.ReloadCommand;
 
 /**
  * Internal {@link Lang} enum for CodelanxLib
@@ -63,6 +62,10 @@ public enum InternalLang implements Lang {
      * Relayed when an inappropriate CommandSender is used for a command
      */
     COMMAND_STATUS_RESTRICTED("command.status.restricted", "This command should only be used by %s!"),
+    /**
+     * Relayed when a proxied CommandSender attempts executing a command
+     */
+    COMMAND_STATUS_NOPROXIES("command.status.no-proxies", "This command cannot be executed by a proxied sender!"),
     /**
      * Title for the {@link HelpCommand}'s internal {@link Paginator}
      */
