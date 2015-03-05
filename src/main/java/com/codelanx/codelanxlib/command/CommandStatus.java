@@ -22,7 +22,12 @@ package com.codelanx.codelanxlib.command;
 import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.Lang;
 import java.util.List;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.RemoteConsoleCommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -47,6 +52,12 @@ public enum CommandStatus {
     CONSOLE_ONLY("the console"),
     /** Command is intended to be run by remote consoles (rcon) only */
     RCON_ONLY("remote consoles"),
+    /** Command is intended to be run by command blocks only */
+    COMMAND_BLOCK_ONLY("command blocks"),
+    /** Command is intended to be run by a CommandMinecart only */
+    MINECART_ONLY("minecarts"),
+    /** Command should not be executed by a proxied sender */
+    NO_PROXIES,
     /** The user does not have the appropriate permissions to execute this */
     NO_PERMISSION,
     /** The command is not meant to be an endpoint */
@@ -90,6 +101,8 @@ public enum CommandStatus {
             case PLAYER_ONLY:
             case CONSOLE_ONLY:
             case RCON_ONLY:
+            case COMMAND_BLOCK_ONLY:
+            case MINECART_ONLY:
                 Lang.sendMessage(sender, format, InternalLang.COMMAND_STATUS_RESTRICTED, this.args);
                 break;
             case NO_PERMISSION:
@@ -106,5 +119,23 @@ public enum CommandStatus {
                 break;
         }
     }
-    
+
+    //Returns true if the sender is okay to use
+    boolean verifySender(CommandSender sender) {
+        switch (this) {
+            case PLAYER_ONLY:
+                return sender instanceof Player;
+            case CONSOLE_ONLY:
+                return sender instanceof ConsoleCommandSender;
+            case RCON_ONLY:
+                return sender instanceof RemoteConsoleCommandSender;
+            case COMMAND_BLOCK_ONLY:
+                return sender instanceof BlockCommandSender;
+            case MINECART_ONLY:
+                return sender instanceof CommandMinecart;
+            default:
+                return true;
+        }
+    }
+
 }
