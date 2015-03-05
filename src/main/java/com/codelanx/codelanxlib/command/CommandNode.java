@@ -23,6 +23,7 @@ import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
+import com.codelanx.codelanxlib.util.exception.IllegalReturnException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -43,6 +44,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
@@ -71,6 +73,10 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     private final Map<String, CommandNode<? extends Plugin>> subcommands = new HashMap<>();
     /** Indicates whether or not this node is meant to be directly executed */
     private boolean executable = true;
+    /** Whether or not to allow a {@link ProxiedCommandSender} */
+    private boolean allowProxies = true;
+    /** Represents a restriction on the CommandSender type */
+    private CommandStatus restriction = null;
 
     /**
      * Initializes a new {@link CommandNode} with no parent object
@@ -132,12 +138,20 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         }
         CommandStatus stat;
         try {
-            stat = child.execute(sender, Arrays.copyOfRange(args, start, args.length));
+            stat = this.verifySender(sender);
+            if (stat == null) {
+                stat = child.execute(sender, Arrays.copyOfRange(args, start, args.length));
+            }
         } catch (Throwable ex) {
             stat = CommandStatus.FAILED;
             child.plugin.getLogger().log(Level.SEVERE, String.format("Unhandled exception executing command '%s %s'", label, StringUtils.join(args, " ")), ex);
         }
-        stat.handle(sender, child.format, child);
+        //Purposely catch NPE and rethrow
+        try {
+            stat.handle(sender, child.format, child);
+        } catch (NullPointerException ex) {
+            throw new IllegalReturnException("Cannot return null from CommandNode#execute", ex);
+        }
         return stat != CommandStatus.FAILED;
     }
 
@@ -150,9 +164,21 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @param sender The command executor
      * @param args The command arguments, starting after the subcommand name
      *
-     * @return The {@link CommandStatus} representing the result of the command
+     * @return The {@link CommandStatus} representing the result of the command.
+     *         This will throw an NPE if {@code null} is returned
      */
     public abstract CommandStatus execute(CommandSender sender, String... args);
+
+    //Returns a not-null CommandStatus if the CommandSender can't be used
+    private CommandStatus verifySender(CommandSender sender) {
+        if (this.restriction != null && !this.restriction.verifySender(sender)) {
+            return this.restriction;
+        }
+        if (!this.allowProxies && sender instanceof ProxiedCommandSender) {
+            return CommandStatus.NO_PROXIES;
+        }
+        return null;
+    }
 
     /**
      * Called from Bukkit to indicate a call for tab completing
@@ -493,6 +519,61 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      */
     public final boolean isExecutable() {
         return this.executable;
+    }
+
+    /**
+     * Disallows execution of this {@link CommandNode} by a ProxiedCommandSender
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
+    public final void disallowProxiedSenders() {
+        this.allowProxies = false;
+    }
+
+    /**
+     * Sets a restriction on this {@link CommandNode} so that it may only
+     * be executed by a particular type of {@link CommandSender}. This method
+     * only allows the following types:
+     * <ul>
+     * <li> {@link CommandStatus#PLAYER_ONLY}
+     * <li> {@link CommandStatus#CONSOLE_ONLY}
+     * <li> {@link CommandStatus#RCON_ONLY}
+     * <li> {@link CommandStatus#COMMAND_BLOCK_ONLY}
+     * <li> {@link CommandStatus#MINECART_ONLY}
+     * </ul>
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param restriction The {@link CommandStatus} type to restrict with
+     */
+    public final void setRestriction(CommandStatus restriction) {
+        switch (restriction) {
+            case PLAYER_ONLY:
+            case CONSOLE_ONLY:
+            case RCON_ONLY:
+            case COMMAND_BLOCK_ONLY:
+            case MINECART_ONLY:
+                this.restriction = restriction;
+                break;
+            default:
+                throw new IllegalArgumentException("Bad type for CommandStatus");
+        }
+    }
+
+    /**
+     * Returns {@code true} if there is a restriction imposed upon this
+     * {@link CommandNode}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return {@code true} if this {@link CommandNode} can only be executed by
+     *         one type of sender
+     */
+    public boolean hasRestriction() {
+        return this.restriction != null;
     }
 
     /**
