@@ -26,6 +26,7 @@ import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.data.types.Yaml;
 import com.codelanx.codelanxlib.util.Paginator;
 import com.codelanx.codelanxlib.command.HelpCommand;
+import com.codelanx.codelanxlib.command.ReloadCommand; //Used in javadocs
 
 /**
  * Internal {@link Lang} enum for CodelanxLib
