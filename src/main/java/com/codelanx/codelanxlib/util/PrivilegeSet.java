@@ -142,7 +142,7 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
      */
     public Set<E> toSet(Class<E> clazz) {
         E[] cn = clazz.getEnumConstants();
-        Exceptions.illegalState(cn.length > 64, "Cannot support enums with over 32 constants!");
+        Exceptions.illegalState(cn.length > 64, "Cannot support enums with over 64 constants!");
         Set<E> temp = new HashSet<>();
         for (E e : cn) {
             if (this.has(e)) {
