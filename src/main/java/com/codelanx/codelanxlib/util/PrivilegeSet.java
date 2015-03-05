@@ -31,6 +31,7 @@ import java.util.Set;
  *
  * @since 0.1.0
  * @author 1Rogue
+ * @author Fireblast709 Helped with some bitshifting
  * @version 0.1.0
  * 
  * @param <E> The type of the enum this {@link PrivilegeSet} applies to
@@ -71,6 +72,9 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
      * @return {@code true} if this set contains the privilege
      */
     public boolean has(E t) {
+        if (this.level == 0) {
+            return false;
+        }
         long val = this.level & this.powerfy(t);
         return val > 0 || val == this.level;
     }
@@ -152,14 +156,14 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
      */
     public Set<E> toSet(Class<E> clazz) {
         E[] cn = clazz.getEnumConstants();
-        Exceptions.illegalState(cn.length > 64, "Cannot support enums with over 64 constants!");
+        Exceptions.illegalState(cn.length <= 64, "Cannot support enums with over 64 constants!");
         Set<E> temp = new HashSet<>();
         for (E e : cn) {
             if (this.has(e)) {
                 temp.add(e);
             } 
         }
-        return EnumSet.copyOf(temp);
+        return temp.isEmpty() ? temp : EnumSet.copyOf(temp);
     }
 
 }
