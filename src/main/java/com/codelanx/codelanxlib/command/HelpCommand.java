@@ -84,8 +84,8 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
      */
     @Override
     public CommandStatus execute(CommandSender sender, String... args) {
-        if (args.length != 1) {
-            return CommandStatus.BAD_ARGS;
+        if (args.length < 1) {
+            args = new String[]{"1"};
         }
         int select;
         try {
