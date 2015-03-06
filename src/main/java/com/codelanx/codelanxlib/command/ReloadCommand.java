@@ -78,7 +78,7 @@ public class ReloadCommand<E extends Plugin> extends CommandNode<E> {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String... args) {
-        return new ArrayList<>();
+        return TabInfo.BLANK_TAB_COMPLETE;
     }
 
     /**

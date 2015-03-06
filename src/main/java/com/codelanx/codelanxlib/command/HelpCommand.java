@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
@@ -109,20 +110,22 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
     @Override
     public List<String> tabComplete(CommandSender sender, String... args) {
         if (args.length < 1) {
-            return new ArrayList<>();
+            return IntStream.range(1, this.getPages().size() + 1).boxed()
+                    .map(String::valueOf).collect(Collectors.toList());
         }
         int size = this.getPages().size();
         int curr;
         try {
             curr = Integer.parseInt(args[0]);
         } catch (NumberFormatException ex) {
-            return new ArrayList<>();
+            return TabInfo.BLANK_TAB_COMPLETE;
         }
-        if (curr > size) {
-            return new ArrayList<>();
+        if (curr > size || curr * 10 > size) {
+            return TabInfo.BLANK_TAB_COMPLETE;
         }
         List<String> back = new ArrayList<>();
-        for (int i = 1; i < size; i++) { //awful, spawns too many strings
+        back.add(args[0]);
+        for (int i = curr * 10; i < size; i++) { //awful, spawns too many strings
             String s = i + "";
             if (s.startsWith(args[0])) {
                 back.add(s);
