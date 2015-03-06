@@ -108,7 +108,9 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         if (parent != null) {
             this.setParent(parent);
         }
-        this.addChild(new HelpCommand<>(this.plugin));
+        if (!(this instanceof HelpCommand)) {
+            this.addChild(new HelpCommand<>(this.plugin));
+        }
     }
 
     /**
