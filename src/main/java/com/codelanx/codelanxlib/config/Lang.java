@@ -162,7 +162,7 @@ public interface Lang extends PluginFile {
      * @return A {@link Lang} object representing the default format
      */
     public static Lang defaultFormat(String option) {
-        return Lang.createLang("&f[&9" + option == null ? "CL-Lib" : option + "&f] %s");
+        return Lang.createLang("&f[&9" + (option == null ? "CL-Lib" : option) + "&f] %s");
     }
 
     /**
