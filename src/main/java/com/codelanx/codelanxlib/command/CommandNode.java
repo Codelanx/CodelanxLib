@@ -77,6 +77,8 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     private boolean allowProxies = true;
     /** Represents a restriction on the CommandSender type */
     private CommandStatus restriction = null;
+    /** The minimum length the arguments can be */
+    private int minArgs = 0;
 
     /**
      * Initializes a new {@link CommandNode} with no parent object
@@ -134,13 +136,13 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         int start = 0;
         for (int i = 0; i < args.length; i++) {
             if (args[i].equalsIgnoreCase(child.getName())) {
-                start = i;
+                start = i + 1;
                 break;
             }
         }
         CommandStatus stat;
         try {
-            stat = this.verifySender(sender);
+            stat = this.verifyState(sender, args);
             if (stat == null) {
                 stat = child.execute(sender, Arrays.copyOfRange(args, start, args.length));
             }
@@ -171,13 +173,16 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      */
     public abstract CommandStatus execute(CommandSender sender, String... args);
 
-    //Returns a not-null CommandStatus if the CommandSender can't be used
-    private CommandStatus verifySender(CommandSender sender) {
+    //Returns a not-null CommandStatus if the CommandSender or args can't be used
+    private CommandStatus verifyState(CommandSender sender, String... args) {
         if (this.restriction != null && !this.restriction.verifySender(sender)) {
             return this.restriction;
         }
         if (!this.allowProxies && sender instanceof ProxiedCommandSender) {
             return CommandStatus.NO_PROXIES;
+        }
+        if (args.length < this.minArgs) {
+            return CommandStatus.BAD_ARGS;
         }
         return null;
     }
@@ -428,7 +433,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         back.add(this);
         back = this.subcommands.values().stream()
                 .filter(c -> this == c.getParent())
-                .filter(c -> c.getClass() == HelpCommand.class)
+                .filter(c -> c.getClass() != HelpCommand.class)
                 .map(c -> c.traverse())
                 .reduce(back, (u, r) -> {
                     u.addAll(r);
@@ -521,6 +526,18 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      */
     public final boolean isExecutable() {
         return this.executable;
+    }
+
+    /**
+     * Sets the minimum number of arguments for this command
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param minimum The minimum number of arguments for this command
+     */
+    public final void minimumArguments(int minimum) {
+        this.minArgs = minimum;
     }
 
     /**
