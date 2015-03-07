@@ -149,7 +149,10 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
         Map<String, CommandNode<? extends Plugin>> aliases = new HashMap<>();
         cmds.forEach(c -> aliases.putAll(c.getAliases()));
         Collections.sort(cmds);
-        String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(this.getParent().getUsage());
+        String usage;
+        String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(
+                this.getParent().getUsage().replaceAll("\\[.*\\]", "")
+                    .replaceAll("\\<.*\\>", "").trim());
         List<String> out = cmds.stream().map(this::toHelpInfo).collect(Collectors.toList());
         if (!aliases.isEmpty()) {
             int blanks = this.getItemsPerPage() - (cmds.size() % this.getItemsPerPage());
@@ -191,7 +194,7 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
      * @return The human-readable output of the command information
      */
     private String toHelpInfo(CommandNode<?> cmd) {
-        return InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info());
+        return InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info() == null ? "<null>" : cmd.info().format());
     }
 
     /**
