@@ -134,17 +134,20 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         Exceptions.illegalPluginAccess(Reflections.accessedFromBukkit(), "Only bukkit may call this method");
         CommandNode<? extends Plugin> child = this.getClosestChild(args);
         int start = 0;
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equalsIgnoreCase(child.getName())) {
-                start = i + 1;
-                break;
+        if (args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equalsIgnoreCase(child.getName())) {
+                    start = i + 1;
+                    break;
+                }
             }
+            args = Arrays.copyOfRange(args, start, args.length);
         }
         CommandStatus stat;
         try {
-            stat = this.verifyState(sender, args);
+            stat = this.verifyState(child, sender, args);
             if (stat == null) {
-                stat = child.execute(sender, Arrays.copyOfRange(args, start, args.length));
+                stat = child.execute(sender, args);
             }
         } catch (Throwable ex) {
             stat = CommandStatus.FAILED;
@@ -174,14 +177,14 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     public abstract CommandStatus execute(CommandSender sender, String... args);
 
     //Returns a not-null CommandStatus if the CommandSender or args can't be used
-    private CommandStatus verifyState(CommandSender sender, String... args) {
-        if (this.restriction != null && !this.restriction.verifySender(sender)) {
+    private CommandStatus verifyState(CommandNode<?> child, CommandSender sender, String... args) {
+        if (child.restriction != null && !child.restriction.verifySender(sender)) {
             return this.restriction;
         }
-        if (!this.allowProxies && sender instanceof ProxiedCommandSender) {
+        if (!child.allowProxies && sender instanceof ProxiedCommandSender) {
             return CommandStatus.NO_PROXIES;
         }
-        if (args.length < this.minArgs) {
+        if (args.length < child.minArgs) {
             return CommandStatus.BAD_ARGS;
         }
         return null;
