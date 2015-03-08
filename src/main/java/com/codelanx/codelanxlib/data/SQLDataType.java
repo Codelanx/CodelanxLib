@@ -233,7 +233,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
         try {
             this.getConnection().close();
         } catch (SQLException ex) {
-            Debugger.error(ex, "Error closing SQL connection");
+            Debugger.error(ex, "Error closing SQL connection: %s", Databases.simpleErrorOutput(ex));
         }
     }
 
