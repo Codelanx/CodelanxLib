@@ -114,6 +114,9 @@ public class Paginator {
             sb.append(InternalLang.PAGINATOR_PAGEFORMAT.format(i + 1, pageCount));
             sb.append('\n');
             int stop = (i + 1) * itemsPerPage;
+            if (stop > content.size()) {
+                stop = content.size();
+            }
             for (int w = i * itemsPerPage; w < stop; w++) {
                 sb.append(content.get(w)).append('\n');
             }
