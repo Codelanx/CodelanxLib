@@ -69,7 +69,7 @@ public class ItemStackBuilder {
      * @return This instance (chained)
      */
     public ItemStackBuilder setName(String name) {
-        this.name = ChatColor.translateAlternateColorCodes('&', name);
+        this.name = Lang.color(name);
         return this;
     }
 
@@ -83,7 +83,7 @@ public class ItemStackBuilder {
      * @return This instance (chained)
      */
     public ItemStackBuilder addLore(String lore) {
-        this.lore.add(ChatColor.translateAlternateColorCodes('&', lore));
+        this.lore.add(Lang.color(lore));
         return this;
     }
 

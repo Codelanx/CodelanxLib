@@ -70,6 +70,10 @@
   </build>
   <repositories>
     <repository>
+      <id>spigot-repo</id>
+      <url>http://hub.spigotmc.org/nexus/content/repositories/public/</url>
+    </repository>
+    <repository>
       <id>codelanx-repo</id>
       <url>http://repo.codelanx.com/content/repositories/public/</url>
     </repository>
@@ -86,7 +90,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.7.10-R0.1-SNAPSHOT</version>
+      <version>1.8-R0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

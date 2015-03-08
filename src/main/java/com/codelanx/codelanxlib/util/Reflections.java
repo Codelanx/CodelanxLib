@@ -352,4 +352,5 @@ public final class Reflections {
     public static <T> List<T> nonFixedList(T... items) {
         return new ArrayList<>(Arrays.asList(items));
     }
+
 }
