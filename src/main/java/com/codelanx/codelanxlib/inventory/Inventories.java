@@ -69,22 +69,24 @@ public final class Inventories {
      * @throws IllegalStateException if the item is modified during the method
      *                               execution
      */
-    public static synchronized int getHeldItemSlot(Player p) {
-        byte[] b = new byte[32];
-        RNG.THREAD_LOCAL().nextBytes(b);
-        List<String> bitStr = new ArrayList<>(Arrays.asList(Base64.encode(b)));
-        ItemStack[] contents = p.getInventory().getContents();
-        //Time is of the essence now
-        List<String> oldLore = p.getItemInHand().getItemMeta().getLore();
-        p.getItemInHand().getItemMeta().setLore(bitStr);
-        for (int i = 0; i < 9; i++) {
-            if (contents[i].getItemMeta().getLore().equals(bitStr)) {
-                p.getItemInHand().getItemMeta().setLore(oldLore);
-                return i;
+    public static int getHeldItemSlot(Player p) {
+        synchronized (p.getInventory()) {
+            byte[] b = new byte[32];
+            RNG.THREAD_LOCAL().nextBytes(b);
+            List<String> bitStr = new ArrayList<>(Arrays.asList(Base64.encode(b)));
+            ItemStack[] contents = p.getInventory().getContents();
+            //Time is of the essence now
+            List<String> oldLore = p.getItemInHand().getItemMeta().getLore();
+            p.getItemInHand().getItemMeta().setLore(bitStr);
+            for (int i = 0; i < 9; i++) {
+                if (contents[i].getItemMeta().getLore().equals(bitStr)) {
+                    p.getItemInHand().getItemMeta().setLore(oldLore);
+                    return i;
+                }
             }
+            p.getItemInHand().getItemMeta().setLore(oldLore);
+            throw new IllegalStateException("Race conflict with other plugin while running method");
         }
-        p.getItemInHand().getItemMeta().setLore(oldLore);
-        throw new IllegalStateException("Race conflict with other plugin while running method");
     }
 
     /**
