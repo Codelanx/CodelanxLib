@@ -22,6 +22,7 @@ package com.codelanx.codelanxlib.config;
 import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.util.Reflections;
 import com.google.common.primitives.Primitives;
+import java.util.Collection;
 import java.util.Map;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
@@ -74,6 +75,70 @@ public interface Config extends PluginFile {
             return c.cast(this.getDefault());
         }
         throw new ClassCastException("Unable to cast config value");
+    }
+
+    /**
+     * Attempts to return the {@link Config} value as a casted type. If the
+     * value cannot be casted it will attempt to return the default value. If
+     * the default value is inappropriate for the class, the method will
+     * throw a {@link ClassCastException}. This exception is also throwing if
+     * the type used for the members contained within the collection are
+     * incorrect
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <T> The type of the casting class
+     * @param <G> The type of the collection's contents
+     * @param collection The collection type to cast to
+     * @param type The generic bounding for the collection
+     * @return A casted value, or {@code null} if unable to cast. If the passed
+     *         class parameter is of a primitive type or autoboxed primitive,
+     *         then a casted value of -1 is returned, or {@code false} for
+     *         booleans. If the passed class parameter is for {@link String},
+     *         then {@link Object#toString()} is called on the value instead
+     */
+    default public <G, T extends Collection<G>> T as(Class<T> collection, Class<G> type) {
+        Collection<?> col = this.as(collection);
+        for (Object o : col) {
+            if (!type.isInstance(o)) {
+                throw new ClassCastException("Inappropriate generic type for collection");
+            }
+        }
+        return (T) col;
+    }
+
+    /**
+     * Attempts to return the {@link Config} value as a casted type. If the
+     * value cannot be casted it will attempt to return the default value. If
+     * the default value is inappropriate for the class, the method will
+     * throw a {@link ClassCastException}. This exception is also throwing if
+     * the type used for the members contained within the collection are
+     * incorrect
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <K> The type of the keys for this map
+     * @param <V> The type of the values for this map
+     * @param <M> The type of the map
+     * @param map The class object of the map type to use
+     * @param key The class object of the key types
+     * @param value The class object of the value types
+     * @return A casted value, or {@code null} if unable to cast. If the passed
+     *         class parameter is of a primitive type or autoboxed primitive,
+     *         then a casted value of -1 is returned, or {@code false} for
+     *         booleans. If the passed class parameter is for {@link String},
+     *         then {@link Object#toString()} is called on the value instead
+     */
+    default public <K, V, M extends Map<K, V>> M as(Class<M> map, Class<K> key, Class<V> value) {
+        Map<?, ?> m = this.as(map);
+        for (Map.Entry<?, ?> ent : m.entrySet()) {
+            if (!key.isInstance(ent.getKey()) || !value.isInstance(ent.getValue())) {
+                throw new ClassCastException("Inappropriate generic types for map");
+            }
+        }
+        return (M) m;
     }
 
     /**
