@@ -39,6 +39,7 @@ Library for Codelanx plugins. Public use is allowed, but must be credited.
 * __[Outline](#outline)__
   * __[Events](#events)__
   * __[Internal Classes](#internal)__
+  * __[Legal](#legal)__
 
 
 ##<a name="commands"></a> Commands
@@ -657,3 +658,18 @@ public Lang getFormat() {
     return SomeOtherLang.getFormat();
 }
 ```
+
+##<a name="outline"></a> Outline
+
+###<a name="legal"></a> Legal
+
+Code copyright is a giant headache, which most people don't want to even think
+about (I sure don't). So, to make things simple, here's a brief summary of what
+you can, cannot, and must do under CodelanxLib's library:
+
+<div style="text-align: center;"><img src="http://i.imgur.com/WMwzhEa.png" /></div>
+
+The only discrepency here, however, is that you cannot modify <i>and</i> distribute
+simultaneously. That is to say, if you modify the library, and proceed to distribute
+your modifications, you must label/publicize these modifications as your own, and not as
+the original library.
