@@ -62,15 +62,22 @@ international agreements.</li>
 						</li><li id="s2a2"><span style="text-decoration: underline;">Exceptions and Limitations</span>. For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.</li>
 						<li id="s2a3"><span style="text-decoration: underline;">Term</span>. The term of this Public License is specified in Section <a href="#s6a">6(a)</a>.</li>
 						<li id="s2a4"><span style="text-decoration: underline;">Media and formats; technical modifications allowed</span>. The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section <a href="#s2a4">2(a)(4)</a> never produces Adapted Material.</li>
-						<li id="s2a5"><span style="text-decoration: underline;">Downstream recipients</span>.
-						<div class="para">
-						<ol type="A">
-							<li id="s2a5A"><span style="text-decoration: underline;">Offer from the Licensor – Licensed Material</span>. Every recipient of the Licensed Material automatically receives an  offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.</li>
-							<li id="s2a5B"><span style="text-decoration: underline;">No downstream restrictions</span>. You may not offer or impose any additional or different terms or  conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.</li>
-						</ol>
-						</div>
-
-						</li><li id="s2a6"><span style="text-decoration: underline;">No endorsement</span>. Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section <a href="#s3a1Ai">3(a)(1)(A)(i)</a>.</li>
+						<li id="s2a5">
+                                                    <span style="text-decoration: underline;">Downstream recipients</span>.
+                                                    <div class="para">
+                                                        <ol type="A">
+                                                            <li id="s2a5A">
+                                                                <span style="text-decoration: underline;">Offer from the Licensor – Licensed Material</span>. Every recipient of the Licensed Material automatically receives an  offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+                                                            </li>
+                                                            <li id="s2a5B">
+                                                                <span style="text-decoration: underline;">No downstream restrictions</span>. You may not offer or impose any additional or different terms or  conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+                                                            </li>
+                                                        </ol>
+                                                    </div>
+                                                </li>
+                                                <li id="s2a6">
+                                                    <span style="text-decoration: underline;">No endorsement</span>. Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section <a href="#s3a1Ai">3(a)(1)(A)(i)</a>.
+                                                </li>
 					</ol>
 					</li><li id="s2b"><p><strong>Other rights</strong>.</p>
 					<ol>
