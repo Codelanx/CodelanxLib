@@ -667,7 +667,7 @@ Code copyright is a giant headache, which most people don't want to even think
 about (I sure don't). So, to make things simple, here's a brief summary of what
 you can, cannot, and must do under CodelanxLib's license:
 
-<div style="text-align: center;"><img src="http://i.imgur.com/WMwzhEa.png" /></div>
+<img align="center" src="http://i.imgur.com/WMwzhEa.png" />
 
 The only discrepancy here, however, is that you cannot modify <i>and</i> distribute
 simultaneously. That is to say, if you modify the library, and proceed to distribute
