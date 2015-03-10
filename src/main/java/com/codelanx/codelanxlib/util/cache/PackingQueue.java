@@ -89,7 +89,15 @@ public class PackingQueue<E> extends LinkedList<E> {
         super.addLast(e);
     }
 
-    public void flush() {
+    /**
+     * Flushes the contents of this {@link PackingQueue} and calls upon the
+     * {@link Consumer} passed in upon the construction of this queue. This
+     * method is safe to call from multiple threads
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     */
+    public synchronized void flush() {
         this.forEach(this.onConsume::accept);
         this.clear();
     }
