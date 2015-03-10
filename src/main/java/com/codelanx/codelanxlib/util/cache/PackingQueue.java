@@ -89,6 +89,11 @@ public class PackingQueue<E> extends LinkedList<E> {
         super.addLast(e);
     }
 
+    public void flush() {
+        this.forEach(this.onConsume::accept);
+        this.clear();
+    }
+
     private void handle() {
         if (this.size() >= this.maxSize) {
             this.setup();
@@ -101,10 +106,5 @@ public class PackingQueue<E> extends LinkedList<E> {
         } else {
             this.flush();
         }
-    }
-
-    private void flush() {
-        this.forEach(this.onConsume::accept);
-        this.clear();
     }
 }
