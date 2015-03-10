@@ -99,7 +99,7 @@ public interface Config extends PluginFile {
      *         then {@link Object#toString()} is called on the value instead
      */
     default public <G, T extends Collection<G>> T as(Class<T> collection, Class<G> type) {
-        Collection<?> col = this.as(collection);
+        Collection<G> col = this.as(collection);
         for (Object o : col) {
             if (!type.isInstance(o)) {
                 throw new ClassCastException("Inappropriate generic type for collection");
