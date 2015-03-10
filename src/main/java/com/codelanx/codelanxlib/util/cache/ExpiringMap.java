@@ -39,8 +39,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -223,7 +225,7 @@ public class ExpiringMap<K, V> implements ConcurrentMap<K, V> {
         }
 
         public <K1 extends K, V1 extends V> Builder<K1, V1> onExpiry(Consumer<? extends ExpiringEntry<? super K, ? super V>> expired) {
-            this.onExpire = expired;
+            //this.onExpire = expired;
             return (Builder<K1, V1>) this;
         }
 
@@ -1215,6 +1217,25 @@ public class ExpiringMap<K, V> implements ConcurrentMap<K, V> {
             Future<?> entryFuture = expirer.schedule(runnable, entry.expectedExpiration.get() - System.nanoTime(),
                     TimeUnit.NANOSECONDS);
             entry.schedule(entryFuture);
+        }
+    }
+    
+    private static class NamedThreadFactory implements ThreadFactory {
+
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String nameFormat;
+
+        /**
+         * Creates a thread factory that names threads according to the {@code nameFormat} by supplying a
+         * single argument to the format representing the thread number.
+         */
+        public NamedThreadFactory(String nameFormat) {
+            this.nameFormat = nameFormat;
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(r, String.format(nameFormat, threadNumber.getAndIncrement()));
         }
     }
 }
