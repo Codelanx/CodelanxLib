@@ -140,6 +140,7 @@ public class ExpiringMap<K, V> implements ConcurrentMap<K, V> {
     public static final class Builder<K, V> {
 
         private ExpirationPolicy expirationPolicy = ExpirationPolicy.CREATED;
+        private Consumer<ExpiringEntry<K, V>> onExpire;
         private List<ExpirationListenerConfig<K, V>> expirationListeners;
         private TimeUnit timeUnit = TimeUnit.SECONDS;
         private boolean variableExpiration;
@@ -160,7 +161,7 @@ public class ExpiringMap<K, V> implements ConcurrentMap<K, V> {
          */
         @SuppressWarnings("unchecked")
         public <K1 extends K, V1 extends V> ExpiringMap<K1, V1> build() {
-            return new ExpiringMap<K1, V1>((Builder<K1, V1>) this);
+            return new ExpiringMap<>((Builder<K1, V1>) this);
         }
 
         /**
@@ -213,11 +214,16 @@ public class ExpiringMap<K, V> implements ConcurrentMap<K, V> {
         public <K1 extends K, V1 extends V> Builder<K1, V1> expirationListeners(
                 List<ExpirationListener<? super K1, ? super V1>> listeners) {
             if (expirationListeners == null) {
-                expirationListeners = new ArrayList<ExpirationListenerConfig<K, V>>(listeners.size());
+                expirationListeners = new ArrayList<>(listeners.size());
             }
             for (ExpirationListener<? super K1, ? super V1> listener : listeners) {
                 expirationListeners.add(new ExpirationListenerConfig<K, V>((ExpirationListener<K, V>) listener));
             }
+            return (Builder<K1, V1>) this;
+        }
+
+        public <K1 extends K, V1 extends V> Builder<K1, V1> onExpiry(Consumer<? extends ExpiringEntry<? super K, ? super V>> expired) {
+            this.onExpire = expired;
             return (Builder<K1, V1>) this;
         }
 
