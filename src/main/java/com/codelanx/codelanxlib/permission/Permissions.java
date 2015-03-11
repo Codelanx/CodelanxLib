@@ -21,7 +21,7 @@ package com.codelanx.codelanxlib.permission;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 
@@ -73,15 +73,15 @@ public interface Permissions {
     }
 
     /**
-     * Determines whether or not the player has this permission
+     * Determines whether or not the {@link Permissible} has this permission
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param p The {@link Player} to check permissions for
-     * @return {@code true} if the player has the permissions
+     * @param p The {@link Permissible} to check permissions for
+     * @return {@code true} if the {@link Permissible} has the permissions
      */
-    default public boolean has(Player p) {
+    default public boolean has(Permissible p) {
         Validate.notNull(p, "Player cannot be null");
         //Register permission to conform to Bukkit API
         String fullPerm = this.build();
