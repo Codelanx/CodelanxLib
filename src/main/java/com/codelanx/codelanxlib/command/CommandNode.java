@@ -21,6 +21,8 @@ package com.codelanx.codelanxlib.command;
 
 import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.permission.Permissions;
+import com.codelanx.codelanxlib.util.Lambdas;
 import com.codelanx.codelanxlib.util.Reflections;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
 import com.codelanx.codelanxlib.util.exception.IllegalReturnException;
@@ -75,6 +77,8 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     private boolean executable = true;
     /** Whether or not to allow a {@link ProxiedCommandSender} */
     private boolean allowProxies = true;
+    /** List of permissions that are required if executed */
+    private final List<Permissions> perms = new ArrayList<>();
     /** Represents a restriction on the CommandSender type */
     private CommandStatus restriction = null;
     /** The minimum length the arguments can be */
@@ -178,14 +182,17 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
 
     //Returns a not-null CommandStatus if the CommandSender or args can't be used
     private CommandStatus verifyState(CommandNode<?> child, CommandSender sender, String... args) {
+        if (args.length < child.minArgs) {
+            return CommandStatus.BAD_ARGS;
+        }
         if (child.restriction != null && !child.restriction.verifySender(sender)) {
             return this.restriction;
         }
         if (!child.allowProxies && sender instanceof ProxiedCommandSender) {
             return CommandStatus.NO_PROXIES;
         }
-        if (args.length < child.minArgs) {
-            return CommandStatus.BAD_ARGS;
+        if (!this.perms.stream().allMatch(p -> p.has(sender))) {
+            return CommandStatus.NO_PERMISSION;
         }
         return null;
     }
@@ -208,11 +215,14 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         Exceptions.illegalPluginAccess(Reflections.accessedFromBukkit(), "Only bukkit may call this method");
         CommandNode<? extends Plugin> child = this.getClosestChild(StringUtils.join(args, " "));
         List<String> back = new ArrayList<>();
-        back.addAll(child.tabComplete(sender, args));
+        List<String> tabd = child.tabComplete(sender, args);
+        Exceptions.notNull(tabd, "Cannot return null from CommandNode#tabComplete", IllegalReturnException.class);
+        Exceptions.isTrue(tabd.stream().noneMatch(Lambdas::isNull), "Cannot return null elements from CommandNode#tabComplete", IllegalReturnException.class);
+        back.addAll(tabd);
         if (!child.subcommands.isEmpty()) {
             if (args.length < 1) {
                 back.addAll(child.subcommands.keySet());
-            } else {
+            } else if (args.length == 1) {
                 back.addAll(Reflections.matchClosestKeys(child.subcommands, args[0]));
             }
         }
@@ -513,10 +523,23 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @version 0.1.0
      *
      * @see CommandNode#getLinkingNode(String, Plugin, Consumer)
-     * @param executable
+     * @param executable {@code true} if this node can be directly executed
      */
     protected final void setExecutable(boolean executable) {
         this.executable = executable;
+    }
+
+    /**
+     * Adds a {@link Permissions} requirement for any executors of this node
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param perm The {@link Permissions} requirement to add to this node 
+     */
+    protected final void requirePermission(Permissions perm) {
+        Validate.notNull(perm);
+        this.perms.add(perm);
     }
 
     /**
