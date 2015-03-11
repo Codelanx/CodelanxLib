@@ -25,51 +25,50 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Allows using enum constants for permissions, up to 64 constants. In context
- * of this documentation, "privilege" refers to any enum constant used in this
+ * A small set comprised of enum elements, up to 64 constants. In context
+ * of this documentation, "constant" refers to any enum constant used in this
  * set
  *
  * @since 0.1.0
  * @author 1Rogue
- * @author Fireblast709 Helped with some bitshifting
  * @version 0.1.0
  * 
- * @param <E> The type of the enum this {@link PrivilegeSet} applies to
+ * @param <E> The type of the enum this {@link EnumBitSet} applies to
  */
-public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
+public class EnumBitSet<E extends Enum> { //Purposefully raw-typed
 
     private long level;
 
     /**
-     * Constructs an empty {@link PrivilegeSet}
+     * Constructs an empty {@link EnumBitSet}
      * 
      * @since 0.1.0
      * @version 0.1.0
      */
-    public PrivilegeSet() {
+    public EnumBitSet() {
         this(0);
     }
 
     /**
-     * Constructs a new {@link PrivilegeSet} with the passed privilege level
+     * Constructs a new {@link EnumBitSet} with the passed constant level
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param level 
+     * @param level The previous internal level used for this set
      */
-    public PrivilegeSet(int level) {
+    public EnumBitSet(int level) {
         this.level = level;
     }
 
     /**
-     * Returns {@code true} if this set contains the privilege
+     * Returns {@code true} if this set contains the constant
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param t The privilege to check for
-     * @return {@code true} if this set contains the privilege
+     * @param t The constant to check for
+     * @return {@code true} if this set contains the constant
      */
     public boolean has(E t) {
         if (this.level == 0) {
@@ -80,13 +79,13 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
     }
 
     /**
-     * Adds a privilege to this set. Does nothing if this set already contains
-     * the privilege
+     * Adds a constant to this set. Does nothing if this set already contains
+     * the constant
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param t The privilege to add
+     * @param t The constant to add
      */
     public void add(E t) {
         if (!this.has(t)) {
@@ -95,13 +94,13 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
     }
 
     /**
-     * Removes a privilege from this set. Does nothing if this set does not
-     * contain the privilege
+     * Removes a constant from this set. Does nothing if this set does not
+     * contain the constant
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param t The privilege to remove
+     * @param t The constant to remove
      */
     public void remove(E t) {
         if (this.has(t)) {
@@ -110,7 +109,7 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
     }
 
     /**
-     * Clears the current set of all privileges
+     * Clears the current set of all constants
      * 
      * @since 0.1.0
      * @version 0.1.0
@@ -137,7 +136,7 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param t The privilege to convert
+     * @param t The constant to convert
      * @return The relevant power level
      */
     private long powerfy(E t) {
@@ -145,14 +144,14 @@ public class PrivilegeSet<E extends Enum> { //Purposefully raw-typed
     }
 
     /**
-     * Converts this {@link PrivilegeSet} into a {@link EnumSet} containing all
+     * Converts this {@link EnumBitSet} into a {@link EnumSet} containing all
      * the elements that this set "has".
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
      * @param clazz The class of the enum used in this set
-     * @return An {@link EnumSet} of the privileges
+     * @return An {@link EnumSet} of the constants
      */
     public Set<E> toSet(Class<E> clazz) {
         E[] cn = clazz.getEnumConstants();
