@@ -68,7 +68,7 @@ public class ItemStackBuilder {
      * @param name The display name
      * @return This instance (chained)
      */
-    public ItemStackBuilder setName(String name) {
+    public ItemStackBuilder name(String name) {
         this.name = Lang.color(name);
         return this;
     }
@@ -96,7 +96,7 @@ public class ItemStackBuilder {
      * @param prefix The prefix to set
      * @return This instance (chained)
      */
-    public ItemStackBuilder setLorePrefix(String prefix) {
+    public ItemStackBuilder lorePrefix(String prefix) {
         this.lorePrefix = prefix;
         return this;
     }
@@ -110,7 +110,7 @@ public class ItemStackBuilder {
      * @param durability The durability to use (can also be a data value)
      * @return This instance (chained)
      */
-    public ItemStackBuilder setDurability(short durability) {
+    public ItemStackBuilder durability(short durability) {
         this.durability = durability;
         return this;
     }
@@ -124,7 +124,7 @@ public class ItemStackBuilder {
      * @param autoTranslate {@code true} to automatically translate '{@code &}'
      * @return This instance (chained)
      */
-    public ItemStackBuilder setAutoTranslate(boolean autoTranslate) {
+    public ItemStackBuilder autoTranslateColors(boolean autoTranslate) {
         this.autoTranslate = autoTranslate;
         return this;
     }
@@ -153,7 +153,7 @@ public class ItemStackBuilder {
      * @param type The {@link Material} type to set
      * @return This instance (chained)
      */
-    public ItemStackBuilder setType(Material type) {
+    public ItemStackBuilder type(Material type) {
         this.type = type;
         return this;
     }
@@ -167,7 +167,7 @@ public class ItemStackBuilder {
      * @param amount The amount to set
      * @return This instance (chained)
      */
-    public ItemStackBuilder setAmount(int amount) {
+    public ItemStackBuilder amount(int amount) {
         this.amount = amount;
         return this;
     }
