@@ -22,8 +22,11 @@ package com.codelanx.codelanxlib.config;
 import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.internal.InternalLang;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ProxiedCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -77,6 +80,20 @@ public interface Lang extends PluginFile {
     }
 
     /**
+     * Formats a {@link Lang} enum constant with the supplied arguments, and
+     * colors it
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param args The arguments to supply
+     * @return The formatted string
+     */
+    default public String formatAndColor(Object... args) {
+        return Lang.color(this.format(args));
+    }
+
+    /**
      * Formats a {@link Lang} enum constant with the supplied arguments
      *
      * @since 0.1.0
@@ -86,7 +103,7 @@ public interface Lang extends PluginFile {
      * @return The formatted string
      */
     default public String format(Object... args) {
-        return Lang.color(String.format(this.value(), args));
+        return String.format(this.value(), args);
     }
 
     /**
@@ -217,7 +234,7 @@ public interface Lang extends PluginFile {
      * @version 0.1.0
      *
      * @param target The target to send to
-     * @param format The format provided
+     * @param format The formatAndColor provided
      * @param message The message to colorize and send
      * @param args Arguments to supply to the {@link Lang} message
      */
@@ -225,7 +242,7 @@ public interface Lang extends PluginFile {
         if (target == null || format == null || message == null) {
             return;
         }
-        String s = format.format(message.format(args));
+        String s = format.formatAndColor(message.format(args));
         if (!s.isEmpty()) {
             target.sendMessage(s);
         }
@@ -246,9 +263,50 @@ public interface Lang extends PluginFile {
         if (message == null || target == null) {
             return;
         }
-        String s = Lang.color(message.format(args));
+        String s = message.formatAndColor(args);
         if (!s.isEmpty()) {
             target.sendMessage(s);
+        }
+    }
+
+    /**
+     * Issues a "tellRaw" to a {@link Player} target with the supplied Lang
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param target The {@link Player} to send the JSON message to
+     * @param message A {@link Lang} representing a JSON payload
+     * @param args The arguments for the passed {@link Lang}
+     */
+    public static void tellRaw(Player target, Lang message, Object... args) {
+        if (message == null || target == null) {
+            return;
+        }
+        String s = message.format(args);
+        if (!s.isEmpty()) {
+            target.sendRawMessage(s);
+        }
+    }
+
+    /**
+     * Issues a "title" command to a {@link Player} taret with the supplied Lang
+     * 
+     * @since 0.1.0
+     * @versoin 0.1.0
+     * 
+     * @param target The {@link Player} to send the JSON title to
+     * @param message A {@link Lang} representing a JSON payload for the title
+     * @param args The arguments for the passed {@link Lang}
+     */
+    public static void sendTitle(Player target, Lang message, Object... args) {
+        if (message == null || target == null) {
+            return;
+        }
+        String s = message.format(args);
+        if (!s.isEmpty()) {
+            //Use command until proper api is in place
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "title " + target.getName() + " " + s); //inb4 "bukkit injection"
         }
     }
 
