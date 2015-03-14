@@ -43,7 +43,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ItemStackBuilder {
 
     /** Prefix for lore items because purple is ugly */
-    protected String lorePrefix = ChatColor.RESET + "" + ChatColor.BLUE + "" + ChatColor.BOLD;
+    public static final String DEFAULT_PREFIX = ChatColor.RESET + "" + ChatColor.BLUE + "" + ChatColor.BOLD;
+    /** A prefix that can be set for all lore */
+    protected String lorePrefix = ItemStackBuilder.DEFAULT_PREFIX;
     /** The name for the {@link ItemStack} */
     protected String name;
     /** The lore for the {@link ItemStack} */
