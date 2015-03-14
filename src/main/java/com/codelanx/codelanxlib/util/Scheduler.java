@@ -87,8 +87,8 @@ public final class Scheduler {
      * @param delay Time (in seconds) to wait before execution
      * @return The scheduled Task
      */
-    public static ScheduledFuture<?> runCallable(Callable<?> c, long delay) {
-        ScheduledFuture<?> sch = Scheduler.getService().schedule(c, delay, TimeUnit.SECONDS);
+    public static <T> ScheduledFuture<T> runCallable(Callable<T> c, long delay) {
+        ScheduledFuture<T> sch = Scheduler.getService().schedule(c, delay, TimeUnit.SECONDS);
         Scheduler.executives.add(sch);
         return sch;
     }
