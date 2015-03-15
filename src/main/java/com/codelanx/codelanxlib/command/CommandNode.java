@@ -67,7 +67,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
 
     /** The {@link Plugin} relevant to this {@link CommandNode} */
     protected final E plugin;
-    /** The format to output with */
+    /** The formatAndColor to output with */
     private final Lang format;
     /** The {@link CommandNode} that directly proceeds this node */
     private CommandNode<? extends Plugin> parent;
@@ -264,8 +264,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      */
     public final String getUsage() {
         if (this.parent != null) {
-            return this.parent.getUsage().replaceAll("\\[.*\\]", "")
-                    .replaceAll("\\<.*\\>", "").trim() + " " + this.usage();
+            return CommandNode.filterUsage(this.parent.getUsage()) + " " + this.usage();
         }
         return this.usage();
     }
@@ -784,6 +783,19 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
             }
 
         };
+    }
+
+    /**
+     * Filters out "usage tags" such as {@code [tag]} or {@code <tag>}
+     * 
+     * @since 0.1.0
+     * @version 0.l.0
+     * 
+     * @param usageRaw The raw usage string to modify
+     * @return The newly formatted usage string
+     */
+    public static String filterUsage(String usageRaw) {
+        return usageRaw.replaceAll("\\[.*\\]", "").replaceAll("\\<.*\\>", "").trim();
     }
 
 }
