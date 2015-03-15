@@ -58,12 +58,19 @@ public interface Config extends PluginFile {
     default public <T> T as(Class<T> c) {
         Validate.notNull(c, "Cannot cast to null");
         Validate.isTrue(Primitives.unwrap(c) != void.class, "Cannot cast to a void type");
+        boolean primitive = Primitives.isWrapperType(c) || Primitives.isWrapperType(Primitives.wrap(c));
         Object o = this.get();
-        if (o == null) {
-            T back = Reflections.defaultPrimitiveValue(c);
-            if (back != null) { //catch for non-primitive classes
-                return back;
+        if (primitive) {
+            T back;
+            if (o == null) {
+                return Reflections.defaultPrimitiveValue(c);
+            } else {
+                back = Primitives.wrap(c).cast(o);
             }
+            return back;
+        }
+        if (o == null) {
+            return null;
         }
         if (c == String.class) {
             return (T) String.valueOf(o);
