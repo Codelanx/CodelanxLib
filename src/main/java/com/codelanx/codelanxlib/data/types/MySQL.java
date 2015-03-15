@@ -103,23 +103,13 @@ public class MySQL implements SQLDataType {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param tablename {@inheritDoc}
+     * @param tableName {@inheritDoc}
      * @return {@inheritDoc}
-     * @throws SQLException {@inheritDoc}
      */
     @Override
-    public boolean checkTable(String tablename) throws SQLException {
-        byte i;
-        PreparedStatement stmt = this.prepare("SELECT count(*) FROM information_schema.TABLES WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = ?)");
-        stmt.setString(1, this.prefs.getDatabase());
-        stmt.setString(2, tablename);
-        try (ResultSet count = stmt.executeQuery()) {
-            i = 0;
-            if (count.next()) {
-                i = count.getByte(1);
-            }
-        }
-        return i == 1;
+    public boolean checkTable(String tableName) {
+        return 1 == this.query(rs -> { return rs.getByte(1); },
+                "SELECT count(*) FROM information_schema.TABLES WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = ?)", this.prefs.getDatabase(), tableName);
     }
 
     /**

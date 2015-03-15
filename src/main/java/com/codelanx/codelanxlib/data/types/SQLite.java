@@ -109,22 +109,13 @@ public class SQLite implements SQLDataType {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param tablename Name of the table to check for
+     * @param tableName Name of the table to check for
      * @return true if exists, false otherwise
-     * @throws SQLException The query on the database fails
      */
     @Override
-    public boolean checkTable(String tablename) throws SQLException {
-        byte i;
-        PreparedStatement stmt = this.prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?");
-        stmt.setString(1, tablename);
-        try (ResultSet count = stmt.executeQuery()) {
-            i = 0;
-            if (count.next()) {
-                i = count.getByte(1);
-            }
-        }
-        return i == 1;
+    public boolean checkTable(String tableName) {
+        return 1 == this.query(rs -> { return rs.getByte(1); },
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", tableName);
     }
 
     /**

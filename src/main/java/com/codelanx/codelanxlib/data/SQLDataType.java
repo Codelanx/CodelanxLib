@@ -28,8 +28,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Represents an object that connects to an SQL database and allows operations
@@ -47,11 +45,10 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param tablename Name of the table to check for
+     * @param tableName Name of the table to check for
      * @return true if exists, false otherwise
-     * @throws SQLException The query on the database fails
      */
-    public boolean checkTable(String tablename) throws SQLException;
+    public boolean checkTable(String tableName);
 
     /**
      * Executes a query, and applies the resulting {@link ResultSet} to the
