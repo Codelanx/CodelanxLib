@@ -26,10 +26,11 @@ import java.util.function.Function;
 /**
  * Represents an SQL function that accepts one argument and produces a result.
  *
- * @see Function
  * @since 0.1.0
  * @author 1Rogue
  * @version 0.1.0
+ * 
+ * @see Function
  * @param <T> the type of the input to the function
  * @param <R> the type of the result of the function
  */
