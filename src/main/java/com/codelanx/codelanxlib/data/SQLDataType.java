@@ -25,6 +25,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents an object that connects to an SQL database and allows operations
@@ -118,15 +120,22 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @param query The string query to execute
      * @param params Any {@link PreparedStatement} parameters
      * @return 0 for no returned results, or the number of returned rows
-     * @throws SQLException The connection cannot be established
      */
-    default public int update(String query, Object... params) throws SQLException {
-        int back;
-        try (PreparedStatement stmt = this.prepare(query)) {
+    default public int update(String query, Object... params) {
+        PreparedStatement stmt = null;
+        int back = 0;
+        try {
+            stmt = this.prepare(query);
             for (int i = 0; i < params.length; i++) {
                 stmt.setObject(i + 1, params[i]);
             }
             back = stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+        } finally {
+            if (stmt != null) {
+                Databases.close(stmt);
+            }
         }
         return back;
     }
