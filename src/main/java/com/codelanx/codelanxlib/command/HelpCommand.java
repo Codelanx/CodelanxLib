@@ -150,16 +150,15 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
         cmds.forEach(c -> aliases.putAll(c.getAliases()));
         Collections.sort(cmds);
         String usage;
-        String title = InternalLang.COMMAND_HELP_TITLEFORMAT.format(
-                this.getParent().getUsage().replaceAll("\\[.*\\]", "")
-                    .replaceAll("\\<.*\\>", "").trim());
+        String title = InternalLang.COMMAND_HELP_TITLEFORMAT.formatAndColor(
+                CommandNode.filterUsage(this.getParent().getUsage()));
         List<String> out = cmds.stream().map(this::toHelpInfo).collect(Collectors.toList());
         if (!aliases.isEmpty()) {
             int blanks = this.getItemsPerPage() - (cmds.size() % this.getItemsPerPage());
             for (; blanks > 0; blanks--) {
                 out.add("");
             }
-            out.add(InternalLang.COMMAND_HELP_ALIASES.format());
+            out.add(InternalLang.COMMAND_HELP_ALIASES.formatAndColor());
             List<String> aliasInfo = this.aliasInfo(aliases);
             Collections.sort(aliasInfo);
             out.addAll(aliasInfo);
@@ -179,7 +178,7 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
      */
     private List<String> aliasInfo(Map<String, CommandNode<? extends Plugin>> aliases) {
         List<String> back = new ArrayList<>();
-        aliases.entrySet().forEach(ent -> back.add(InternalLang.COMMAND_HELP_ITEMFORMAT.format(
+        aliases.entrySet().forEach(ent -> back.add(InternalLang.COMMAND_HELP_ITEMFORMAT.formatAndColor(
                 ent.getKey(), "Aliased from " + ent.getValue().getUsage())));
         return back;
     }
@@ -194,7 +193,7 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
      * @return The human-readable output of the command information
      */
     private String toHelpInfo(CommandNode<?> cmd) {
-        return InternalLang.COMMAND_HELP_ITEMFORMAT.format(cmd.getUsage(), cmd.info() == null ? "<null>" : cmd.info().format());
+        return InternalLang.COMMAND_HELP_ITEMFORMAT.formatAndColor(cmd.getUsage(), cmd.info() == null ? "<null>" : cmd.info().formatAndColor());
     }
 
     /**
