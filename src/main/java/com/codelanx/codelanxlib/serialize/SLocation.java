@@ -41,6 +41,8 @@ import org.bukkit.util.Vector;
 public class SLocation implements ConfigurationSerializable {
 
     private final Vector loc;
+    private final float yaw;
+    private final float pitch;
     private final UUID uuid;
     private World world;
 
@@ -54,6 +56,8 @@ public class SLocation implements ConfigurationSerializable {
      */
     public SLocation(Location loc) {
         this.loc = loc.toVector();
+        this.yaw = loc.getYaw();
+        this.pitch = loc.getPitch();
         this.uuid = loc.getWorld().getUID();
     }
 
@@ -65,10 +69,14 @@ public class SLocation implements ConfigurationSerializable {
      * 
      * @param loc The relevant {@link Vector}
      * @param worldUUID The {@link UUID} of the world for this {@link SLocation}
+     * @param pitch The pitch
+     * @param yaw The yaw
      */
-    public SLocation(Vector loc, UUID worldUUID) {
+    public SLocation(Vector loc, UUID worldUUID, float pitch, float yaw) {
         this.loc = loc;
         this.uuid = worldUUID;
+        this.pitch = pitch;
+        this.yaw = yaw;
     }
 
     /**
@@ -83,6 +91,8 @@ public class SLocation implements ConfigurationSerializable {
     public SLocation(Map<String, Object> config) {
         this.loc = (Vector) config.get("location");
         this.uuid = UUID.fromString((String) config.get("world"));
+        this.pitch = (float) config.get("pitch");
+        this.yaw = (float) config.get("yaw");
     }
 
     /**
@@ -98,6 +108,8 @@ public class SLocation implements ConfigurationSerializable {
         Map<String, Object> back = new HashMap<>();
         back.put("location", this.loc);
         back.put("world", this.uuid.toString());
+        back.put("pitch", this.pitch);
+        back.put("yaw", this.yaw);
         return back;
     }
 
@@ -168,7 +180,7 @@ public class SLocation implements ConfigurationSerializable {
      * @return This instance in the context of a {@link Location} object
      */
     public Location toLocation() {
-        return this.getVector().toLocation(this.getWorld());
+        return this.getVector().toLocation(this.getWorld(), this.yaw, this.pitch);
     }
 
 }
