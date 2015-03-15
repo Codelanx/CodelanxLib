@@ -40,7 +40,6 @@ public final class Scheduler {
     private static final List<ScheduledFuture<?>> executives = new ArrayList<>();
     private static ScheduledExecutorService es;
 
-    
     private Scheduler() {
     }
 
@@ -83,6 +82,7 @@ public final class Scheduler {
      * @since 0.1.0
      * @version 0.1.0
      * 
+     * @param <T> The return type of the {@link Callable}
      * @param c The callable to execute
      * @param delay Time (in seconds) to wait before execution
      * @return The scheduled Task
