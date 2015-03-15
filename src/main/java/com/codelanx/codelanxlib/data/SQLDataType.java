@@ -25,6 +25,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -141,6 +144,63 @@ public interface SQLDataType extends DataType, AutoCloseable {
     }
 
     /**
+     * Executes a batch update on a database, and maps passed parameters based
+     * upon 0-indexed {@code paramMappers} for each parameter. An example of
+     * a usage would be:
+     * <br><br>{@code
+     * //A collection of objects to apply to each batch
+     * Collection<SomeObject> yourCollection;
+     * SQLDataType#batchUpdate("<SQL Query>", 500, yourCollection,
+     *    (s) -> s.getName(),
+     *    (s) -> s.getID(),
+     *    (s) -> s.getLastName());
+     * }
+     * <br><br>
+     * In the above example, the {@link PreparedStatement} parameters would
+     * map each object so that "Parameter 1" would be the result of
+     * {@code SomeObject#getName}, and parameter 2 would be the result of
+     * {@code SomeObject#getID}, and so on
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <T> The type of the objects being batch committed
+     * @param query The SQL query to execute
+     * @param batchSize The size of each batch
+     * @param params The objects to use in each batch
+     * @param paramMappers A series of functions for mapping objects to params
+     */
+    default public <T> void batchUpdate(String query, int batchSize, Collection<T> params, Function<T, ?>... paramMappers) {
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.prepare(query);
+            this.setAutoCommit(false);
+            Iterator<T> itr = params.iterator();
+            for (int i = 1; itr.hasNext(); i++) {
+                T val = itr.next();
+                for (int w = 0; w < paramMappers.length; w++) {
+                    stmt.setObject(w + 1, paramMappers[w].apply(val));
+                }
+                stmt.addBatch();
+                if (i >= batchSize) {
+                    stmt.executeBatch();
+                    this.commit();
+                    i = 1;
+                }
+            }
+            stmt.executeBatch();
+            this.commit();
+            this.setAutoCommit(true);
+        } catch (SQLException ex) {
+            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+        } finally {
+            if (stmt != null) {
+                Databases.close(stmt);
+            }
+        }
+    }
+
+    /**
      * Returns a {@link PreparedStatement} in which you can easily protect
      * against SQL injection attacks.
      * 
@@ -239,7 +299,9 @@ public interface SQLDataType extends DataType, AutoCloseable {
         } catch (SQLException ex) {
             Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
         } finally {
-            Databases.close(stmt);
+            if (stmt != null) {
+                Databases.close(stmt);
+            }
         }
         return null;
     }
@@ -270,7 +332,9 @@ public interface SQLDataType extends DataType, AutoCloseable {
         } catch (SQLException ex) {
             Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
         } finally {
-            Databases.close(stmt);
+            if (stmt != null) {
+                Databases.close(stmt);
+            }
         }
         return null;
     }
