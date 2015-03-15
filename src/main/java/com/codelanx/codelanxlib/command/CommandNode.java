@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -796,6 +797,11 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      */
     public static String filterUsage(String usageRaw) {
         return usageRaw.replaceAll("\\[.*\\]", "").replaceAll("\\<.*\\>", "").trim();
+    }
+
+    @Override
+    public String toString() {
+        return "{CommandNode: " + this.getClass().getSimpleName() + " - /" + this.getUsage() + "}";
     }
 
 }
