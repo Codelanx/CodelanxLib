@@ -108,7 +108,7 @@ public class MySQL implements SQLDataType {
      */
     @Override
     public boolean checkTable(String tableName) {
-        return 1 == this.query(rs -> { return rs.getByte(1); },
+        return 1 == this.query(rs -> { return rs.next() ? rs.getByte(1) : 0; },
                 "SELECT count(*) FROM information_schema.TABLES WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = ?)", this.prefs.getDatabase(), tableName);
     }
 
