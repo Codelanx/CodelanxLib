@@ -78,7 +78,7 @@ public class TabInfo {
      */
     public void map(int argCount, List<String> defaults) {
         Validate.notNull(defaults);
-        this.defaults.put(argCount, new SupplierContainer(defaults));
+        this.getContainer(argCount).list = defaults;
     }
 
     /**
@@ -93,7 +93,7 @@ public class TabInfo {
      */
     public void map(int argCount, Supplier<? extends List<String>> defaults) {
         Validate.notNull(defaults);
-        this.defaults.put(argCount, new SupplierContainer(defaults));
+        this.getContainer(argCount).supplier = defaults;
     }
 
     /**
@@ -111,7 +111,7 @@ public class TabInfo {
      */
     public void map(int argCount, Function<String, ? extends List<String>> defaults) {
         Validate.notNull(defaults);
-        this.defaults.put(argCount, new SupplierContainer(defaults));
+        this.getContainer(argCount).function = defaults;
     }
 
     /**
@@ -130,7 +130,17 @@ public class TabInfo {
      */
     public void map(int argCount, BiFunction<CommandSender, String, ? extends List<String>> defaults) {
         Validate.notNull(defaults);
-        this.defaults.put(argCount, new SupplierContainer(defaults));
+        this.getContainer(argCount).biFunction = defaults;
+    }
+
+    //Retrieves the internal SupplierContainer
+    private SupplierContainer getContainer(int argCount) {
+        SupplierContainer back = this.defaults.get(argCount);
+        if (back == null) {
+            back = new SupplierContainer();
+            this.defaults.put(argCount, back);
+        }
+        return back;
     }
 
     /**
@@ -203,51 +213,27 @@ public class TabInfo {
     //Accepts anything (relevant) that will return a List<String> value
     private class SupplierContainer {
         
-        private final List<String> list;
-        private final Supplier<? extends List<String>> supplier;
-        private final Function<String, ? extends List<String>> function;
-        private final BiFunction<CommandSender, String, ? extends List<String>> biFunction;
-        
-        public SupplierContainer(List<String> list) {
-            this.list = Collections.unmodifiableList(list);
-            this.supplier = null;
-            this.function = null;
-            this.biFunction = null;
-        }
-        
-        public SupplierContainer(Supplier<? extends List<String>> supplier) {
-            this.list = null;
-            this.supplier = supplier;
-            this.function = null;
-            this.biFunction = null;
-        }
-        
-        public SupplierContainer(Function<String, ? extends List<String>> function) {
-            this.list = null;
-            this.supplier = null;
-            this.function = function;
-            this.biFunction = null;
-        }
-        
-        public SupplierContainer(BiFunction<CommandSender, String, ? extends List<String>> biFunction) {
-            this.list = null;
-            this.supplier = null;
-            this.function = null;
-            this.biFunction = biFunction;
-        }
+        private List<String> list;
+        private Supplier<? extends List<String>> supplier;
+        private Function<String, ? extends List<String>> function;
+        private BiFunction<CommandSender, String, ? extends List<String>> biFunction;
 
         //While a bit messy, applies logic for each type
         public List<String> apply(CommandSender sender, String arg) {
+            List<String> back = new ArrayList<>();
             if (this.list != null) {
-                return this.list; //unmodifiable
-            } else if (this.supplier != null) {
-                return this.supplier.get();
-            } else if (this.function != null) {
-                return this.function.apply(arg);
-            } else if (this.biFunction != null) {
-                return this.biFunction.apply(sender, arg);
+                back.addAll(this.list); //unmodifiable
             }
-            throw new IllegalStateException("All container fields are null");
+            if (this.supplier != null) {
+                back.addAll(this.supplier.get());
+            }
+            if (this.function != null) {
+                back.addAll(this.function.apply(arg));
+            }
+            if (this.biFunction != null) {
+                back.addAll(this.biFunction.apply(sender, arg));
+            }
+            return back;
         }
 
     }
