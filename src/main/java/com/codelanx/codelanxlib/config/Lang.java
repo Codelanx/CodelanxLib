@@ -25,7 +25,6 @@ import com.codelanx.codelanxlib.internal.InternalLang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -234,7 +233,7 @@ public interface Lang extends PluginFile {
      * @version 0.1.0
      *
      * @param target The target to send to
-     * @param format The formatAndColor provided
+     * @param format The format provided
      * @param message The message to colorize and send
      * @param args Arguments to supply to the {@link Lang} message
      */
@@ -290,10 +289,10 @@ public interface Lang extends PluginFile {
     }
 
     /**
-     * Issues a "title" command to a {@link Player} taret with the supplied Lang
+     * Issues a "title" command to a {@link Player} target with the passed Lang
      * 
      * @since 0.1.0
-     * @versoin 0.1.0
+     * @version 0.1.0
      * 
      * @param target The {@link Player} to send the JSON title to
      * @param message A {@link Lang} representing a JSON payload for the title
