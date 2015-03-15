@@ -49,17 +49,64 @@ public interface SQLDataType extends DataType, AutoCloseable {
     public boolean checkTable(String tablename) throws SQLException;
 
     /**
-     * Executes a query, but does not update any information
+     * Executes a query, and applies the resulting {@link ResultSet} to the
+     * passed {@link SQLFunction}. This method will return anything returned
+     * from the lambda body
      *
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param query The string query to execute
-     * @return A ResultSet from the query
-     * @throws SQLException The connection cannot be established
+     * @param <R> The return type from the lambda body
+     * @param oper The operation to apply to the {@link ResultSet}
+     * @param sql The SQL statement to execute
+     * @param params Any {@link PreparedStatement} parameters
+     * @return The return value of the lambda
      */
-    default public ResultSet query(String query) throws SQLException {
-        return this.getConnection().createStatement().executeQuery(query);
+    default public <R> R query(SQLFunction<? super ResultSet, R> oper, String sql, Object... params) {
+        PreparedStatement stmt = null;
+        R back = null;
+        try {
+            stmt = this.prepare(sql);
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            ResultSet rs = stmt.executeQuery();
+            back = oper.apply(rs);
+            Databases.close(rs);
+        } catch (SQLException ex) {
+            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+        } finally {
+            Databases.close(stmt);
+        }
+        return back;
+    }
+
+    /**
+     * Executes a query, and applies the resulting {@link ResultSet} to the
+     * passed {@link SQLConsumer}
+     *
+     * @since 0.1.0
+     * @version 0.1.0
+     *
+     * @param oper The operation to apply to the {@link ResultSet}
+     * @param sql The SQL statement to execute
+     * @param params Any {@link PreparedStatement} parameters
+     */
+    default public void query(SQLConsumer<? super ResultSet> oper, String sql, Object... params) {
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.prepare(sql);
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            ResultSet rs = stmt.executeQuery();
+            oper.accept(rs);
+            Databases.close(rs);
+        } catch (SQLException ex) {
+            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+        } finally {
+            Databases.close(stmt);
+        }
     }
 
     /**
@@ -69,11 +116,19 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @version 0.1.0
      *
      * @param query The string query to execute
+     * @param params Any {@link PreparedStatement} parameters
      * @return 0 for no returned results, or the number of returned rows
      * @throws SQLException The connection cannot be established
      */
-    default public int update(String query) throws SQLException {
-        return this.getConnection().createStatement().executeUpdate(query);
+    default public int update(String query, Object... params) throws SQLException {
+        int back;
+        try (PreparedStatement stmt = this.prepare(query)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            back = stmt.executeUpdate();
+        }
+        return back;
     }
 
     /**

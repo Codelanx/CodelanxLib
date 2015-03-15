@@ -143,13 +143,7 @@ public class MySQL implements SQLDataType {
      * @return true if connected, false otherwise
      */
     public boolean checkConnection() {
-        boolean give;
-        try (ResultSet count = query("SELECT count(*) FROM information_schema.SCHEMATA")) {
-            give = count.first();
-        } catch (SQLException ex) {
-            give = false;
-        }
-        return give;
+        return this.query((rs) -> { return rs.first(); }, "SELECT count(*) FROM information_schema.SCHEMATA");
     }
 
     /**
