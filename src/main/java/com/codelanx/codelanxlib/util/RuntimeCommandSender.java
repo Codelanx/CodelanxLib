@@ -19,8 +19,8 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import com.sun.istack.internal.logging.Logger;
 import java.util.Set;
+import java.util.logging.Logger;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
@@ -39,7 +39,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class RuntimeCommandSender implements CommandSender {
 
-    private static final Logger LOG = Logger.getLogger(RuntimeCommandSender.class);
+    private static final Logger LOG = Logger.getLogger(RuntimeCommandSender.class.getName());
 
     @Override
     public void sendMessage(String message) {
