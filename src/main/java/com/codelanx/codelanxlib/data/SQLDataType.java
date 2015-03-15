@@ -154,6 +154,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
      *    (s) -> s.getName(),
      *    (s) -> s.getID(),
      *    (s) -> s.getLastName());
+     * );
      * }
      * <br><br>
      * In the above example, the {@link PreparedStatement} parameters would
