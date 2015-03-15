@@ -58,6 +58,20 @@ public class SLocation implements ConfigurationSerializable {
     }
 
     /**
+     * Allows constructing an {@link SLocation} from serialized parts
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param loc The relevant {@link Vector}
+     * @param worldUUID The {@link UUID} of the world for this {@link SLocation}
+     */
+    public SLocation(Vector loc, UUID worldUUID) {
+        this.loc = loc;
+        this.uuid = worldUUID;
+    }
+
+    /**
      * {@link ConfigurationSerializable} constructor. Should not be used by
      * anything other than Bukkit.
      * 
