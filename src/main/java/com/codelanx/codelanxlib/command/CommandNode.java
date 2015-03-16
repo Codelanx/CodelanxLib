@@ -804,4 +804,20 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         return "{CommandNode: " + this.getClass().getSimpleName() + " - /" + this.getUsage() + "}";
     }
 
+    /**
+     * Retrieves the help output for this {@link CommandNode}, in the form of
+     * a {@link HelpCommand} class
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The {@link HelpCommand} attached to this node
+     */
+    public HelpCommand<?> getHelpOutput() {
+        CommandNode<? extends Plugin> child = this.getChild("help");
+        if (child instanceof HelpCommand) {
+            return (HelpCommand) child;
+        }
+        return null;
+    }
 }
