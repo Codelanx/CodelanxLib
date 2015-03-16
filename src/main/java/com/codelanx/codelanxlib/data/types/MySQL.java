@@ -114,6 +114,23 @@ public class MySQL implements SQLDataType {
 
     /**
      * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param tableName {@inheritDoc}
+     * @param columnName {@inheritDoc}
+     * @return {@inheritDoc}
+     */
+    @Override
+    public boolean checkColumn(String tableName, String columnName) {
+        return 1 == this.query(rs -> { return rs.next() ? rs.getByte(1) : 0; },
+                "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?",
+                this.prefs.getDatabase(), tableName, columnName);
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @since 0.1.0
      * @version 0.1.0

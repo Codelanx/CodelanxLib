@@ -119,6 +119,24 @@ public class SQLite implements SQLDataType {
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param tableName {@inheritDoc}
+     * @param columnName {@inheritDoc}
+     * @return {@inheritDoc}
+     */
+    @Override
+    public boolean checkColumn(String tableName, String columnName) {
+        return 1 == this.query(rs -> { return rs.next() ? rs.getByte(1) : 0; },
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='index' AND name=?", columnName);
+    }
+    
+    
+
+    /**
      * Closes the SQLite connection. Must be open first.
      *
      * @since 0.1.0

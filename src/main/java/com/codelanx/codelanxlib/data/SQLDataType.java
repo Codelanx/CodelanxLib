@@ -46,9 +46,21 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @version 0.1.0
      *
      * @param tableName Name of the table to check for
-     * @return true if exists, false otherwise
+     * @return {@code true} if the table exists
      */
     public boolean checkTable(String tableName);
+
+    /**
+     * Checks if a table has the following column
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param tableName The table to look in
+     * @param columnName The column to search for
+     * @return {@code true} if the column exists
+     */
+    public boolean checkColumn(String tableName, String columnName);
 
     /**
      * Executes a query, and applies the resulting {@link ResultSet} to the
