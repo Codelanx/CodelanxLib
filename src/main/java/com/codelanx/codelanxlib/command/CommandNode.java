@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -640,7 +639,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @param args The arguments chaining from this node to the alias
      */
     public final <T extends Plugin> void alias(CommandNode<T> toAlias, String... args) {
-        if (args.length < 0) {
+        if (args.length <= 0) {
             this.subcommands.put(toAlias.getName(), toAlias);
         }
         CommandNode<? extends Plugin> child = this;
@@ -726,7 +725,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
             f.setAccessible(true);
             SimpleCommandMap scm;
             synchronized (scm = (SimpleCommandMap) f.get(Bukkit.getServer().getPluginManager())) {
-                scm.register(this.plugin.getName().toLowerCase() + ".", cmd);
+                scm.register(this.plugin.getName().toLowerCase(), cmd);
             }
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
             Debugger.error(ex, "Error registering Bukkit command alias");
