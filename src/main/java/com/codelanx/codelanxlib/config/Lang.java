@@ -310,4 +310,35 @@ public interface Lang extends PluginFile {
         }
     }
 
+    /**
+     * Formats a string into either a proper word or sentence (First letter
+     * capitalized, if spaces are included a period is added)
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @see Lang#raw(String, char)
+     * @param raw The raw string to format
+     * @return The formatted string
+     */
+    public static String proper(String raw) {
+        return Lang.proper(raw, '.');
+    }
+
+    /**
+     * Formats a string into either a proper word or sentence (First letter
+     * capitalized, if spaces are included the supplied punctuation is added)
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param raw The raw string to format
+     * @param punctuation Punctuation to append to anything containing spaces
+     * @return The formatted string
+     */
+    public static String proper(String raw, char punctuation) {
+        raw = raw.trim();
+        return raw.isEmpty() ? "" : (Character.toUpperCase(raw.charAt(0)) + raw.substring(1).toLowerCase() + (raw.contains(" ") ? punctuation : ""));
+    }
+
 }
