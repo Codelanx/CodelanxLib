@@ -30,6 +30,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Instantiable MySQL connector
@@ -150,7 +152,12 @@ public class MySQL implements SQLDataType {
      * @return true if connected, false otherwise
      */
     public boolean checkConnection() {
-        return this.query((rs) -> { return rs.first(); }, "SELECT count(*) FROM information_schema.SCHEMATA");
+        try {
+            ResultSet rs = this.prepare("SELECT count(*) FROM information_schema.SCHEMATA").executeQuery();
+            return rs.first();
+        } catch (SQLException ex) {
+            return false;
+        }
     }
 
     /**
