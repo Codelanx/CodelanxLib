@@ -105,7 +105,8 @@ public interface Config extends PluginFile {
      *         booleans. If the passed class parameter is for {@link String},
      *         then {@link Object#toString()} is called on the value instead
      */
-    default public <G, T extends Collection<G>> T as(Class<T> collection, Class<G> type) {
+    @SuppressWarnings("rawtypes")
+    default public <G, T extends Collection<G>> T as(Class<? extends Collection> collection, Class<G> type) {
         Collection<G> col = this.as(collection);
         for (Object o : col) {
             if (!type.isInstance(o)) {
@@ -138,7 +139,8 @@ public interface Config extends PluginFile {
      *         booleans. If the passed class parameter is for {@link String},
      *         then {@link Object#toString()} is called on the value instead
      */
-    default public <K, V, M extends Map<K, V>> M as(Class<M> map, Class<K> key, Class<V> value) {
+    @SuppressWarnings("rawtypes")
+    default public <K, V, M extends Map<K, V>> M as(Class<? extends Map> map, Class<K> key, Class<V> value) {
         Map<?, ?> m = this.as(map);
         for (Map.Entry<?, ?> ent : m.entrySet()) {
             if (!key.isInstance(ent.getKey()) || !value.isInstance(ent.getValue())) {
