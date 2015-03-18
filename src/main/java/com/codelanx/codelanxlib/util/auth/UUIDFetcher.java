@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import org.apache.commons.lang.Validate;
@@ -151,6 +153,62 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return uuidMap;
     }
 
+    /**
+     * Calls each supplied name individually to Mojang's servers, treating them
+     * as previously used names which henceforth were changed. This method is
+     * much slower than the other call methods, and should only be used
+     * if there is a need to retrieve names which are now changed
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param output Whether or not to print output
+     * @param log The {@link Logger} to print to
+     * @param doOutput A {@link Predicate} representing when to output a number
+     * @return A {@link Map} of supplied names to relevant {@link UserInfo}.
+     *         Note that this map will contain the supplied names even if they
+     *         are invalid or not actual usernames (in which case, they will
+     *         be mapped to {@code null}). Note names that have never been
+     *         changed before will be mapped as invalid per this method
+     * @throws IOException If there's a problem sending or receiving the request
+     * @throws ParseException If the request response cannot be read
+     * @throws InterruptedException If the thread is interrupted while sleeping
+     */
+    public Map<String, UserInfo> callFromOldNames(boolean output, Logger log, 
+            Predicate<? super Integer> doOutput) throws IOException, ParseException, InterruptedException {
+        Map<String, UserInfo> back = new HashMap<>();
+        int reqs = 0;
+        int completed = 0;
+        int failed = 0;
+        for (String s : names) {
+            HttpURLConnection connection = UUIDFetcher.createSingleProfileConnection(s);
+            if (connection.getResponseCode() == 200) {
+                JSONObject o = (JSONObject) this.jsonParser.parse(new InputStreamReader(connection.getInputStream()));
+                back.put(s, new UserInfo((String) o.get("name"), UUIDFetcher.getUUID((String) o.get("id"))));
+                completed++;
+            } else { //e.g. 400, 204
+                if (output) {
+                    log.warning(String.format("No profile found for '%s', skipping...", s));
+                }
+                back.put(s, null);
+                failed++;
+                continue; //nothing can be done with the return
+            }
+            if (output) {
+                int processed = completed + failed;
+                if (doOutput.test(processed) || processed == this.names.size()) {
+                    log.info(String.format("[UUIDFetcher] Progress: %d/%d, %.2f%%, Failed names: %d",
+                            processed, this.names.size(), ((double) processed / this.names.size()) * 100D, failed));
+                }
+            }
+            if (this.rateLimiting && reqs >= 600) {
+                reqs = 0;
+                log.warning("[UUIDFetcher] Rate limit hit! Waiting 10 minutes until continuing conversion...");
+                Thread.sleep(TimeUnit.MINUTES.toMillis(10));
+            }
+        }
+        return back;
+    }
 
     /**
      * Writes a JSON payload an {@link HttpURLConnection} object
@@ -186,6 +244,26 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setUseCaches(false);
         connection.setDoInput(true);
+        connection.setDoOutput(true);
+        return connection;
+    }
+
+    /**
+     * Creates a connection object for requesting a single profile name
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param name The name to request
+     * @return The {@link HttpURLConnection} to Mojang's server
+     * @throws IOException If there is a problem opening the stream, a malformed
+     *                     URL, or if there is a ProtocolException
+     */
+    private static HttpURLConnection createSingleProfileConnection(String name) throws IOException {
+        URL url = new URL(String.format("https://api.mojang.com/users/profiles/minecraft/%s?at=0", name));
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setUseCaches(false);
         connection.setDoOutput(true);
         return connection;
     }
