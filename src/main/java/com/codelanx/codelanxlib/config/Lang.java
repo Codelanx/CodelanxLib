@@ -317,7 +317,7 @@ public interface Lang extends PluginFile {
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @see Lang#raw(String, char)
+     * @see Lang#proper(String, char)
      * @param raw The raw string to format
      * @return The formatted string
      */
