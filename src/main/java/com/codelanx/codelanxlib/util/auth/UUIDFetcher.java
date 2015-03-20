@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -127,10 +126,16 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         int failed = 0;
         int requests = (int) Math.ceil(this.names.size() / UUIDFetcher.PROFILES_PER_REQUEST);
         for (int i = 0; i < requests; i++) {
-            HttpURLConnection connection = UUIDFetcher.createConnection();
             List<String> request = names.subList(i * 100, Math.min((i + 1) * 100, this.names.size()));
             String body = JSONArray.toJSONString(request);
+            HttpURLConnection connection = UUIDFetcher.createConnection();
             UUIDFetcher.writeBody(connection, body);
+            if (connection.getResponseCode() == 429 && this.rateLimiting) {
+                log.warning("[UUIDFetcher] Rate limit hit! Waiting 10 minutes until continuing conversion...");
+                Thread.sleep(TimeUnit.MINUTES.toMillis(10));
+                connection = UUIDFetcher.createConnection();
+                UUIDFetcher.writeBody(connection, body);
+            }
             JSONArray array = (JSONArray) this.jsonParser.parse(new InputStreamReader(connection.getInputStream()));
             completed += array.size();
             failed += request.size() - array.size();
@@ -145,9 +150,6 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
                     log.info(String.format("[UUIDFetcher] Progress: %d/%d, %.2f%%, Failed names: %d",
                         processed, totalNames, ((double) processed / totalNames) * 100D, failed));
                 }
-            }
-            if (this.rateLimiting && i != requests - 1) {
-                Thread.sleep(100L);
             }
         }
         return uuidMap;
@@ -177,11 +179,15 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     public Map<String, UserInfo> callFromOldNames(boolean output, Logger log, 
             Predicate<? super Integer> doOutput) throws IOException, ParseException, InterruptedException {
         Map<String, UserInfo> back = new HashMap<>();
-        int reqs = 0;
         int completed = 0;
         int failed = 0;
         for (String s : names) {
             HttpURLConnection connection = UUIDFetcher.createSingleProfileConnection(s);
+            if (connection.getResponseCode() == 429 && this.rateLimiting) {
+                log.warning("[UUIDFetcher] Rate limit hit! Waiting 10 minutes until continuing conversion...");
+                Thread.sleep(TimeUnit.MINUTES.toMillis(10));
+                connection = UUIDFetcher.createSingleProfileConnection(s);
+            }
             if (connection.getResponseCode() == 200) {
                 JSONObject o = (JSONObject) this.jsonParser.parse(new InputStreamReader(connection.getInputStream()));
                 back.put(s, new UserInfo((String) o.get("name"), UUIDFetcher.getUUID((String) o.get("id"))));
@@ -200,11 +206,6 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
                     log.info(String.format("[UUIDFetcher] Progress: %d/%d, %.2f%%, Failed names: %d",
                             processed, this.names.size(), ((double) processed / this.names.size()) * 100D, failed));
                 }
-            }
-            if (this.rateLimiting && reqs >= 600) {
-                reqs = 0;
-                log.warning("[UUIDFetcher] Rate limit hit! Waiting 10 minutes until continuing conversion...");
-                Thread.sleep(TimeUnit.MINUTES.toMillis(10));
             }
         }
         return back;
