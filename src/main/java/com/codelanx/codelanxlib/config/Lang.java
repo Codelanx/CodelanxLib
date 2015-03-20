@@ -71,11 +71,12 @@ public interface Lang extends PluginFile {
      * 
      * @return The formatting string to be used for sending a message
      */
-    default public String value() {
+    @Override
+    default public String get() {
         if (this.getClass().isAnonymousClass()) {
             return this.getDefault();
         }
-        return String.valueOf(this.getConfig().get(this.getPath(), this.getDefault()));
+        return String.valueOf(PluginFile.super.get());
     }
 
     /**
@@ -102,7 +103,7 @@ public interface Lang extends PluginFile {
      * @return The formatted string
      */
     default public String format(Object... args) {
-        return String.format(this.value(), args);
+        return String.format(this.get(), args);
     }
 
     /**
@@ -123,7 +124,7 @@ public interface Lang extends PluginFile {
      * @return The formatting string value for plurals
      */
     default public String pluralFormat(int amount, Object... args) {
-        String repl = this.value();
+        String repl = this.get();
         repl = repl.replaceAll("\\{PLURALA (.*)\\|(.*)\\}", amount == 1 ? "is " + amount + " $1" : "are " + amount + " $2");
         repl = repl.replaceAll("\\{PLURAL (.*)\\|(.*)\\}", amount == 1 ? "$1" : "$2");
         return Lang.color(String.format(repl, args));
@@ -161,6 +162,12 @@ public interface Lang extends PluginFile {
             public FileDataType getConfig() {
                 throw new UnsupportedOperationException("An anonymous Lang does not have a FileDataType associated with it");
             }
+
+            @Override
+            public DataHolder<FileDataType> getData() {
+                throw new UnsupportedOperationException("Anonymous PluginFile classes do not have DataHolders");
+            }
+
         };
     }
 

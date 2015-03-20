@@ -27,6 +27,8 @@ import com.codelanx.codelanxlib.data.types.Yaml;
 import com.codelanx.codelanxlib.util.Paginator;
 import com.codelanx.codelanxlib.command.HelpCommand;
 import com.codelanx.codelanxlib.command.ReloadCommand; //Used in javadocs
+import com.codelanx.codelanxlib.config.DataHolder;
+import com.codelanx.codelanxlib.data.FileDataType;
 
 /**
  * Internal {@link Lang} enum for CodelanxLib
@@ -132,7 +134,7 @@ public enum InternalLang implements Lang {
      */
     FORMAT("format", "&f[&9CL-Lib&f] %s");
 
-    private static Yaml yaml;
+    private static final DataHolder<Yaml> DATA = new DataHolder<>(Yaml.class);
     private final String def;
     private final String path;
 
@@ -166,11 +168,8 @@ public enum InternalLang implements Lang {
     }
 
     @Override
-    public Yaml getConfig() {
-        if (InternalLang.yaml == null) {
-            InternalLang.yaml = this.init(Yaml.class);
-        }
-        return InternalLang.yaml;
+    public DataHolder<Yaml> getData() {
+        return InternalLang.DATA;
     }
 
 }

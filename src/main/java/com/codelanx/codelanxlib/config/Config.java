@@ -151,18 +151,6 @@ public interface Config extends PluginFile {
     }
 
     /**
-     * Gets the current object in memory
-     * 
-     * @since 0.1.0
-     * @version 0.1.0
-     * 
-     * @return The Object found at the relevant location
-     */
-    default public Object get() {
-        return this.getConfig().get(this.getPath(), this.getDefault());
-    }
-
-    /**
      * Sets a value in the {@link FileDataType}
      * 
      * @since 0.1.0
@@ -232,8 +220,13 @@ public interface Config extends PluginFile {
             }
 
             @Override
-            public FileDataType getConfig() {
+            public T getConfig() {
                 return file;
+            }
+
+            @Override
+            public DataHolder<FileDataType> getData() {
+                throw new UnsupportedOperationException("Anonymous PluginFile classes do not have DataHolders");
             }
             
         };

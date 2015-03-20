@@ -89,7 +89,33 @@ public interface PluginFile {
      * 
      * @return The internal {@link FileDataType} of this {@link Config}
      */
-    public FileDataType getConfig();
+    default public FileDataType getConfig() {
+        return this.getData().get(this);
+    }
+
+    /**
+     * Gets the current object in memory
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return The Object found at the relevant location
+     */
+    default public Object get() {
+        return this.getConfig().get(this.getPath(), this.getDefault());
+    }
+
+    /**
+     * Returns the relevant {@link DataHolder} for this file, which provides
+     * thread-safety for the {@link FileDataType} object initialization
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param <T> The type of the {@link FileDataType} associated with this file
+     * @return The {@link DataHolder} for this {@link PluginFile}
+     */
+    public <T extends FileDataType> DataHolder<T> getData();
 
     /**
      * Loads the {@link PluginFile} values from the configuration file.

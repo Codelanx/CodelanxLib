@@ -22,7 +22,6 @@ package com.codelanx.codelanxlib.config;
 import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.annotation.RelativePath;
-import com.codelanx.codelanxlib.data.FileDataType;
 import com.codelanx.codelanxlib.data.types.Yaml;
 import com.codelanx.codelanxlib.internal.InternalLang;
 
@@ -43,7 +42,7 @@ public enum DefaultLang implements Lang {
     NOT_POSITIVE("math.not-positive", "&9%d&f is not a positive number"),
     ;
 
-    private static Yaml yaml;
+    private static final DataHolder<Yaml> DATA = new DataHolder<>(Yaml.class);
     private final String path;
     private final String def;
 
@@ -58,21 +57,18 @@ public enum DefaultLang implements Lang {
     }
 
     @Override
-    public String getDefault() {
-        return this.def;
-    }
-
-    @Override
     public String getPath() {
         return this.path;
     }
 
     @Override
-    public FileDataType getConfig() {
-        if (DefaultLang.yaml == null) {
-            DefaultLang.yaml = this.init(Yaml.class);
-        }
-        return DefaultLang.yaml;
+    public String getDefault() {
+        return this.def;
+    }
+
+    @Override
+    public DataHolder<Yaml> getData() {
+        return DefaultLang.DATA;
     }
 
 }
