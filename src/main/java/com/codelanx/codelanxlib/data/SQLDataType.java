@@ -249,12 +249,14 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @version 0.1.0
      * 
      * @param set {@code true} to enable, {@code false} to disable
-     * @throws SQLException The connection cannot be established,
-     *                      or an access error occurred
      */
-    default public void setAutoCommit(boolean set) throws SQLException {
+    default public void setAutoCommit(boolean set) {
         if (this.getConnection() != null) {
-            this.getConnection().setAutoCommit(set);
+            try {
+                this.getConnection().setAutoCommit(set);
+            } catch (SQLException ex) {
+                Debugger.error(ex, "Error setting MySQL#setAutoCommit");
+            }
         }
     }
 
