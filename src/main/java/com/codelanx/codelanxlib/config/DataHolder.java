@@ -22,11 +22,13 @@ package com.codelanx.codelanxlib.config;
 import com.codelanx.codelanxlib.data.FileDataType;
 
 /**
- * Class description for {@link DataHolder}
+ * Holds a reference to a {@link FileDataType} and initializes it upon the first
+ * calling. This is meant for adding thread-safety to {@link PluginFile} calls
+ * to {@link PluginFile#getConfig()}
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author 1Rogue
- * @version 1.0.0
+ * @version 0.1.0
  * 
  * @param <D> The type of the relevant {@link FileDataType}
  */
@@ -35,10 +37,27 @@ public class DataHolder<D extends FileDataType> {
     private final Class<D> dataClass;
     private volatile D value = null;
 
+    /**
+     * Initializes this holder
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param dataClass A class representing the {@link FileDataType} type
+     */
     public DataHolder(Class<D> dataClass) {
         this.dataClass = dataClass;
     }
-    
+
+    /**
+     * Returns (and potentially initializes) the underlying {@link FileDataType}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param source The {@link PluginFile} calling this method
+     * @return The initialized {@link FileDataType}
+     */
     public D get(PluginFile source) {
         if (this.value == null) {
             synchronized (this) {
