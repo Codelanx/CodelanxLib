@@ -112,10 +112,9 @@ public interface PluginFile {
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param <T> The type of the {@link FileDataType} associated with this file
      * @return The {@link DataHolder} for this {@link PluginFile}
      */
-    public <T extends FileDataType> DataHolder<T> getData();
+    public DataHolder<? extends FileDataType> getData();
 
     /**
      * Loads the {@link PluginFile} values from the configuration file.
