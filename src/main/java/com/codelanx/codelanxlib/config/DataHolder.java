@@ -24,7 +24,8 @@ import com.codelanx.codelanxlib.data.FileDataType;
 /**
  * Holds a reference to a {@link FileDataType} and initializes it upon the first
  * calling. This is meant for adding thread-safety to {@link PluginFile} calls
- * to {@link PluginFile#getConfig()}
+ * to {@link PluginFile#getConfig()} for the initialization of the underlying
+ * {@link FileDataType} (thread-safe lazy initialization)
  *
  * @since 0.1.0
  * @author 1Rogue
