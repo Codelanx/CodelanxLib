@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  * 
  * @param <E> The type of the cached variable
  */
-public abstract class WeakCache<E> {
+public class WeakCache<E> {
 
     private volatile WeakReference<E> value;
     private Supplier<? extends E> update;
