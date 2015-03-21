@@ -19,9 +19,14 @@
  */
 package com.codelanx.codelanxlib.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -111,6 +116,43 @@ public final class Players {
         return loc.getWorld().getPlayers().stream().min((o1, o2) -> {
             return Double.compare(o1.getLocation().distanceSquared(loc), o2.getLocation().distanceSquared(loc));
         }).orElse(null);
+    }
+
+    /**
+     * Determines whether or not a location is harmful if a player was to be
+     * located there in the current instant of time (such as a teleport)
+     * 
+     * @deprecated Unfinished
+     * @param in
+     * @return
+     */
+    public static boolean isSafeLocation(final Location in) {
+        Location l = in.clone();
+        List<Predicate<Material>> conditions = new ArrayList<>(Arrays.asList(
+                m -> !Blocks.isHarmful(m),
+                m -> !m.isBlock()
+        ));
+        Predicate<Material> matcher = (m) -> conditions.stream().allMatch(p -> p.test(m));
+        for (; l.getBlockY() < in.getBlockY() + 2; l.add(0, 1, 0)) {
+            if (!matcher.test(Material.AIR)) {
+                
+            }
+        }
+        for (; l.getBlockY() > in.getBlockY() - 5; l.add(0, -1, 0)) {
+            if (!matcher.test(l.getBlock().getType())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private static boolean magnitudeContained(int relative, int origin, int magnitude) {
+        if (magnitude < 0) {
+            return relative > origin - magnitude;
+        } else {
+            return relative < origin + magnitude;
+        }
     }
 
 }
