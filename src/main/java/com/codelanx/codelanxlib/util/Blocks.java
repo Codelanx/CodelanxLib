@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib.util;
 
+import org.bukkit.Material;
 import org.bukkit.block.Sign;
 
 /**
@@ -48,6 +49,28 @@ public final class Blocks {
         Players.getPlayersInRange(65, s.getLocation()).keySet().forEach(p -> {
             p.sendSignChange(s.getLocation(), s.getLines());
         });
+    }
+
+    /**
+     * Returns whether or not a {@link Material} will harm a
+     * {@link org.bukkit.entity.Player Player} who comes into contact with it
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param mat The {@link Material} to compare
+     * @return {@code true} if the material will harm the player
+     */
+    public static boolean isHarmful(Material mat) {
+        switch(mat) {
+            case LAVA:
+            case CACTUS:
+            case FIRE:
+            case STATIONARY_LAVA:
+                return true;
+            default:
+                return false;
+        }
     }
 
 }
