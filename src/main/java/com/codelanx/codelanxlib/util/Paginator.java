@@ -91,7 +91,7 @@ public class Paginator {
      * @param content A {@link List} of strings to display
      */
     public Paginator(String title, int itemsPerPage, List<String> content) {
-        String s = InternalLang.PAGINATOR_BARCHAR.format();
+        String s = InternalLang.PAGINATOR_BARCHAR.formatAndColor();
         if (s.isEmpty()) {
             this.BAR = "------------------------------"
                     + "------------------------------";
@@ -108,10 +108,10 @@ public class Paginator {
         for (int i = 0; i < pageCount; i++) {
             StringBuilder sb = new StringBuilder();
             sb.append(this.formatTitle(title,
-                InternalLang.PAGINATOR_BARCOLOR.format(),
-                InternalLang.PAGINATOR_TITLECOLOR.format()));
+                InternalLang.PAGINATOR_BARCOLOR.formatAndColor(),
+                InternalLang.PAGINATOR_TITLECOLOR.formatAndColor()));
             sb.append('\n');
-            sb.append(InternalLang.PAGINATOR_PAGEFORMAT.format(i + 1, pageCount));
+            sb.append(InternalLang.PAGINATOR_PAGEFORMAT.formatAndColor(i + 1, pageCount));
             sb.append('\n');
             int stop = (i + 1) * itemsPerPage;
             if (stop > content.size()) {
@@ -120,7 +120,7 @@ public class Paginator {
             for (int w = i * itemsPerPage; w < stop; w++) {
                 sb.append(content.get(w)).append('\n');
             }
-            sb.append(this.formatFooter(InternalLang.PAGINATOR_BARCOLOR.format()));
+            sb.append(this.formatFooter(InternalLang.PAGINATOR_BARCOLOR.formatAndColor()));
             sb.append('\n');
             this.pages.add(sb.toString());
         }
@@ -157,7 +157,7 @@ public class Paginator {
     private String formatTitle(String title, String barcolor, String titlecolor) {
         String line = barcolor + this.BAR;
         int pivot = line.length() / 2;
-        String center = InternalLang.PAGINATOR_TITLECONTAINER.format(barcolor, titlecolor, title);
+        String center = InternalLang.PAGINATOR_TITLECONTAINER.formatAndColor(barcolor, titlecolor, title);
         return Lang.color(line.substring(0, pivot - center.length() / 2)
                 + center
                 + line.substring(0, pivot - center.length() / 2));
