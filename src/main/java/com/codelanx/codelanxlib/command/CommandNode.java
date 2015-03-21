@@ -220,11 +220,13 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         Exceptions.isTrue(tabd.stream().noneMatch(Lambdas::isNull), "Cannot return null elements from CommandNode#tabComplete", IllegalReturnException.class);
         back.addAll(tabd);
         if (!child.subcommands.isEmpty()) {
-            if (args.length < 1) {
-                back.addAll(child.subcommands.keySet());
-            } else if (args.length == 1) {
-                back.addAll(Reflections.matchClosestKeys(child.subcommands, args[0]));
+            List<String> valid = child.subcommands.entrySet().stream().filter(ent -> {
+                return ent.getValue().perms.stream().allMatch(p -> p.has(sender));
+            }).map(ent -> ent.getKey()).collect(Collectors.toList());
+            if (args.length == 1) {
+                valid.removeIf(s -> !s.startsWith(args[0]));
             }
+            back.addAll(valid);
         }
         return back;
     }
