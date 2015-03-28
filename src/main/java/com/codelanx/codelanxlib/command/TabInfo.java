@@ -28,11 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * Utility class for mapping command arguments to simplify basic uses of
@@ -204,10 +206,26 @@ public class TabInfo {
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @return A {@link List} of online player's names
+     * @return A {@link Supplier} for a {@link List} of online player's names
      */
     public static Supplier<List<String>> onlinePlayers() {
         return () -> Bukkit.getOnlinePlayers().stream().map(p -> p.getName()).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a {@link Supplier} which will return a string {@link List} of
+     * online players, filtered by the given predicate. This {@link Supplier}
+     * will contain only the elements which return {@code true} from the
+     * {@link Predicate}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param filter The {@link Predicate} to filter by
+     * @return A {@link Supplier} for a {@link List} of online player's names
+     */
+    public static Supplier<List<String>> onlinePlayers(Predicate<? super Player> filter) {
+        return () -> Bukkit.getOnlinePlayers().stream().filter(filter).map(p -> p.getName()).collect(Collectors.toList());
     }
 
     //Accepts anything (relevant) that will return a List<String> value
