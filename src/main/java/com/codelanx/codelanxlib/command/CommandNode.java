@@ -265,10 +265,11 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @return Usage for this {@link CommandNode}
      */
     public final String getUsage() {
+        String append = this.getName() + " " + this.usage();
         if (this.parent != null) {
-            return CommandNode.filterUsage(this.parent.getUsage()) + " " + this.usage();
+            return CommandNode.filterUsage(this.parent.getUsage()) + " " + append;
         }
-        return this.usage();
+        return append;
     }
 
     /**
@@ -280,7 +281,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @return The usage, defaults to {@link CommandNode#getName()}
      */
     protected String usage() {
-        return this.getName() + " ";
+        return "";
     }
 
     /**
