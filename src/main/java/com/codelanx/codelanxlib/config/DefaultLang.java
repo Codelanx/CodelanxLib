@@ -38,6 +38,7 @@ public enum DefaultLang implements Lang {
 
     PLAYER_NOT_ONLINE("player.not-online", "&9%s&f is not online!"),
     PLAYER_NEVER_PLAYED("player.never-played", "&9%s&f has not played on this server before!"),
+    UNKNOWN_PLAYER("player.unknown", "Unknown player: %s"),
     NOT_A_NUMBER("math.not-a-number", "&9%s&f is not a number!"),
     NOT_POSITIVE("math.not-positive", "&9%d&f is not a positive number"),
     ;
