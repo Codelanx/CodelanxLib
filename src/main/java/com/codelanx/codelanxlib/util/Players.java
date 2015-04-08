@@ -19,15 +19,24 @@
  */
 package com.codelanx.codelanxlib.util;
 
+import com.codelanx.codelanxlib.util.auth.UUIDFetcher;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.json.simple.parser.ParseException;
 
 /**
  * Represents utility functions to simplify or clarify common operations
@@ -122,36 +131,71 @@ public final class Players {
      * Determines whether or not a location is harmful if a player was to be
      * located there in the current instant of time (such as a teleport)
      * 
-     * @deprecated Unfinished
-     * @param in
-     * @return
+     * @param in The {@link Location} to check
+     * @return {@code true} if the location is safe
      */
     public static boolean isSafeLocation(final Location in) {
         Location l = in.clone();
-        List<Predicate<Material>> conditions = new ArrayList<>(Arrays.asList(
-                m -> !Blocks.isHarmful(m),
-                m -> !m.isBlock()
-        ));
-        Predicate<Material> matcher = (m) -> conditions.stream().allMatch(p -> p.test(m));
-        for (; l.getBlockY() < in.getBlockY() + 2; l.add(0, 1, 0)) {
-            if (!matcher.test(Material.AIR)) {
-                
+        boolean hole = false;
+        BiPredicate<Integer, Material> fallDmg = (i, m) -> i > 3 && m.isBlock();
+        int count = 0;
+        while (l.getBlockY() > 0) {
+            l.add(0, -1, 0);
+            count++;
+            Material type = l.getBlock().getType();
+            if (fallDmg.test(count, type)) {
+                return false;
+            }
+            if (Blocks.isHarmful(type)) {
+                return false;
+            }
+            if (type != Material.AIR && (type.isBlock() || type == Material.WATER || type == Material.STATIONARY_WATER)) {
+                break;
             }
         }
-        for (; l.getBlockY() > in.getBlockY() - 5; l.add(0, -1, 0)) {
-            if (!matcher.test(l.getBlock().getType())) {
-                return true;
+        l = in.clone();
+        for (int i = 0; i < 2; i++) {
+            Material type = l.getBlock().getType();
+            if (Blocks.isHarmful(type) || type.isBlock() || Blocks.isLiquid(type)) {
+                return false;
             }
+            l.add(0, 1, 0);
         }
-        return false;
+        while (l.getBlockY() < 255) {
+            Material type = l.getBlock().getType();
+            if (Blocks.isDangerousFromAbove(type)) {
+                return false;
+            } else if (type.isBlock()) {
+                break;
+            }
+            l.add(0, 1, 0);
+        }
+        return true;
     }
 
-
-    private static boolean magnitudeContained(int relative, int origin, int magnitude) {
-        if (magnitude < 0) {
-            return relative > origin - magnitude;
-        } else {
-            return relative < origin + magnitude;
+    /**
+     * Gets the most correct UUID for the {@link Player} in the least expensive
+     * way possible. Note however, if there is no UUID information about the
+     * player on the server (e.g., they never played before), it will send a
+     * blocking web request to Mojang's servers
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param name The name of the {@link Player}
+     * @return The {@link UUID} for that player
+     */
+    public static UUID getUUID(String name) {
+        if (Bukkit.getServer().getOnlineMode()) {
+            OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+            if (op.hasPlayedBefore()) {
+                return op.getUniqueId();
+            }
+        }
+        try {
+            return UUIDFetcher.getUUIDOf(name);
+        } catch (IOException | ParseException | InterruptedException ex) {
+            throw new IllegalArgumentException("Player does not exist!", ex);
         }
     }
 
