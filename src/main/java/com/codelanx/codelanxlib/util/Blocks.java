@@ -73,4 +73,48 @@ public final class Blocks {
         }
     }
 
+    /**
+     * Determines if a material will be liquid when placed
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param mat The {@link Material} to check
+     * @return {@code true} if lava or water (non-contained of any kind)
+     */
+    public static boolean isLiquid(Material mat) {
+        switch(mat) {
+            case LAVA:
+            case STATIONARY_LAVA:
+            case WATER:
+            case STATIONARY_WATER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Determines if a block would be dangerous if above a player's head with
+     * nothing but air inbetween, assuming no movement on part of the player
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param mat The {@link Material} to check
+     * @return {@code true} if a player could be harmed
+     */
+    public static boolean isDangerousFromAbove(Material mat) {
+        switch(mat) {
+            case LAVA:
+            case STATIONARY_LAVA:
+            case SAND:
+            case GRAVEL:
+            case ANVIL:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }
