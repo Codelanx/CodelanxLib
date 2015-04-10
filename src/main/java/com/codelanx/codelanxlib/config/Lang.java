@@ -292,7 +292,7 @@ public interface Lang extends PluginFile {
         String s = message.format(args);
         if (!s.isEmpty()) {
             //Use command until proper api is in place
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellRaw" + target.getName() + " " + s);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellRaw " + target.getName() + " " + s);
         }
     }
 
