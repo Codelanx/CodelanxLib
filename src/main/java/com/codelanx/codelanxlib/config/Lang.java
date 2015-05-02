@@ -24,6 +24,7 @@ import com.codelanx.codelanxlib.implementers.Formatted;
 import com.codelanx.codelanxlib.internal.InternalLang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -348,4 +349,34 @@ public interface Lang extends PluginFile {
         return raw.isEmpty() ? "" : (Character.toUpperCase(raw.charAt(0)) + raw.substring(1).toLowerCase() + (raw.contains(" ") ? punctuation : ""));
     }
 
+    //Convieniance methods
+
+    public static void sendMessage(OfflinePlayer target, Lang format, Lang message, Object... args) {
+        if (target.isOnline()) {
+            Lang.sendMessage((CommandSender) target.getPlayer(), format, message, args);
+        }
+    }
+    public static void sendMessage(OfflinePlayer target, Lang message, Object... args) {
+        if (target.isOnline()) {
+            Lang.sendMessage((CommandSender) target.getPlayer(), message.getFormat(), message, args);
+        }
+    }
+
+    public static void sendRawMessage(OfflinePlayer target, Lang message, Object... args) {
+        if (target.isOnline()) {
+            Lang.sendRawMessage((CommandSender) target.getPlayer(), message, args);
+        }
+    }
+
+    public static void sendMessage(Player target, Lang format, Lang message, Object... args) {
+        Lang.sendMessage((CommandSender) target, format, message, args);
+    }
+
+    public static void sendMessage(Player target, Lang message, Object... args) {
+        Lang.sendMessage((CommandSender) target, message.getFormat(), message, args);
+    }
+
+    public static void sendRawMessage(Player target, Lang message, Object... args) {
+        Lang.sendRawMessage((CommandSender) target, message, args);
+    }
 }
