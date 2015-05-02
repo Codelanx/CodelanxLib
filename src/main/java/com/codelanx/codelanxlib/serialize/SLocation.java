@@ -65,7 +65,7 @@ public class SLocation implements ConfigurationSerializable {
      * Allows constructing an {@link SLocation} from serialized parts
      * 
      * @since 0.1.0
-     * @version 0.1.0
+     * @version 0.1.0 
      * 
      * @param loc The relevant {@link Vector}
      * @param worldUUID The {@link UUID} of the world for this {@link SLocation}
@@ -91,8 +91,8 @@ public class SLocation implements ConfigurationSerializable {
     public SLocation(Map<String, Object> config) {
         this.loc = (Vector) config.get("location");
         this.uuid = UUID.fromString((String) config.get("world"));
-        this.pitch = (float) config.get("pitch");
-        this.yaw = (float) config.get("yaw");
+        this.pitch = config.containsKey("pitch") ? ((Number) config.get("pitch")).floatValue() : 0F;
+        this.yaw = config.containsKey("yaw") ? ((Number) config.get("yaw")).floatValue() : 0F;
     }
 
     /**
