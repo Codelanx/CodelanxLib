@@ -115,7 +115,7 @@ public class SQLite implements SQLDataType {
     @Override
     public boolean checkTable(String tableName) {
         return 1 == this.query(rs -> { return rs.next() ? rs.getByte(1) : 0; },
-                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", tableName);
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", tableName).getResponse();
     }
 
     /**
@@ -131,7 +131,7 @@ public class SQLite implements SQLDataType {
     @Override
     public boolean checkColumn(String tableName, String columnName) {
         return 1 == this.query(rs -> { return rs.next() ? rs.getByte(1) : 0; },
-                "SELECT COUNT(*) FROM sqlite_master WHERE type='index' AND name=?", columnName);
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='index' AND name=?", columnName).getResponse();
     }
     
     

@@ -76,7 +76,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @param params Any {@link PreparedStatement} parameters
      * @return The return value of the lambda
      */
-    default public <R> R query(SQLFunction<? super ResultSet, R> oper, String sql, Object... params) {
+    default public <R> SQLResponse<R> query(SQLFunction<? super ResultSet, R> oper, String sql, Object... params) {
         PreparedStatement stmt = null;
         R back = null;
         try {
@@ -92,7 +92,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
         } finally {
             Databases.close(stmt);
         }
-        return back;
+        return new SQLResponse<>(back);
     }
 
     /**
@@ -105,8 +105,11 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @param oper The operation to apply to the {@link ResultSet}
      * @param sql The SQL statement to execute
      * @param params Any {@link PreparedStatement} parameters
+     * @return An {@link SQLResponse} containing any required information
      */
-    default public void query(SQLConsumer<? super ResultSet> oper, String sql, Object... params) {
+    @SuppressWarnings("rawtypes")
+    default public SQLResponse query(SQLConsumer<? super ResultSet> oper, String sql, Object... params) {
+        SQLResponse resp = new SQLResponse();
         PreparedStatement stmt = null;
         try {
             stmt = this.prepare(sql);
@@ -121,6 +124,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
         } finally {
             Databases.close(stmt);
         }
+        return resp;
     }
 
     /**
@@ -133,7 +137,9 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @param params Any {@link PreparedStatement} parameters
      * @return 0 for no returned results, or the number of returned rows
      */
-    default public int update(String query, Object... params) {
+    @SuppressWarnings("rawtypes")
+    default public SQLResponse update(String query, Object... params) {
+        SQLResponse resp = new SQLResponse();
         PreparedStatement stmt = null;
         int back = 0;
         try {
@@ -149,7 +155,8 @@ public interface SQLDataType extends DataType, AutoCloseable {
                 Databases.close(stmt);
             }
         }
-        return back;
+        resp.setUpdatedRows(back);
+        return resp;
     }
 
     /**
@@ -293,34 +300,6 @@ public interface SQLDataType extends DataType, AutoCloseable {
     /**
      * Runs a {@link PreparedStatement} using the provided {@code sql} parameter.
      * The following {@link SQLFunction} will then be run using this constructed
-     * statement
-     * 
-     * @since 0.1.0
-     * @version 0.1.0
-     * 
-     * @param <R> The type of the return value
-     * @param oper The {@link SQLFunction} operation to use
-     * @param sql The sql statement to execute
-     * @return The returned result of the {@link SQLFunction}
-     */
-    default public <R> R operate(SQLFunction<? super PreparedStatement, R> oper, String sql) {
-        PreparedStatement stmt = null;
-        try {
-            stmt = this.prepare(sql);
-            return oper.apply(stmt);
-        } catch (SQLException ex) {
-            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
-        } finally {
-            if (stmt != null) {
-                Databases.close(stmt);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Runs a {@link PreparedStatement} using the provided {@code sql} parameter.
-     * The following {@link SQLFunction} will then be run using this constructed
      * statement. This is typically more-so for use in one-time executed
      * statements
      * 
@@ -333,14 +312,15 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * @param params Parameters to pass to the {@link PreparedStatement}
      * @return The returned result of the {@link SQLFunction}
      */
-    default public <R> R operate(SQLFunction<? super PreparedStatement, R> oper, String sql, Object... params) {
+    default public <R> SQLResponse<R> operate(SQLFunction<? super PreparedStatement, R> oper, String sql, Object... params) {
+        SQLResponse<R> back = new SQLResponse<>();
         PreparedStatement stmt = null;
         try {
             stmt = this.prepare(sql);
             for (int i = 0; i < params.length; i++) {
                 stmt.setObject(i + 1, params[i]);
             }
-            return oper.apply(stmt);
+            back.setResponse(oper.apply(stmt));
         } catch (SQLException ex) {
             Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
         } finally {
@@ -348,7 +328,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
                 Databases.close(stmt);
             }
         }
-        return null;
+        return back;
     }
 
     /**
