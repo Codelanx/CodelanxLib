@@ -134,7 +134,7 @@ public class SQLite implements SQLDataType {
     }
 
     @Override
-    public void toggleErrorOutput(boolean errors) {
+    public void setErrorOutput(boolean errors) {
         this.errors = errors;
     }
 

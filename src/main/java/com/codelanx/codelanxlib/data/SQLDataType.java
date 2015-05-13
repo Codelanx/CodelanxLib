@@ -88,7 +88,9 @@ public interface SQLDataType extends DataType, AutoCloseable {
             back = oper.apply(rs);
             Databases.close(rs);
         } catch (SQLException ex) {
-            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            if (this.isSendingErrorOutput()) {
+                Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            }
         } finally {
             Databases.close(stmt);
         }
@@ -120,7 +122,9 @@ public interface SQLDataType extends DataType, AutoCloseable {
             oper.accept(rs);
             Databases.close(rs);
         } catch (SQLException ex) {
-            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            if (this.isSendingErrorOutput()) {
+                Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            }
         } finally {
             Databases.close(stmt);
         }
@@ -149,7 +153,9 @@ public interface SQLDataType extends DataType, AutoCloseable {
             }
             back = stmt.executeUpdate();
         } catch (SQLException ex) {
-            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            if (this.isSendingErrorOutput()) {
+                Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            }
         } finally {
             if (stmt != null) {
                 Databases.close(stmt);
@@ -209,7 +215,9 @@ public interface SQLDataType extends DataType, AutoCloseable {
             this.commit();
             this.setAutoCommit(true);
         } catch (SQLException ex) {
-            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            if (this.isSendingErrorOutput()) {
+                Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            }
         } finally {
             if (stmt != null) {
                 Databases.close(stmt);
@@ -322,7 +330,9 @@ public interface SQLDataType extends DataType, AutoCloseable {
             }
             back.setResponse(oper.apply(stmt));
         } catch (SQLException ex) {
-            Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            if (this.isSendingErrorOutput()) {
+                Debugger.error(ex, "Error in SQL operation: %s", Databases.simpleErrorOutput(ex));
+            }
         } finally {
             if (stmt != null) {
                 Databases.close(stmt);
@@ -366,7 +376,7 @@ public interface SQLDataType extends DataType, AutoCloseable {
      * 
      * @param errors {@code false} to disable error output
      */
-    public abstract void toggleErrorOutput(boolean errors);
+    public abstract void setErrorOutput(boolean errors);
 
     /**
      * Determines whether or not to automatically print errors to the console
