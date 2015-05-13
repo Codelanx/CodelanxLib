@@ -26,12 +26,9 @@ import com.codelanx.codelanxlib.util.cache.Cache;
 import com.codelanx.codelanxlib.util.Databases;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instantiable MySQL connector
@@ -44,6 +41,7 @@ public class MySQL implements SQLDataType {
 
     private static byte connections = 0;
     private final ConnectionPrefs prefs;
+    private boolean errors = true;
     private Connection con = null;
 
     /**
@@ -204,6 +202,16 @@ public class MySQL implements SQLDataType {
                 this.setCurrentValue(set);
             }
         };
+    }
+
+    @Override
+    public void toggleErrorOutput(boolean errors) {
+        this.errors = errors;
+    }
+
+    @Override
+    public boolean isSendingErrorOutput() {
+        return this.errors;
     }
 
     /**

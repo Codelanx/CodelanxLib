@@ -357,4 +357,25 @@ public interface SQLDataType extends DataType, AutoCloseable {
         }
     }
 
+    /**
+     * Sets whether or not to print errors to the console automatically. This
+     * is defaulted to {@code true}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param errors {@code false} to disable error output
+     */
+    public abstract void toggleErrorOutput(boolean errors);
+
+    /**
+     * Determines whether or not to automatically print errors to the console
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return {@code true} if content is printed to the console.
+     */
+    public boolean isSendingErrorOutput();
+
 }

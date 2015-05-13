@@ -24,8 +24,6 @@ import com.codelanx.codelanxlib.logging.Debugger;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.bukkit.plugin.Plugin;
 
@@ -42,6 +40,7 @@ public class SQLite implements SQLDataType {
     protected static byte connections = 0;
     /** The {@link Connection} object */
     protected Connection con = null;
+    private boolean errors = true;
 
     /**
      * Opens a connection to the SQLite database. Make sure to call
@@ -133,8 +132,16 @@ public class SQLite implements SQLDataType {
         return 1 == this.query(rs -> { return rs.next() ? rs.getByte(1) : 0; },
                 "SELECT COUNT(*) FROM sqlite_master WHERE type='index' AND name=?", columnName).getResponse();
     }
-    
-    
+
+    @Override
+    public void toggleErrorOutput(boolean errors) {
+        this.errors = errors;
+    }
+
+    @Override
+    public boolean isSendingErrorOutput() {
+        return this.errors;
+    }
 
     /**
      * Closes the SQLite connection. Must be open first.
