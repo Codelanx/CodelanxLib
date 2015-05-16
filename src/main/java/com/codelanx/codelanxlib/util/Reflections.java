@@ -41,6 +41,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -351,6 +353,19 @@ public final class Reflections {
      */
     public static <T> List<T> nonFixedList(T... items) {
         return new ArrayList<>(Arrays.asList(items));
+    }
+
+    /**
+     * Gets the default {@link World} loaded by Bukkit
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @return Bukkit's default {@link World} object
+     */
+    public static World getDefaultWorld() {
+        Exceptions.illegalState(!Bukkit.getServer().getWorlds().isEmpty(), "No worlds loaded");
+        return Bukkit.getServer().getWorlds().get(0);
     }
 
 }
