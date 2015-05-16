@@ -89,7 +89,7 @@ public class WeakCache<E> {
      * @version 0.1.0
      */
     private synchronized void checkCache() {
-        if (this.value.get() == null) {
+        if (this.value == null || this.value.get() == null) {
             this.setNextCache();
         }
     }
@@ -114,7 +114,7 @@ public class WeakCache<E> {
      * @return The current value of this {@link WeakCache}
      */
     protected E getCurrentValue() {
-        return this.value.get();
+        return this.value == null ? null : this.value.get();
     }
 
     /**
