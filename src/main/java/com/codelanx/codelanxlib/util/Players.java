@@ -21,16 +21,10 @@ package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.util.auth.UUIDFetcher;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -188,7 +182,7 @@ public final class Players {
     public static UUID getUUID(String name) {
         if (Bukkit.getServer().getOnlineMode()) {
             OfflinePlayer op = Bukkit.getOfflinePlayer(name);
-            if (op.hasPlayedBefore()) {
+            if (op.hasPlayedBefore() || op.isOnline()) {
                 return op.getUniqueId();
             }
         }
@@ -197,6 +191,22 @@ public final class Players {
         } catch (IOException | ParseException | InterruptedException ex) {
             throw new IllegalArgumentException("Player does not exist!", ex);
         }
+    }
+
+    /**
+     * Returns whether or not a player by the specified {@code name} parameter
+     * has played on this server before, or is currently online, thus resulting
+     * in having a correct {@link UUID}
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param name The player name to look for
+     * @return {@code true} if the UUID will be correct 
+     */
+    public static boolean hasCorrectOfflineUUID(String name) {
+        OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+        return op.hasPlayedBefore() || op.isOnline();
     }
 
 }
