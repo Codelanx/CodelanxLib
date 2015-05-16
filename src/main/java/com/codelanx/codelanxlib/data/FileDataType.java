@@ -19,6 +19,8 @@
  */
 package com.codelanx.codelanxlib.data;
 
+import com.codelanx.codelanxlib.data.types.Json;
+import com.codelanx.codelanxlib.data.types.Yaml;
 import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.logging.Logging;
 import java.io.File;
@@ -130,6 +132,27 @@ public interface FileDataType extends DataType {
                 | IllegalArgumentException
                 | InvocationTargetException ex) {
             Debugger.error(ex, "Error parsing data file");
+        }
+        return null;
+    }
+
+    /**
+     * Returns a {@link Class} value representative of a {@link FileDataType},
+     * or {@code null} if none is matched
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param in The string to parse
+     * @return A relevant {@link FileDataType} class, or {@code null}
+     */
+    public static Class<? extends FileDataType> fromString(String in) {
+        in = in.toLowerCase();
+        switch (in) {
+            case "json":
+                return Json.class;
+            case "yaml":
+                return Yaml.class;
         }
         return null;
     }
