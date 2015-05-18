@@ -300,7 +300,7 @@ public class JoinCommand extends SubCommand<MyChannelPlugin> {
 
 Plugin files are the foundation of building interfaces to be applied for
 interacting with a flat-file format. As of the current release, there are two
-provided interfaces that use this interfacing, which are the [Config](#config)
+provided interfaces that use this, which are the [Config](#config)
 and [Lang](#lang) interfaces.
 
 Typically, the `PluginFile` interface should be applied to an enum, to allow for
@@ -330,7 +330,7 @@ public enum MyPluginFile implements PluginFile {
     EXAMPLE_DOUBLE("example.double", 3.14),
     EXAMPLE_LIST("example.list", new ArrayList<>());
 
-    private static Yaml yaml; //FileDataType, you'll see this later!
+    private static final DataHolder<Yaml> DATA = new DataHolder<>(Yaml.class); //FileDataType, you'll see this later!
     private final String path;
     private final Object def;
 
@@ -353,11 +353,8 @@ public enum MyPluginFile implements PluginFile {
     }
 
     @Override
-    public Yaml getConfig() {
-        if (MyPluginFile.yaml == null) {
-            MyPluginFile.yaml = this.init(Yaml.class); //Lazy initialization
-        }
-        return MyPluginFile.yaml;
+    public DataHolder<Yaml> getData() {
+        return DATA;
     }
 
 }
