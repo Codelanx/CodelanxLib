@@ -62,7 +62,7 @@ public final class Players {
                     double d = p.getLocation().distanceSquared(origin);
                     if (d <= range) {
                         back.put(p, d);
-    }
+                    }
                 });
         return back;
     }
