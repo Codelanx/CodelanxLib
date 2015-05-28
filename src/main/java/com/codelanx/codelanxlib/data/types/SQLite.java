@@ -51,7 +51,7 @@ public class SQLite implements SQLDataType {
      * @version 0.1.0
      *
      * @param plugin The {@link Plugin} with the data folder to use
-     * @return The Connection object
+     * @return The established {@link Connection}
      * @throws SQLException If the connection fails to open
      */
     public Connection open(Plugin plugin) throws SQLException {
@@ -68,7 +68,7 @@ public class SQLite implements SQLDataType {
      *
      * @param plugin The {@link Plugin} with the data folder to use
      * @param name The name of the database file
-     * @return The Connection object
+     * @return The established {@link Connection}
      * @throws SQLException If the connection fails to open
      */
     public Connection open(Plugin plugin, String name) throws SQLException {
@@ -85,19 +85,36 @@ public class SQLite implements SQLDataType {
      *
      * @param folder A {@link File} pointing to a data folder for the database
      * @param name The name of the database file
-     * @return The Connection object
+     * @return The established {@link Connection}
      * @throws SQLException If the connection fails to open
      */
     public Connection open(File folder, String name) throws SQLException {
-        if (folder == null || !folder.exists() || !folder.isDirectory()) {
-            throw new IllegalArgumentException("Folder must be a non-null, existing directory");
+        this.open(new File(folder, name + ".db"));
+        return this.con;
+    }
+
+    /**
+     * Opens a connection to the SQLite database. Make sure to call
+     * {@link SQLite#close()} after you are finished working with the database
+     * for your segment of your code.
+     * 
+     * @since 0.2.0
+     * @version 0.2.0
+     * 
+     * @param database A {@link File} that represents the database location
+     * @return The established {@link Connection}
+     * @throws SQLException If the connection fails to open
+     */
+    public Connection open(File database) throws SQLException {
+        if (database == null || database.isDirectory() || !database.exists()) {
+            throw new IllegalArgumentException("Folder must be a non-null, existing file!");
         }
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException ex) {
             Debugger.error(ex, "Error loading SQLite drivers");
         }
-        this.con = DriverManager.getConnection("jdbc:sqlite:" + folder.getAbsolutePath() + File.separatorChar + name + ".db");
+        this.con = DriverManager.getConnection("jdbc:sqlite:" + database.getAbsolutePath());
         Debugger.print("Open SQLite connections: %d", ++connections);
         return this.con;
     }
