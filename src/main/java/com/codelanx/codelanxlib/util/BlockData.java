@@ -124,10 +124,7 @@ public class BlockData {
         if (this.mat != other.mat) {
             return false;
         }
-        if (this.data == other.data || this.data < 0 || other.data < 0) {
-            return true;
-        }
-        return false;
+        return this.data == other.data || this.data < 0 || other.data < 0;
     }
 
     
