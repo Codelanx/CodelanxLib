@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
@@ -337,6 +338,24 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     public final void addChild(CommandNode<? extends Plugin>... children) {
         for (CommandNode<? extends Plugin> ccmd : children) {
             ccmd.setParent(this);
+        }
+    }
+
+    /**
+     * Adds new child subcommands to this {@link CommandNode}
+     * 
+     * @since 0.2.0
+     * @version 0.2.0
+     * 
+     * @param children Any {@link CommandNode CommandNodes} to add
+     */
+    @SafeVarargs
+    public final void addChild(Function<E, CommandNode<? extends Plugin>>... children) {
+        for (Function<E, CommandNode<? extends Plugin>> child : children) {
+            CommandNode<? extends Plugin> ccmd = child.apply(this.plugin);
+            if (ccmd != null) {
+                ccmd.setParent(this);
+            }
         }
     }
 
