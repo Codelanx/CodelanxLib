@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib.util;
 
+import java.util.Objects;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -103,4 +104,31 @@ public class BlockData {
         return new BlockData(mat, data);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 41 * hash + Objects.hashCode(this.mat);
+        hash = 41 * hash + this.data;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BlockData other = (BlockData) obj;
+        if (this.mat != other.mat) {
+            return false;
+        }
+        if (this.data == other.data || this.data < 0 || other.data < 0) {
+            return true;
+        }
+        return false;
+    }
+
+    
 }
