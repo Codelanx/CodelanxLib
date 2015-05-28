@@ -39,7 +39,7 @@ import org.bukkit.Bukkit;
  */
 public final class Scheduler {
 
-    private static final List<ScheduledFuture<?>> executives = new ArrayList<>();
+    private static final List<ScheduledFuture<?>> executives = new ArrayList<>(); //TODO implement a cache pattern
     private static ScheduledExecutorService es;
 
     private Scheduler() {
@@ -76,6 +76,19 @@ public final class Scheduler {
         ScheduledFuture<?> sch = Scheduler.getService().schedule(r, delay, TimeUnit.SECONDS);
         Scheduler.executives.add(sch);
         return sch;
+    }
+
+    /**
+     * Immediately runs a single asynchronous task
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
+     * 
+     * @param r The runnable to execute
+     * @return The scheduled Task
+     */
+    public static ScheduledFuture<?> runAsyncTask(Runnable r) {
+        return Scheduler.runAsyncTask(r, 0);
     }
 
     /**
