@@ -42,7 +42,8 @@ public class BlockData {
      * @version 0.2.0
      * 
      * @param mat The {@link Material} value
-     * @param data A {@code byte} representing an internal data value 
+     * @param data A {@code byte} representing an internal data value, set to
+     *             negative to match all data values
      */
     public BlockData(Material mat, Number data) {
         this.mat = mat;
@@ -68,13 +69,15 @@ public class BlockData {
      */
     public ItemStack toItemStack() {
         ItemStack back = new ItemStack(this.mat);
-        back.getData().setData(this.data);
+        if (this.data > 0) {
+            back.getData().setData(this.data);
+        }
         return back;
     }
 
     @Override
     public String toString() {
-        return this.mat.toString() + ":" + this.data;
+        return this.mat.toString() + ":" + (this.data < 0 ? "*" : this.data);
     }
 
     /**
@@ -90,7 +93,12 @@ public class BlockData {
         String[] raw = in.split(":");
         Validate.isTrue(raw.length == 2, "Malformed string passed to BlockData#fromString");
         Material mat = Material.matchMaterial(raw[0]);
-        byte data = Byte.valueOf(raw[1]);
+        byte data;
+        if (raw[1].equals("*")) {
+            data = -1;
+        } else {
+            data = Byte.valueOf(raw[1]);
+        }
         Validate.notNull(mat);
         return new BlockData(mat, data);
     }
