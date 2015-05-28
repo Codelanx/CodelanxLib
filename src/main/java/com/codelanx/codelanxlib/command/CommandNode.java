@@ -59,7 +59,7 @@ import org.bukkit.plugin.SimplePluginManager;
  *
  * @since 0.1.0
  * @author 1Rogue
- * @version 0.1.0
+ * @version 0.2.0
  *
  * @param <E> The type of the {@link Plugin} associated with this
  *            {@link CommandNode}
