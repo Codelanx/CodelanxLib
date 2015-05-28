@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -366,6 +367,27 @@ public final class Reflections {
     public static World getDefaultWorld() {
         Exceptions.illegalState(!Bukkit.getServer().getWorlds().isEmpty(), "No worlds loaded");
         return Bukkit.getServer().getWorlds().get(0);
+    }
+
+    /**
+     * Provides a way of mutating an object (into a new result) without worrying
+     * about null safety. This is particularly useful in constructor
+     * overloading, where null safety cannot be determined before having
+     * to call upon the variable
+     * 
+     * @since 0.2.0
+     * @version 0.2.0
+     * 
+     * @param <I> The potentially null variable to be mutated
+     * @param <R> The expected result type
+     * @param in The variable to evaluate for a mutation
+     * @param act The action to take on the variable
+     * @return The expected result
+     * @throws IllegalArgumentException if the passed parameter is null
+     */
+    public static <I, R> R nullSafeMutation(I in, Function<I, R> act) {
+        Validate.notNull(null);
+        return act.apply(in);
     }
 
 }
