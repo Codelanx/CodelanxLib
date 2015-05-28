@@ -49,6 +49,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 
@@ -688,6 +689,19 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         PluginCommand cmd = this.plugin.getServer().getPluginCommand(this.getName());
         Validate.notNull(cmd, "Attempted to register a non-existant command");
         cmd.setExecutor(this);
+    }
+
+    /**
+     * Registers this class as a {@link Listener} to Bukkit, providing that this
+     * command node implements the {@link Listener} class
+     * 
+     * @since 0.2.0
+     * @version 0.2.0
+     */
+    protected final void registerAsListener() {
+        if (this instanceof Listener) {
+            Bukkit.getServer().getPluginManager().registerEvents((Listener) this, this.plugin);
+        }
     }
 
     /**
