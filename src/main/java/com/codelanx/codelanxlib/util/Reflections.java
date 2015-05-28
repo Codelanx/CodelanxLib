@@ -386,7 +386,7 @@ public final class Reflections {
      * @throws IllegalArgumentException if the passed parameter is null
      */
     public static <I, R> R nullSafeMutation(I in, Function<I, R> act) {
-        Validate.notNull(null);
+        Validate.notNull(in);
         return act.apply(in);
     }
 
