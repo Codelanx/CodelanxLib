@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack;
  * @author 1Rogue
  * @version 0.2.0
  */
-public class BlockData {
+public class BlockData implements Comparable<BlockData> {
 
     private final Material mat;
     private final byte data;
@@ -127,5 +127,16 @@ public class BlockData {
         return this.data == other.data || this.data < 0 || other.data < 0;
     }
 
+    @Override
+    public int compareTo(BlockData o) {
+        if (this.mat.ordinal() != o.mat.ordinal()) {
+            return this.mat.ordinal() - o.mat.ordinal();
+        } else {
+            if (this.data < 0 || o.data < 0) {
+                return 0;
+            }
+            return this.data - o.data;
+        }
+    }
     
 }
