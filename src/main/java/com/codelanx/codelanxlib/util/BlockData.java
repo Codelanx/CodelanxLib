@@ -124,7 +124,7 @@ public class BlockData implements Comparable<BlockData> {
         if (this.mat != other.mat) {
             return false;
         }
-        return this.data == other.data || this.data < 0 || other.data < 0;
+        return this.data == other.data || this.data < 0 || other.data < 0; //TODO: remove comparison exception?
     }
 
     @Override
