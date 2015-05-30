@@ -92,15 +92,22 @@ public class BlockData implements Comparable<BlockData> {
      */
     public static BlockData fromString(String in) {
         String[] raw = in.split(":");
-        Validate.isTrue(raw.length == 2, "Malformed string passed to BlockData#fromString");
-        Material mat = Material.matchMaterial(raw[0]);
-        byte data;
-        if (raw[1].equals("*")) {
-            data = -1;
-        } else {
-            data = Byte.valueOf(raw[1]);
+        byte data = 0;
+        Material mat;
+        switch (raw.length) {
+            case 2:
+                if (raw[1].equals("*")) {
+                    data = -1;
+                } else {
+                    data = Byte.valueOf(raw[1]);
+                }
+            case 1:
+                mat = Material.matchMaterial(raw[0]);
+                Validate.notNull(mat);
+                break;
+            default:
+                throw new IllegalArgumentException("Malformed string passed to BlockData#fromString: '" + in + "'");
         }
-        Validate.notNull(mat);
         return new BlockData(mat, data);
     }
 
