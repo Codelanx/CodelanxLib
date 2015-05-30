@@ -78,7 +78,7 @@ public class BlockData implements Comparable<BlockData> {
 
     @Override
     public String toString() {
-        return this.mat.toString() + ":" + (this.data < 0 ? "*" : this.data);
+        return this.mat.toString() + (this.data != 0 ? ":" + (this.data < 0 ? "*" : this.data) : "");
     }
 
     /**
@@ -87,8 +87,8 @@ public class BlockData implements Comparable<BlockData> {
      * @since 0.2.0
      * @version 0.2.0
      * 
-     * @param in
-     * @return 
+     * @param in The string to parse
+     * @return The relevant {@link BlockData}
      */
     public static BlockData fromString(String in) {
         String[] raw = in.split(":");
