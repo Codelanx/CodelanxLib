@@ -58,9 +58,10 @@ public final class Players {
      */
     public static Map<Player, Double> getPlayersInRange(int range, Location origin) {
         Map<Player, Double> back = new HashMap<>();
+        int frange = range * range;
         origin.getWorld().getPlayers().forEach((p) -> {
                     double d = p.getLocation().distanceSquared(origin);
-                    if (d <= range) {
+                    if (d <= frange) {
                         back.put(p, d);
                     }
                 });
@@ -124,6 +125,9 @@ public final class Players {
     /**
      * Determines whether or not a location is harmful if a player was to be
      * located there in the current instant of time (such as a teleport)
+     * 
+     * @since 0.1.0
+     * @version 0.1.0
      * 
      * @param in The {@link Location} to check
      * @return {@code true} if the location is safe
