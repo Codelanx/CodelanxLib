@@ -432,7 +432,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     /**
      * Compares {@link CommandNode} objects by command name via
      * {@link CommandNode#getName()}, or their parent objects if possible
-     * <br><br> {inheritDoc}
+     * <br><br> {@inheritDoc}
      *
      * @since 0.1.0
      * @version 0.1.0
