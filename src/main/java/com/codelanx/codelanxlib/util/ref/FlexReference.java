@@ -105,7 +105,7 @@ public class FlexReference<T> {
         return this.holder.enqueue();
     }
     
-    protected static class ReferenceHolder<T> {
+    static class ReferenceHolder<T> {
         
         private T in;
         private final Reference<? extends T> ref;
