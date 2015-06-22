@@ -63,9 +63,11 @@ public class Single<E> {
      * @version 0.0.1
      *  
      * @param val The value to set
+     * @return This {@link Single} instance (chained)
      */
-    public void setValue(E val) {
+    public Single<E> setValue(E val) {
         this.val = val;
+        return this;
     }
 
 }
