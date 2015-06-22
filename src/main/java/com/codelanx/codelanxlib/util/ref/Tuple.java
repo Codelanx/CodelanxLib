@@ -24,7 +24,7 @@ package com.codelanx.codelanxlib.util.ref;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.2.0
  * 
  * @param <E> The first object type
  * @param <T> The second object type

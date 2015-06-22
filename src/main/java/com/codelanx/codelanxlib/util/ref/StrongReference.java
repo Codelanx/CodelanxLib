@@ -60,7 +60,7 @@ public class StrongReference<E> {
      * Sets the stored value
      * 
      * @since 0.0.1
-     * @version 0.0.1
+     * @version 0.2.0
      *  
      * @param val The value to set
      * @return This {@link StrongReference} instance (chained)

@@ -26,7 +26,7 @@ package com.codelanx.codelanxlib.util.ref;
  *
  * @since 0.1.0
  * @author 1Rogue
- * @version 0.1.0
+ * @version 0.2.0
  * 
  * @param <T> The type of the boxed item
  */
