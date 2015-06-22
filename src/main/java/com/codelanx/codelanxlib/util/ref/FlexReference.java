@@ -77,6 +77,16 @@ public class FlexReference<T> {
     }
 
     /**
+     * Clears this reference, or unsets any strong references
+     * 
+     * @since 0.2.0
+     * @version 0.2.0
+     */
+    public void clear() {
+        this.holder.clear();
+    }
+
+    /**
      * Returns whether or not the object is enqueued. If the object is a strong
      * reference, then this method always returns {@code false}
      * 
