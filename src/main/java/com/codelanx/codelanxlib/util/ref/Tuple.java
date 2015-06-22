@@ -17,7 +17,7 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.util.number;
+package com.codelanx.codelanxlib.util.ref;
 
 /**
  * Represents a wrapper class for a pair of objects

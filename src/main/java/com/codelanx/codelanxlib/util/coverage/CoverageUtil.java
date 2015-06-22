@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.util.coverage;
 import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.logging.Logging;
 import com.codelanx.codelanxlib.util.Reflections;
-import com.codelanx.codelanxlib.util.number.StrongReference;
+import com.codelanx.codelanxlib.util.ref.StrongReference;
 import com.google.common.io.Files;
 import java.io.BufferedReader;
 import java.io.File;

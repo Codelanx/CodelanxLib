@@ -17,57 +17,27 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.util.number;
+package com.codelanx.codelanxlib.util.ref;
 
 /**
- * Holds a single strong reference to a stored object
+ * Used for enclosing a single return value, such as a returned task from a
+ * scheduler. Should not be exposed beyond being a local member, as the only
+ * field of the class is both public and mutable.
  *
- * @since 0.0.1
+ * @since 0.1.0
  * @author 1Rogue
- * @version 0.2.0
+ * @version 0.1.0
  * 
- * @param <E> The type of the boxed item
+ * @param <T> The type of the boxed item
  */
-public class StrongReference<E> {
-
-    private E val;
+public class Box<T> {
 
     /**
-     * Constructor. Assigns the value to an internal field
+     * The value of the {@code Box<T>}
      * 
-     * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @param val The value to set
+     * @since 0.1.0
+     * @version 0.1.0
      */
-    public StrongReference(E val) {
-        this.val = val;
-    }
-
-    /**
-     * Retrieves the stored value
-     * 
-     * @since 0.0.1
-     * @version 0.0.1
-     * 
-     * @return The stored object
-     */
-    public E getValue() {
-        return this.val;
-    }
-
-    /**
-     * Sets the stored value
-     * 
-     * @since 0.0.1
-     * @version 0.0.1
-     *  
-     * @param val The value to set
-     * @return This {@link StrongReference} instance (chained)
-     */
-    public StrongReference<E> setValue(E val) {
-        this.val = val;
-        return this;
-    }
+    public volatile T value;
 
 }
