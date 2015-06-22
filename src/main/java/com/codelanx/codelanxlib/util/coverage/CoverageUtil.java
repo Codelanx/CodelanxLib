@@ -22,7 +22,7 @@ package com.codelanx.codelanxlib.util.coverage;
 import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.logging.Logging;
 import com.codelanx.codelanxlib.util.Reflections;
-import com.codelanx.codelanxlib.util.number.Single;
+import com.codelanx.codelanxlib.util.number.StrongReference;
 import com.google.common.io.Files;
 import java.io.BufferedReader;
 import java.io.File;
@@ -411,7 +411,7 @@ public final class CoverageUtil {
         sb.append("\n\n");
         StringBuilder mb = new StringBuilder();
         mb.append("Hit markers [ class;method;line-number ]:\n");
-        Single<Integer> hit = new Single<>(0);
+        StrongReference<Integer> hit = new StrongReference<>(0);
         mark.getClassMarkers().forEach((c) -> {
             c.getMethodMarkers().forEach((m) -> {
                 m.getMarkers().stream().filter(m::isHit).forEach((mk) -> {
@@ -422,7 +422,7 @@ public final class CoverageUtil {
         });
         mb.append('\n');
         mb.append("Missed markers [ class;method;missed-amount ]:\n");
-        Single<Integer> missed = new Single<>(0);
+        StrongReference<Integer> missed = new StrongReference<>(0);
         mark.getClassMarkers().forEach((c) -> {
             c.getMethodMarkers().forEach((m) -> {
                 mb.append(String.format("%s;%s;%d\n", c.getName(), m.getName(), m.getMissed()));

@@ -20,15 +20,15 @@
 package com.codelanx.codelanxlib.util.number;
 
 /**
- * Holds a single reference to a stored object
+ * Holds a single strong reference to a stored object
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.0.1
+ * @version 0.2.0
  * 
  * @param <E> The type of the boxed item
  */
-public class Single<E> {
+public class StrongReference<E> {
 
     private E val;
 
@@ -40,7 +40,7 @@ public class Single<E> {
      * 
      * @param val The value to set
      */
-    public Single(E val) {
+    public StrongReference(E val) {
         this.val = val;
     }
 
@@ -63,9 +63,9 @@ public class Single<E> {
      * @version 0.0.1
      *  
      * @param val The value to set
-     * @return This {@link Single} instance (chained)
+     * @return This {@link StrongReference} instance (chained)
      */
-    public Single<E> setValue(E val) {
+    public StrongReference<E> setValue(E val) {
         this.val = val;
         return this;
     }
