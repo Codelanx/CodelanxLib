@@ -848,10 +848,10 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * 
      * @return The {@link HelpCommand} attached to this node
      */
-    public HelpCommand<?> getHelpOutput() {
+    public HelpCommand<E> getHelpOutput() {
         CommandNode<? extends Plugin> child = this.getChild("help");
         if (child instanceof HelpCommand) {
-            return (HelpCommand) child;
+            return (HelpCommand<E>) child;
         }
         return null;
     }
