@@ -193,7 +193,7 @@ public final class Players {
         try {
             return UUIDFetcher.getUUIDOf(name);
         } catch (IOException | ParseException | InterruptedException ex) {
-            throw new IllegalArgumentException("Player does not exist!", ex);
+            throw new IllegalArgumentException("Cannot locate UUID of player '" + name + "'", ex);
         }
     }
 
