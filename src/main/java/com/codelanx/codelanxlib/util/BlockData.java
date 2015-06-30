@@ -102,7 +102,7 @@ public class BlockData implements Comparable<BlockData> {
                     data = Byte.valueOf(raw[1]);
                 }
             case 1:
-                mat = Material.matchMaterial(raw[0]);
+                mat = Material.matchMaterial(raw[0].toUpperCase());
                 Validate.notNull(mat);
                 break;
             default:
