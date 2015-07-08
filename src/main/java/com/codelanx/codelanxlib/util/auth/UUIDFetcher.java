@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -131,7 +132,12 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
             HttpURLConnection connection = UUIDFetcher.createConnection();
             UUIDFetcher.writeBody(connection, body);
             if (connection.getResponseCode() == 429 && this.rateLimiting) {
-                log.warning("[UUIDFetcher] Rate limit hit! Waiting 10 minutes until continuing conversion...");
+                String out = "[UUIDFetcher] Rate limit hit! Waiting 10 minutes until continuing conversion...";
+                if (log != null) {
+                    log.warning(out);
+                } else {
+                    Bukkit.getLogger().warning(out);
+                }
                 Thread.sleep(TimeUnit.MINUTES.toMillis(10));
                 connection = UUIDFetcher.createConnection();
                 UUIDFetcher.writeBody(connection, body);
