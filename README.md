@@ -509,7 +509,7 @@ public enum MyPluginFile implements Lang {
      */
     FORMAT("format", "[&9MyAwesomePlugin&f] %s");
 
-    private static Yaml yaml; //Note you can use other FileDataTypes
+    private static final DataHolder<Yaml> DATA = new DataHolder<>(Yaml.class); //Note you can use other FileDataTypes
     private final String path;
     private final String def;
 
@@ -537,11 +537,8 @@ public enum MyPluginFile implements Lang {
     }
 
     @Override
-    public Yaml getConfig() {
-        if (MyPluginFile.yaml == null) {
-            MyPluginFile.yaml = this.init(Yaml.class); //Lazy initialization
-        }
-        return MyPluginFile.yaml;
+    public DataHolder<Yaml> getData() {
+        return MyPluginFile.DATA;
     }
 
 }
