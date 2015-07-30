@@ -21,6 +21,7 @@ package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.annotation.PluginClass;
 import com.codelanx.codelanxlib.logging.Debugger;
+import com.codelanx.codelanxlib.logging.Logging;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
 import com.google.common.primitives.Primitives;
 import java.io.BufferedReader;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -390,4 +392,49 @@ public final class Reflections {
         return act.apply(in);
     }
 
+    /**
+     * Performs an operation with a lock, saving room by not requiring a lot of
+     * {@code try-finally} blocks
+     * 
+     * @since 0.2.0
+     * @version 0.2.0
+     * 
+     * @param lock The {@link Lock} to utilize
+     * @param operation The code to be run
+     */
+    public static void operateLock(Lock lock, Runnable operation) {
+        lock.lock();
+        try {
+            operation.run();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * Prints out the stack history 1 call back
+     * 
+     * @since 0.2.0
+     * @version 0.2.0
+     */
+    public static void trace() {
+        trace(1);
+    }
+
+    /**
+     * Prints out the stack history {@code length} calls back
+     * 
+     * @since 0.2.0
+     * @version 0.2.0
+     * 
+     * @param length The number of calls back on the stack to print out
+     */
+    public static void trace(int length) {
+        StackTraceElement[] elems = Thread.currentThread().getStackTrace();
+        StringBuilder sb = new StringBuilder("Callback history:");
+        for (int i = 2; i < elems.length && i < length + 2; i++) {
+            sb.append(String.format("\n\tCalled from:\t%s#%s:%d\t\tFile: %s", elems[i].getClassName(), elems[i].getMethodName(), elems[i].getLineNumber(), elems[i].getFileName()));
+        }
+        Logging.info(sb.toString());
+    }
 }
