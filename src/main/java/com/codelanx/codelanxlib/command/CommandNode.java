@@ -138,17 +138,18 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     @Override
     public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Exceptions.illegalPluginAccess(Reflections.accessedFromBukkit(), "Only bukkit may call this method");
-        CommandNode<? extends Plugin> child = this.getClosestChild(args);
+        CommandNode<? extends Plugin> child = this;
         int start = 0;
-        if (args.length > 0) {
-            for (int i = 0; i < args.length; i++) {
-                if (args[i].equalsIgnoreCase(child.getName())) {
-                    start = i + 1;
-                    break;
-                }
+        for (String s : args) {
+            CommandNode<? extends Plugin> next = child.getChild(s);
+            if (next != null) {
+                child = next;
+                start++;
+            } else {
+                break;
             }
-            args = Arrays.copyOfRange(args, start, args.length);
         }
+        args = Arrays.copyOfRange(args, start, args.length);
         CommandStatus stat;
         try {
             stat = this.verifyState(child, sender, args);
