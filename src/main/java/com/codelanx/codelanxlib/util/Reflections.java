@@ -288,7 +288,7 @@ public final class Reflections {
     public static <T> T defaultPrimitiveValue(Class<T> c) {
         if (c.isPrimitive() || Primitives.isWrapperType(c)) {
             c = Primitives.unwrap(c);
-            T back;
+            T back = null;
             if (c == boolean.class) {
                 back = c.cast(false);
             } else if (c == char.class) { //god help me
@@ -306,6 +306,7 @@ public final class Reflections {
             } else if (c == byte.class) {
                 back = c.cast((byte) -1);
             }
+            return back;
         }
         return null;
     }
