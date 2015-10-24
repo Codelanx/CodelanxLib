@@ -125,7 +125,7 @@ public final class Reflections {
      * @return {@code true} if accessed from this class
      */
     public static boolean accessedFrom(Class<?> clazz) {
-        return Reflections.getCaller(2).getClassName().equals(clazz.getName());
+        return Reflections.getCaller(1).getClassName().equals(clazz.getName());
     }
 
     /**
@@ -137,7 +137,7 @@ public final class Reflections {
      * @return {@code true} if Bukkit is the direct invoker of the method
      */
     public static boolean accessedFromBukkit() {
-        return Reflections.getCaller(2).getClassName().matches("org\\.bukkit\\..*");
+        return Reflections.getCaller(1).getClassName().matches("org\\.bukkit\\..*");
     }
 
     /**
