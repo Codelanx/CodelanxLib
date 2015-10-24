@@ -137,7 +137,7 @@ public final class Reflections {
      * @return {@code true} if Bukkit is the direct invoker of the method
      */
     public static boolean accessedFromBukkit() {
-        return Reflections.getCaller(1).getClassName().matches("org\\.bukkit\\..*");
+        return Reflections.getCaller(1).getClassName().startsWith("org.bukkit.");
     }
 
     /**
