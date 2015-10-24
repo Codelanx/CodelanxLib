@@ -306,6 +306,7 @@ public final class Reflections {
             } else if (c == byte.class) {
                 back = c.cast((byte) -1);
             }
+            return back;
         }
         return null;
     }
