@@ -317,7 +317,7 @@ public class CEconomy extends Observable {
      */
     private double tax() {
         double back = this.taxRate();
-        if (back < 0) {
+        if (back <= 0) {
             back = 1D;
         }
         return back;
