@@ -23,7 +23,12 @@ import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.util.exception.Exceptions;
+
+import java.util.HashSet;
 import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
+
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -44,6 +49,8 @@ public class CEconomy extends Observable {
     protected final Lang format;
     /** The underlying {@link Economy} object, usually a proxy */
     private Economy econ;
+    /** Holds {@link EconomyObserver} objects for java-8 style observations */
+    private Set<EconomyObserver> observers = new HashSet<>();
 
     /**
      * Sets the format string for this object to use for output
@@ -204,6 +211,7 @@ public class CEconomy extends Observable {
             return;
         }
         super.notifyObservers(arg);
+        this.observers.forEach(ob -> ob.update(this, arg));
     }
 
     /**
@@ -266,6 +274,35 @@ public class CEconomy extends Observable {
             this.econ = rsp.getProvider();
         }
         return this.econ;
+    }
+
+    /**
+     * Adds an {@link EconomyObserver} to this {@link CEconomy}
+     *
+     * @since 0.2.0
+     * @version 0.2.0
+     *
+     * @param o The {@link EconomyObserver} to be notified when the economy state changes
+     */
+    public synchronized void addObserver(EconomyObserver o) {
+        super.addObserver(o);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 0.2.0
+     * @version 0.2.0
+     *
+     * @param o {@inheritDoc}
+     */
+    @Override
+    public synchronized void addObserver(Observer o) {
+        if (o instanceof EconomyObserver) {
+            this.addObserver((EconomyObserver) o);
+        } else {
+            super.addObserver(o);
+        }
     }
 
     /**
