@@ -1,3 +1,7 @@
 /target/
 /example/
 /log.txt
+/.idea
+dependency-reduced-pom.xml
+nbactions.xml
+nb-configuration.xml
