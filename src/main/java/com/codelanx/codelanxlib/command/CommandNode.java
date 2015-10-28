@@ -194,7 +194,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         if (!child.allowProxies && sender instanceof ProxiedCommandSender) {
             return CommandStatus.NO_PROXIES;
         }
-        if (!this.perms.stream().allMatch(p -> p.has(sender))) {
+        if (!child.perms.stream().allMatch(p -> p.has(sender))) {
             return CommandStatus.NO_PERMISSION;
         }
         if (!child.isExecutable()) {
