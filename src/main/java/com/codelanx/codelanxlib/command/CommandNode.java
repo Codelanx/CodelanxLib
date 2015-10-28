@@ -197,6 +197,9 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         if (!this.perms.stream().allMatch(p -> p.has(sender))) {
             return CommandStatus.NO_PERMISSION;
         }
+        if (!child.isExecutable()) {
+            return CommandStatus.NOT_EXECUTABLE;
+        }
         return null;
     }
 
