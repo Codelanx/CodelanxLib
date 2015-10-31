@@ -40,6 +40,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -346,6 +348,28 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     }
 
     /**
+     * Removes a child subcommand that is active under this {@link CommandNode}
+     *
+     * @since 0.2.0
+     * @version 0.2.0
+     *
+     * @param name The command label of the {@link CommandNode} to remove
+     */
+    protected final void removeChild(String name) {
+        this.subcommands.remove(name);
+    }
+
+    /**
+     * Removes the {@link HelpCommand} associated with this {@link CommandNode}
+     *
+     * @since 0.2.0
+     * @version 0.2.0
+     */
+    protected final void removeHelpCommand() {
+        this.removeChild("help");
+    }
+
+    /**
      * Adds new child subcommands to this {@link CommandNode}
      * 
      * @since 0.2.0
@@ -450,6 +474,20 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
         return this.getUsage().compareTo(o.getUsage());
     }
 
+
+    /**
+     * Traverses the command tree with no restrictions (shows all commands)
+     *
+     * @since 0.2.0
+     * @version 0.2.0
+     *
+     * @see CommandNode#traverse(CommandSender, boolean)
+     * @return
+     */
+    public Collection<CommandNode<? extends Plugin>> traverse() {
+        return this.traverse(null, false);
+    }
+
     /**
      * Traverses the {@link CommandNode} tree and returns all child objects
      * found that satisfy the following:
@@ -463,22 +501,24 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * </ul>
      *
      * @since 0.1.0
-     * @version 0.1.0
+     * @version 0.2.0
      *
      * @return All found {@link CommandNode} children for this node
      */
-    public Collection<CommandNode<? extends Plugin>> traverse() {
-        Collection<CommandNode<? extends Plugin>> back = new ArrayList<>();
-        back.add(this);
-        back = this.subcommands.values().stream()
+    public Collection<CommandNode<? extends Plugin>> traverse(CommandSender sender, boolean restrictions) {
+        Stream<CommandNode<? extends Plugin>> str = this.subcommands.values().stream()
                 .filter(c -> this == c.getParent())
-                .filter(c -> c.getClass() != HelpCommand.class)
-                .map(c -> c.traverse())
-                .reduce(back, (u, r) -> {
-                    u.addAll(r);
-                    return u;
-                });
-        back.removeIf(c -> !c.isExecutable());
+                .filter(c -> c.getClass() != HelpCommand.class);
+        if (restrictions) {
+            str = str.filter(c -> c.restriction == null || c.restriction.verifySender(sender))
+                    .filter(c -> c.perms.stream().allMatch(p -> p.has(sender)))
+                    .filter(c -> c.allowProxies || sender instanceof ProxiedCommandSender);
+        }
+        Collection<CommandNode<? extends Plugin>> back = str.map(c -> c.traverse(sender, restrictions))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        back.add(this); //potential break point?
+        back.removeIf(c -> !c.isExecutable()); //leave after the #filter calls so linking nodes make it through
         return back;
     }
 

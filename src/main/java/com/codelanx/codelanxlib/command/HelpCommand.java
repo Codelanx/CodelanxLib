@@ -27,10 +27,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -40,21 +42,16 @@ import org.bukkit.plugin.Plugin;
  *
  * @since 0.0.1
  * @author 1Rogue
- * @version 0.1.0
+ * @version 0.2.0
  *
  * @param <E> The {@link Plugin} that caused this class to be instantiated
  */
 public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
 
-    /** Internal {@link Paginator} cache, used to pre-render and output pages */
-    private final Cache<Paginator> pages = new Cache<Paginator>(TimeUnit.MINUTES.toMillis(5)) {
-
-        @Override
-        protected void update() {
-            this.setCurrentValue(HelpCommand.this.newPaginator());
-        }
-        
-    };
+    /** Stores a {@link Paginator} cache per player */
+    private final Map<UUID, Cache<Paginator>> pages = new HashMap<>(); //TODO: Use IdentityMap
+    /** Internal {@link Paginator} cache per {@link CommandSender}, used to pre-render and output pages */
+    private final Map<Class<? extends CommandSender>, Cache<Paginator>> oddSenders = new HashMap<>();
     /** The number of commands to show per page */
     private int factor = 5;
 
@@ -93,7 +90,7 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
         } catch (NumberFormatException ex) {
             return CommandStatus.BAD_ARGS;
         }
-        sender.sendMessage(this.getPages().getPage(select));
+        sender.sendMessage(this.getPages(sender).getPage(select));
         return CommandStatus.SUCCESS;
     }
 
@@ -101,7 +98,7 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
      * {@inheritDoc}
      * 
      * @since 0.1.0
-     * @version 0.1.0
+     * @version 0.2.0
      * 
      * @param sender {@inheritDoc}
      * @param args {@inheritDoc}
@@ -110,10 +107,10 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
     @Override
     public List<String> tabComplete(CommandSender sender, String... args) {
         if (args.length < 1) {
-            return IntStream.range(1, this.getPages().size() + 1).boxed()
+            return IntStream.range(1, this.getPages(sender).size() + 1).boxed()
                     .map(String::valueOf).collect(Collectors.toList());
         }
-        int size = this.getPages().size();
+        int size = this.getPages(sender).size();
         int curr;
         try {
             curr = Integer.parseInt(args[0]);
@@ -136,16 +133,16 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
 
     /**
      * Returns a new {@link Paginator} instance according to the current state
-     * of the {@link CommandHandler} command map and the set page factor for
+     * of the {@link CommandNode} command map and the set page factor for
      * this {@link HelpCommand}
      *
      * @since 0.1.0
-     * @version 0.1.0
+     * @version 0.2.0
      *
      * @return A new {@link Paginator} instance containing help information
      */
-    private Paginator newPaginator() {
-        List<CommandNode<? extends Plugin>> cmds = new ArrayList<>(this.getParent().traverse());
+    private Paginator newPaginator(CommandSender sender) {
+        List<CommandNode<? extends Plugin>> cmds = new ArrayList<>(this.getParent().traverse(sender, true));
         Map<String, CommandNode<? extends Plugin>> aliases = new HashMap<>();
         cmds.forEach(c -> aliases.putAll(c.getAliases()));
         Collections.sort(cmds);
@@ -201,13 +198,13 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
      * forcefully refresh the {@link Paginator} cache
      *
      * @since 0.1.0
-     * @version 0.1.0
+     * @version 0.2.0
      *
      * @param factor The number of commands per page
      */
     public void setItemsPerPage(int factor) {
         this.factor = factor;
-        this.pages.forceRefresh();
+        this.pages.values().forEach(Cache::forceRefresh);
     }
 
     /**
@@ -262,8 +259,23 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
         return InternalLang.COMMAND_HELP_INFO;
     }
 
-    private Paginator getPages() {
-        return this.pages.get();
+    private Paginator getPages(CommandSender sender) {
+        UUID uuid = null;
+        if (sender instanceof Player) {
+            return this.pages.computeIfAbsent(uuid, uid -> new Cache<Paginator>(TimeUnit.MINUTES.toMillis(5)) {
+                @Override
+                protected void update() {
+                    this.setCurrentValue(HelpCommand.this.newPaginator(sender));
+                }
+            }).get();
+        } else {
+            return this.oddSenders.computeIfAbsent(sender.getClass(), uid -> new Cache<Paginator>(TimeUnit.MINUTES.toMillis(5)) {
+                @Override
+                protected void update() {
+                    this.setCurrentValue(HelpCommand.this.newPaginator(sender));
+                }
+            }).get();
+        }
     }
 
 }
