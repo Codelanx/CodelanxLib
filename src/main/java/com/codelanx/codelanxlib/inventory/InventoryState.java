@@ -19,10 +19,11 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
-import java.util.Arrays;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
 
 /**
  * An immutable class that represents the state of an {@link Inventory}

@@ -17,9 +17,14 @@
  * You should have received a copy of the Creative Commons BY-NC-ND license
  * long with this program. If not, see <https://creativecommons.org/licenses/>.
  */
-package com.codelanx.codelanxlib.util.time;
+package com.codelanx.codelanxlib.util;
 
-import com.codelanx.codelanxlib.util.Scheduler;
+import com.codelanx.commons.util.Scheduler;
+import com.codelanx.commons.util.time.TimePoint;
+import org.bukkit.Bukkit;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Scoreboard;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -30,9 +35,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.bukkit.Bukkit;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Scoreboard;
 
 /**
  * Allows for having a countdown timer which can be applied through messages
@@ -168,7 +170,7 @@ public class Countdown {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @see Countdown#setTimeFormat(java.lang.String) for info about the syntax
+     * @see Countdown#setTimeFormat(String) for info about the syntax
      * for setting a format string
      * @param s The scoreboard to modify
      * @param format Optional board-specific format. Can be null

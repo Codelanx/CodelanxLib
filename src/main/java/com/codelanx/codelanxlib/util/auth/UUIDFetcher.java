@@ -17,6 +17,13 @@
 package com.codelanx.codelanxlib.util.auth;
 
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -32,12 +39,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * All credit to evilmidget38! A small bit of cleanup for Java 8. This class can
@@ -78,7 +79,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
      * @since 0.0.1
      * @version 0.0.1
      * 
-     * @see UUIDFetcher#UUIDFetcher(List, boolean) 
+     * @see UUIDFetcher#UUIDFetcher(List, boolean)
      * @param names The names to convert
      */
     public UUIDFetcher(List<String> names) {
@@ -182,7 +183,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
      * @throws ParseException If the request response cannot be read
      * @throws InterruptedException If the thread is interrupted while sleeping
      */
-    public Map<String, UserInfo> callFromOldNames(boolean output, Logger log, 
+    public Map<String, UserInfo> callFromOldNames(boolean output, Logger log,
             Predicate<? super Integer> doOutput) throws IOException, ParseException, InterruptedException {
         Map<String, UserInfo> back = new HashMap<>();
         int completed = 0;

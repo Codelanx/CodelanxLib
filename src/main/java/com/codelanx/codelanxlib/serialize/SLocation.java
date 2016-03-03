@@ -19,15 +19,16 @@
  */
 package com.codelanx.codelanxlib.serialize;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.Vector;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Represents a {@link ConfigurationSerializable} {@link Location} with a lazily
@@ -45,6 +46,10 @@ public class SLocation implements ConfigurationSerializable {
     private final float pitch;
     private final UUID uuid;
     private World world;
+
+    static {
+
+    }
 
     /**
      * Creates a new {@link SLocation} object from the passed {@link Location}

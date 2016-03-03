@@ -19,13 +19,27 @@
  */
 package com.codelanx.codelanxlib.command;
 
+import com.codelanx.codelanxlib.util.ReflectBukkit;
+import com.codelanx.commons.logging.Debugger;
+import com.codelanx.commons.util.Lambdas;
+import com.codelanx.commons.util.exception.Exceptions;
+import com.codelanx.commons.util.exception.IllegalReturnException;
 import com.codelanx.codelanxlib.config.Lang;
-import com.codelanx.codelanxlib.logging.Debugger;
 import com.codelanx.codelanxlib.permission.Permissions;
-import com.codelanx.codelanxlib.util.Lambdas;
-import com.codelanx.codelanxlib.util.Reflections;
-import com.codelanx.codelanxlib.util.exception.Exceptions;
-import com.codelanx.codelanxlib.util.exception.IllegalReturnException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.ProxiedCommandSender;
+import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.SimplePluginManager;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -41,20 +55,6 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.ProxiedCommandSender;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.SimplePluginManager;
 
 /**
  * Represents a singular point in a command argument chain (or even the command
@@ -139,7 +139,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      */
     @Override
     public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Exceptions.illegalPluginAccess(Reflections.accessedFromBukkit(), "Only bukkit may call this method");
+        Exceptions.illegalInvocation(ReflectBukkit.accessedFromBukkit(), "Only bukkit may call this method");
         CommandNode<? extends Plugin> child = this;
         int start = 0;
         for (String s : args) {
@@ -220,7 +220,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      */
     @Override
     public final List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        Exceptions.illegalPluginAccess(Reflections.accessedFromBukkit(), "Only bukkit may call this method");
+        Exceptions.illegalInvocation(ReflectBukkit.accessedFromBukkit(), "Only bukkit may call this method");
         CommandNode<? extends Plugin> child = this.getClosestChild(StringUtils.join(args, " "));
         List<String> back = new ArrayList<>();
         List<String> tabd = child.tabComplete(sender, args);
@@ -601,7 +601,7 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @param perm The {@link Permissions} requirement to add to this node 
+     * @param perm The {@link Permissions} requirement to add to this node
      */
     protected final void requirePermission(Permissions perm) {
         Validate.notNull(perm);

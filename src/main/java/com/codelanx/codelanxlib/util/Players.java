@@ -20,17 +20,18 @@
 package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.util.auth.UUIDFetcher;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.BiPredicate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.BiPredicate;
 
 /**
  * Represents utility functions to simplify or clarify common operations

@@ -19,13 +19,14 @@
  */
 package com.codelanx.codelanxlib.serialize;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a {@link PlayerInventory} that is capable of being serialized

@@ -19,17 +19,18 @@
  */
 package com.codelanx.codelanxlib.inventory;
 
-import com.codelanx.codelanxlib.util.RNG;
+import com.codelanx.commons.util.RNG;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Utility methods for simplifying the use of Bukkit's inventory API, or

@@ -20,6 +20,7 @@
 package com.codelanx.codelanxlib.internal;
 
 import com.codelanx.codelanxlib.permission.Permissions;
+import com.codelanx.codelanxlib.util.Protections;
 
 /**
  * Internal {@link Permissions} enum for CodelanxLib
@@ -32,7 +33,7 @@ public enum InternalPerms implements Permissions {
 
     /**
      * Allows bypassing protection provided by the
-     * {@link com.codelanx.codelanxlib.util.Protections Protections} class
+     * {@link Protections Protections} class
      * 
      * @since 0.1.0
      * @version 0.1.0
@@ -47,7 +48,7 @@ public enum InternalPerms implements Permissions {
 
     @Override
     public String getBase() {
-        return "codelanxlib";
+        return "commons";
     }
 
     @Override

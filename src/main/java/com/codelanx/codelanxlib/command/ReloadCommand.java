@@ -19,14 +19,14 @@
  */
 package com.codelanx.codelanxlib.command;
 
-import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.Lang;
 import com.codelanx.codelanxlib.events.ReloadEvent;
 import com.codelanx.codelanxlib.implementers.Reloadable;
-import java.util.ArrayList;
-import java.util.List;
+import com.codelanx.codelanxlib.internal.InternalLang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+
+import java.util.List;
 
 /**
  * Fires a {@link ReloadEvent} and, if applicable, calls

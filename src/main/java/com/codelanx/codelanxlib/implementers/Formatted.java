@@ -19,6 +19,7 @@
  */
 package com.codelanx.codelanxlib.implementers;
 
+import com.codelanx.commons.config.LangFile;
 import com.codelanx.codelanxlib.config.Lang;
 
 /**
@@ -31,12 +32,12 @@ import com.codelanx.codelanxlib.config.Lang;
 public interface Formatted {
 
     /**
-     * The {@link Lang} format to use for any plugin output
+     * The {@link LangFile} format to use for any plugin output
      * 
      * @since 0.1.0
      * @version 0.1.0
      * 
-     * @return The {@link Lang} object to use for plugin output as a format
+     * @return The {@link LangFile} object to use for plugin output as a format
      */
     public Lang getFormat();
 

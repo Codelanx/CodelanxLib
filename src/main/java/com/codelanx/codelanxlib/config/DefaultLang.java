@@ -19,21 +19,19 @@
  */
 package com.codelanx.codelanxlib.config;
 
-import com.codelanx.codelanxlib.CodelanxLib;
-import com.codelanx.codelanxlib.annotation.PluginClass;
-import com.codelanx.codelanxlib.annotation.RelativePath;
-import com.codelanx.codelanxlib.data.types.Yaml;
+import com.codelanx.commons.config.DataHolder;
+import com.codelanx.commons.config.RelativePath;
+import com.codelanx.commons.data.types.Yaml;
 import com.codelanx.codelanxlib.internal.InternalLang;
 
 /**
- * Class description for {@link DefaultLang}
+ * Default lang messages used for plugins
  *
  * @since 1.0.0
  * @author 1Rogue
  * @version 1.0.0
  */
-@PluginClass(CodelanxLib.class)
-@RelativePath("defaults.yml")
+@RelativePath("lang-defaults.yml")
 public enum DefaultLang implements Lang {
 
     PLAYER_NOT_ONLINE("player.not-online", "&9%s&f is not online!"),

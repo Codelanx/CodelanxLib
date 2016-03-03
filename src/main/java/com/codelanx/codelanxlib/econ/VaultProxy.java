@@ -20,14 +20,7 @@
 package com.codelanx.codelanxlib.econ;
 
 import com.codelanx.codelanxlib.events.EconomyChangeEvent;
-import com.codelanx.codelanxlib.logging.Debugger;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.logging.Level;
+import com.codelanx.commons.logging.Debugger;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -37,6 +30,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * A proxy {@link InvocationHandler} class for Vault's {@link Economy} class,

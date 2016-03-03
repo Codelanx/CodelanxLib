@@ -21,8 +21,6 @@ package com.codelanx.codelanxlib.inventory.iinterface;
 
 import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.inventory.Inventories;
-import java.util.HashMap;
-import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -30,6 +28,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Listens for inventory clicks and conveys information to any appropriate and

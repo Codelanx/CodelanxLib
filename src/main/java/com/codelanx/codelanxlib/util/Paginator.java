@@ -19,8 +19,10 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import com.codelanx.codelanxlib.internal.InternalLang;
 import com.codelanx.codelanxlib.config.Lang;
+import com.codelanx.codelanxlib.internal.InternalLang;
+import org.bukkit.ChatColor;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

@@ -19,13 +19,14 @@
  */
 package com.codelanx.codelanxlib.events;
 
+import com.codelanx.codelanxlib.command.ReloadCommand;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 
 /**
  * Event fired upon the use of a
- * {@link com.codelanx.codelanxlib.command.ReloadCommand ReloadCommand}
+ * {@link ReloadCommand ReloadCommand}
  *
  * @since 0.0.1
  * @author 1Rogue

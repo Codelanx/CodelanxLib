@@ -19,14 +19,15 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import java.util.Set;
-import java.util.logging.Logger;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
+
+import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Represents a {@link CommandSender} which outputs to a {@link Logger}. This is

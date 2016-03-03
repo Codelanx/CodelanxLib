@@ -19,11 +19,14 @@
  */
 package com.codelanx.codelanxlib.util.coverage;
 
-import com.codelanx.codelanxlib.logging.Debugger;
-import com.codelanx.codelanxlib.logging.Logging;
-import com.codelanx.codelanxlib.util.Reflections;
-import com.codelanx.codelanxlib.util.ref.StrongReference;
+import com.codelanx.codelanxlib.util.ReflectBukkit;
+import com.codelanx.commons.logging.Debugger;
+import com.codelanx.commons.logging.Logging;
+import com.codelanx.commons.util.ref.StrongReference;
 import com.google.common.io.Files;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,8 +43,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Allows for implementing a coverage utility into Bukkit plugins. Note that
@@ -319,7 +320,7 @@ public final class CoverageUtil {
      * @version 0.0.1
      */
     public static void marker() {
-        PluginMarker pm = CoverageUtil.marks.get(Reflections.getCallingPlugin());
+        PluginMarker pm = CoverageUtil.marks.get(ReflectBukkit.getCallingPlugin());
         if (pm != null) {
             StackTraceElement elem = Thread.currentThread().getStackTrace()[2];
             pm.addValue(elem.getClassName(), elem.getMethodName(), elem.getLineNumber(), true);
@@ -335,7 +336,7 @@ public final class CoverageUtil {
      * @param classes The {@link Class classes} to register
      */
     public static void registerClasses(Class<?>... classes) {
-        Plugin p = Reflections.getCallingPlugin();
+        Plugin p = ReflectBukkit.getCallingPlugin();
         PluginMarker pm = CoverageUtil.marks.get(p);
         if (pm != null) {
             Collection<ClassMarker> o = new PluginMarker(p, classes).getClassMarkers();
@@ -353,7 +354,7 @@ public final class CoverageUtil {
      * @version 0.0.1
      */
     public static void load() {
-        Plugin p = Reflections.getCallingPlugin();
+        Plugin p = ReflectBukkit.getCallingPlugin();
         File data = new File(p.getDataFolder(), "coverage" + File.separator);
         File log = new File(data, "coverage-latest.log");
         if (log.exists()) {

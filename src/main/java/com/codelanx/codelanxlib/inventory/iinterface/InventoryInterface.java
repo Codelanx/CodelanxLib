@@ -19,10 +19,17 @@
  */
 package com.codelanx.codelanxlib.inventory.iinterface;
 
-import com.codelanx.codelanxlib.config.Config;
-import com.codelanx.codelanxlib.util.Lambdas;
-import com.codelanx.codelanxlib.util.RNG;
-import com.codelanx.codelanxlib.util.exception.Exceptions;
+import com.codelanx.codelanxlib.config.Configs;
+import com.codelanx.commons.util.Lambdas;
+import com.codelanx.commons.util.RNG;
+import com.codelanx.commons.util.exception.Exceptions;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -36,12 +43,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 /**
  * A collection of {@link InventoryPanel} objects with an opening reference
@@ -309,7 +310,7 @@ public final class InventoryInterface {
         InventoryInterface ii = new InventoryInterface();
         if (f.exists()) {
             FileConfiguration yml = YamlConfiguration.loadConfiguration(f);
-            Map<String, Object> panes = Config.getConfigSectionValue(yml.get("panels"));
+            Map<String, Object> panes = Configs.getConfigSectionValue(yml.get("panels"));
             if (panes == null) {
                 p.getLogger().log(Level.WARNING, String.format("No root panel for Inventory Interface '%s'", f.getName()));
                 return ii;

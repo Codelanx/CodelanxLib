@@ -20,18 +20,18 @@
 package com.codelanx.codelanxlib.internal;
 
 import com.codelanx.codelanxlib.CodelanxLib;
-import com.codelanx.codelanxlib.annotation.PluginClass;
-import com.codelanx.codelanxlib.annotation.RelativePath;
-import com.codelanx.codelanxlib.config.Lang;
-import com.codelanx.codelanxlib.data.types.Yaml;
-import com.codelanx.codelanxlib.util.Paginator;
 import com.codelanx.codelanxlib.command.HelpCommand;
-import com.codelanx.codelanxlib.command.ReloadCommand; //Used in javadocs
-import com.codelanx.codelanxlib.config.DataHolder;
-import com.codelanx.codelanxlib.data.FileDataType;
+import com.codelanx.codelanxlib.command.ReloadCommand;
+import com.codelanx.codelanxlib.config.Lang;
+import com.codelanx.codelanxlib.config.PluginClass;
+import com.codelanx.codelanxlib.util.Paginator;
+import com.codelanx.commons.config.DataHolder;
+import com.codelanx.commons.config.LangFile;
+import com.codelanx.commons.config.RelativePath;
+import com.codelanx.commons.data.types.Yaml;
 
 /**
- * Internal {@link Lang} enum for CodelanxLib
+ * Internal {@link LangFile} enum for CodelanxLib
  *
  * @since 0.1.0
  * @author 1Rogue

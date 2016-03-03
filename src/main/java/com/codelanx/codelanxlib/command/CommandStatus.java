@@ -19,9 +19,9 @@
  */
 package com.codelanx.codelanxlib.command;
 
-import com.codelanx.codelanxlib.internal.InternalLang;
+import com.codelanx.commons.config.LangFile;
 import com.codelanx.codelanxlib.config.Lang;
-import java.util.List;
+import com.codelanx.codelanxlib.internal.InternalLang;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -29,6 +29,8 @@ import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.plugin.Plugin;
+
+import java.util.List;
 
 /**
  * Represents the status of an executed command, and is returned upon the
@@ -86,7 +88,7 @@ public enum CommandStatus {
      * @version 0.1.0
      * 
      * @param sender The {@link CommandSender} object that executed the command
-     * @param format The {@link Lang} being used as a format string
+     * @param format The {@link LangFile} being used as a format string
      * @param cmd The {@link CommandNode} that was executed
      */
     public void handle(CommandSender sender, Lang format, CommandNode<?> cmd) {

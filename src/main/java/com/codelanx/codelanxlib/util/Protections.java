@@ -21,8 +21,6 @@ package com.codelanx.codelanxlib.util;
 
 import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.internal.InternalPerms;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,6 +37,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Adds protection to specific locations. This should not be used for large

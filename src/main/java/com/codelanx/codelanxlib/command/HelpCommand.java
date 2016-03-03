@@ -19,9 +19,13 @@
  */
 package com.codelanx.codelanxlib.command;
 
+import com.codelanx.commons.util.cache.Cache;
 import com.codelanx.codelanxlib.internal.InternalLang;
-import com.codelanx.codelanxlib.util.cache.Cache;
 import com.codelanx.codelanxlib.util.Paginator;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,14 +35,11 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Provides a listing of help information derived from all {@link CommandNode}
  * objects that are returned from a call to a parent's
- * {@link CommandNode#traverse()} method
+ * {@link CommandNode#traverse} method
  *
  * @since 0.0.1
  * @author 1Rogue
@@ -148,7 +149,7 @@ public final class HelpCommand<E extends Plugin> extends CommandNode<E> {
         Collections.sort(cmds);
         String usage;
         String title = InternalLang.COMMAND_HELP_TITLEFORMAT.formatAndColor(
-                CommandNode.filterUsage(this.getParent().getUsage()));
+                filterUsage(this.getParent().getUsage()));
         List<String> out = cmds.stream().map(this::toHelpInfo).collect(Collectors.toList());
         if (!aliases.isEmpty()) {
             int blanks = this.getItemsPerPage() - (cmds.size() % this.getItemsPerPage());

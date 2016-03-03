@@ -19,18 +19,19 @@
  */
 package com.codelanx.codelanxlib.inventory.iinterface;
 
-import com.codelanx.codelanxlib.config.Config;
-import com.codelanx.codelanxlib.util.Lambdas;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.codelanx.commons.util.Lambdas;
+import com.codelanx.codelanxlib.config.Configs;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A single inventory that represents a menu
@@ -46,12 +47,12 @@ public final class InventoryPanel {
     private final String seed;
     private final String name;
     private String serializer;
-    private final InventoryInterface ii;
+    private final com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface ii;
     private final int rows;
-    private final List<MenuIcon> icons = new ArrayList<>();
-    private final Map<Integer, MenuIcon> locations = new HashMap<>();
+    private final List<com.codelanx.codelanxlib.inventory.iinterface.MenuIcon> icons = new ArrayList<>();
+    private final Map<Integer, com.codelanx.codelanxlib.inventory.iinterface.MenuIcon> locations = new HashMap<>();
 
-    InventoryPanel(InventoryInterface ii, String name, int rows) {
+    InventoryPanel(com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface ii, String name, int rows) {
         Validate.notNull(ii, "InventoryInterface cannot be null");
         if (name == null) {
             name = "Choose an option!";
@@ -63,7 +64,7 @@ public final class InventoryPanel {
     }
 
     /**
-     * Returns a new {@link MenuIcon} stored in this panel
+     * Returns a new {@link com.codelanx.codelanxlib.inventory.iinterface.MenuIcon} stored in this panel
      * 
      * @since 0.0.1
      * @version 0.1.0
@@ -71,44 +72,44 @@ public final class InventoryPanel {
      * @param item The {@link ItemStack} to use for displaying the icon
      * @param onExec The {@link Execution} to use when the icon is clicked
      * @param options A mapping of metadata options for the icon
-     * @return The new {@link MenuIcon}
+     * @return The new {@link com.codelanx.codelanxlib.inventory.iinterface.MenuIcon}
      */
-    public MenuIcon newIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
-        MenuIcon icon = new MenuIcon(item, onExec, options);
+    public com.codelanx.codelanxlib.inventory.iinterface.MenuIcon newIcon(ItemStack item, Execution onExec, Map<String, Object> options) {
+        com.codelanx.codelanxlib.inventory.iinterface.MenuIcon icon = new com.codelanx.codelanxlib.inventory.iinterface.MenuIcon(item, onExec, options);
         this.locations.put(this.index++, icon);
         return icon;
     }
 
     /**
-     * Returns a new {@link MenuIcon} stored in this panel
+     * Returns a new {@link com.codelanx.codelanxlib.inventory.iinterface.MenuIcon} stored in this panel
      * 
      * @since 0.0.1
      * @version 0.1.0
      * 
      * @param item The {@link ItemStack} to use for displaying the icon
      * @param onExec The {@link Execution} to use when the icon is clicked
-     * @return The new {@link MenuIcon}
+     * @return The new {@link com.codelanx.codelanxlib.inventory.iinterface.MenuIcon}
      */
-    public MenuIcon newIcon(ItemStack item, Execution onExec) {
+    public com.codelanx.codelanxlib.inventory.iinterface.MenuIcon newIcon(ItemStack item, Execution onExec) {
         return this.newIcon(item, onExec, new HashMap<>());
     }
 
     /**
-     * Links this panel to the passed {@link MenuIcon} such that clicking it
+     * Links this panel to the passed {@link com.codelanx.codelanxlib.inventory.iinterface.MenuIcon} such that clicking it
      * will open this panel
      * 
      * @since 0.0.1
      * @version 0.0.1
      * 
-     * @see InventoryInterface#linkPanel(MenuIcon, InventoryPanel)
-     * @param icon The {@link MenuIcon} to link
+     * @see com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface#linkPanel(com.codelanx.codelanxlib.inventory.iinterface.MenuIcon, InventoryPanel)
+     * @param icon The {@link com.codelanx.codelanxlib.inventory.iinterface.MenuIcon} to link
      */
-    public void linkIcon(MenuIcon icon) {
+    public void linkIcon(com.codelanx.codelanxlib.inventory.iinterface.MenuIcon icon) {
         this.ii.linkPanel(icon, this);
     }
 
     /**
-     * Sets the {@link Execution} for all {@link MenuIcon} objects held in this
+     * Sets the {@link Execution} for all {@link com.codelanx.codelanxlib.inventory.iinterface.MenuIcon} objects held in this
      * panel
      * 
      * @since 0.1.0
@@ -133,7 +134,7 @@ public final class InventoryPanel {
     }
 
     /**
-     * Called when a player clicks a {@link MenuIcon} inside of an
+     * Called when a player clicks a {@link com.codelanx.codelanxlib.inventory.iinterface.MenuIcon} inside of an
      * {@link InventoryPanel}
      * 
      * @since 0.0.1
@@ -143,7 +144,7 @@ public final class InventoryPanel {
      * @param slot The slot that was clicked
      */
     public void click(Player p, int slot) {
-        MenuIcon icon = this.locations.get(slot);
+        com.codelanx.codelanxlib.inventory.iinterface.MenuIcon icon = this.locations.get(slot);
         if (icon != null && icon.hasPermission(p)) {
             if (this.ii.isLinked(icon)) {
                 InventoryPanel next = this.ii.getLinkedPanel(icon);
@@ -157,8 +158,8 @@ public final class InventoryPanel {
         }
     }
 
-    static InventoryPanel valueOf(InventoryInterface ii, Object o) {
-        Map<String, Object> map = Config.getConfigSectionValue(o);
+    static InventoryPanel valueOf(com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface ii, Object o) {
+        Map<String, Object> map = Configs.getConfigSectionValue(o);
         if (map == null || map.isEmpty()) {
             return null;
         }
@@ -166,8 +167,8 @@ public final class InventoryPanel {
         Boolean root = Boolean.valueOf(String.valueOf(map.get("root")));
         String name = String.valueOf(map.get("name"));
         if (objs != null && root != null) {
-            List<MenuIcon> icons = objs.stream()
-                    .map(obj -> MenuIcon.valueOf(ii, obj))
+            List<com.codelanx.codelanxlib.inventory.iinterface.MenuIcon> icons = objs.stream()
+                    .map(obj -> com.codelanx.codelanxlib.inventory.iinterface.MenuIcon.valueOf(ii, obj))
                     .filter(Lambdas::notNull)
                     .collect(Collectors.toList());
             int rows;
@@ -198,7 +199,7 @@ public final class InventoryPanel {
      */
     public void open(Player p) {
         String name = this.name;
-        int maxLength = 32 - (InventoryInterface.SEED_LENGTH * 2) - (InventoryPanel.SEED_LENGTH * 2);
+        int maxLength = 32 - (com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface.SEED_LENGTH * 2) - (InventoryPanel.SEED_LENGTH * 2);
         if (name.length() > maxLength) {
             name = name.substring(0, maxLength);
         }

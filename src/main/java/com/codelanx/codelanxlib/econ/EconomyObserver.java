@@ -1,7 +1,5 @@
 package com.codelanx.codelanxlib.econ;
 
-import net.milkbowl.vault.economy.Economy;
-
 import java.util.Observable;
 import java.util.Observer;
 

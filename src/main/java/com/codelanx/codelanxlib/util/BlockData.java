@@ -19,10 +19,11 @@
  */
 package com.codelanx.codelanxlib.util;
 
-import java.util.Objects;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Objects;
 
 /**
  * Allows for representing material and it's data counterpart as a single string

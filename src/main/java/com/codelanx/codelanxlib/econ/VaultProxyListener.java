@@ -19,11 +19,11 @@
  */
 package com.codelanx.codelanxlib.econ;
 
-import com.codelanx.codelanxlib.CodelanxLib;
 import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.listener.SubListener;
-import com.codelanx.codelanxlib.util.Reflections;
-import com.codelanx.codelanxlib.util.exception.Exceptions;
+import com.codelanx.commons.util.Reflections;
+import com.codelanx.commons.util.exception.Exceptions;
+import com.codelanx.codelanxlib.CodelanxLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -50,7 +50,7 @@ public class VaultProxyListener extends SubListener<CodelanxLib> {
      */
     public VaultProxyListener(CodelanxLib plugin) {
         super(plugin);
-        Exceptions.illegalPluginAccess(Reflections.accessedFrom(CodelanxLib.class));
+        Exceptions.illegalInvocation(Reflections.accessedFrom(CodelanxLib.class));
     }
 
     /**

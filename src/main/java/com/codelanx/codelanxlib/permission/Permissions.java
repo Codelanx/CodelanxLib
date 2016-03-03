@@ -37,7 +37,7 @@ import org.bukkit.plugin.PluginManager;
 public interface Permissions {
 
     /**
-     * Returns the base permission node for the plugin. e.g. "codelanxlib".
+     * Returns the base permission node for the plugin. e.g. "commons".
      * 
      * @since 0.1.0
      * @version 0.1.0

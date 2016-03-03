@@ -19,22 +19,22 @@
  */
 package com.codelanx.codelanxlib.econ;
 
-import com.codelanx.codelanxlib.config.Config;
 import com.codelanx.codelanxlib.config.Lang;
+import com.codelanx.commons.config.ConfigFile;
+import com.codelanx.commons.config.LangFile;
+import com.codelanx.commons.util.exception.Exceptions;
 import com.codelanx.codelanxlib.internal.InternalLang;
-import com.codelanx.codelanxlib.util.exception.Exceptions;
-
-import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
-
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
 
 /**
  * Represents an observable façade class for Vault's {@link Economy} object
@@ -45,7 +45,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  */
 public class CEconomy extends Observable {
 
-    /** The {@link Lang} format to use for output */
+    /** The {@link LangFile} format to use for output */
     protected final Lang format;
     /** The underlying {@link Economy} object, usually a proxy */
     private Economy econ;
@@ -72,13 +72,13 @@ public class CEconomy extends Observable {
      * @version 0.1.0
      *
      * @param p The {@link OfflinePlayer} to check if they can be charged
-     * @param value A {@link Config} double value representing how much to take
+     * @param value A {@link ConfigFile} double value representing how much to take
      * @return A {@link ChargeStatus} representing the total cost and the status
      *         of whether or not the {@link OfflinePlayer} can be charged. If
      *         {@link CEconomy#isEnabled()} returns {@code false}, this will be
      *         a {@link ChargeStatus} of {@code true} with a returned cost of 0
      */
-    public ChargeStatus canCharge(OfflinePlayer p, Config value) {
+    public ChargeStatus canCharge(OfflinePlayer p, ConfigFile value) {
         return this.canCharge(p, value.as(double.class));
     }
 
@@ -117,11 +117,11 @@ public class CEconomy extends Observable {
      * @version 0.1.0
      *
      * @param p The {@link OfflinePlayer} to take money from
-     * @param value A {@link Config} double value representing how much to take
+     * @param value A {@link ConfigFile} double value representing how much to take
      * @return {@code true} if the money was successfully taken, or if
      *         {@link CEconomy#isEnabled()} returns {@code false}
      */
-    public boolean charge(OfflinePlayer p, Config value) {
+    public boolean charge(OfflinePlayer p, ConfigFile value) {
         return this.charge(p, value.as(double.class));
     }
 
@@ -166,11 +166,11 @@ public class CEconomy extends Observable {
      * @version 0.1.0
      *
      * @param p The {@link OfflinePlayer} to give money to
-     * @param value A {@link Config} double value representing how much to give
+     * @param value A {@link ConfigFile} double value representing how much to give
      * @return {@code true} if the money was deposited successfully, or if
      *         {@link CEconomy#isEnabled()} returns {@code false}
      */
-    public boolean pay(OfflinePlayer p, Config value) {
+    public boolean pay(OfflinePlayer p, ConfigFile value) {
         return this.pay(p, value.as(double.class));
     }
 
