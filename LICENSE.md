@@ -1,4 +1,4 @@
-Copyright (C) 2015 CodeLanx , All Rights Reserved
+Copyright (C) 2016 CodeLanx , All Rights Reserved
 
 This work is licensed under a Creative Commons
 Attribution-NonCommercial-NoDerivs 3.0 Unported License.
