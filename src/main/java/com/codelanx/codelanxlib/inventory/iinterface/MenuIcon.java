@@ -76,7 +76,7 @@ public class MenuIcon {
 
     /**
      * Returns the {@link ItemStack} that is displayed when a user opens the
-     * {@link com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface}
+     * {@link InventoryInterface}
      *
      * @since 0.1.0
      * @version 0.1.0
@@ -187,9 +187,9 @@ public class MenuIcon {
      * @version 0.1.0
      *
      * @param p The {@link Player} that clicked the icon
-     * @param ii The {@link com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface} associated with this icon
+     * @param ii The {@link InventoryInterface} associated with this icon
      */
-    void execute(Player p, com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface ii) {
+    void execute(Player p, InventoryInterface ii) {
         if (this.onExec != null) {
             this.onExec.onExec(p, ii, this);
         }
@@ -204,11 +204,11 @@ public class MenuIcon {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param ii The {@link com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface} to serialize for
+     * @param ii The {@link InventoryInterface} to serialize for
      * @param o The YAML mapping to deserialize
      * @return A new {@link MenuIcon} instance
      */
-    static MenuIcon valueOf(com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface ii, Object o) {
+    static MenuIcon valueOf(InventoryInterface ii, Object o) {
         Map<String, Object> map = Configs.getConfigSectionValue(o);
         if (map == null || map.isEmpty()) {
             return null;
@@ -245,10 +245,10 @@ public class MenuIcon {
      * @since 0.1.0
      * @version 0.1.0
      *
-     * @param ii The relevant {@link com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface} for this serialization
+     * @param ii The relevant {@link InventoryInterface} for this serialization
      * @return A mapping of this object's values
      */
-    Map<String, Object> toMap(com.codelanx.codelanxlib.inventory.iinterface.InventoryInterface ii) {
+    Map<String, Object> toMap(InventoryInterface ii) {
         Map<String, Object> back = new HashMap<>();
         back.put("item", this.item);
         back.put("options", this.options);
