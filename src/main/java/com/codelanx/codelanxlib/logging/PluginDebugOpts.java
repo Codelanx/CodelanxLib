@@ -72,6 +72,7 @@ public class PluginDebugOpts extends DebugOpts {
         } else {
             this.url = null;
         }
+        this.logger = plugin.getLogger();
     }
 
     /**
