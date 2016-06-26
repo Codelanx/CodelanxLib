@@ -24,6 +24,7 @@ import com.codelanx.codelanxlib.listener.ListenerManager;
 import com.codelanx.codelanxlib.util.ReflectBukkit;
 import com.codelanx.commons.logging.Debugger;
 import com.codelanx.commons.logging.Debugger.DebugOpts;
+import com.codelanx.commons.logging.Logging;
 import com.codelanx.commons.util.Reflections;
 import com.codelanx.commons.util.exception.Exceptions;
 import com.codelanx.commons.util.exception.IllegalInvocationException;
@@ -224,6 +225,10 @@ public class PluginDebugOpts extends DebugOpts {
         @Override
         public void publish(LogRecord record) {
             if (record.getThrown() != null) {
+                StackTraceElement e = Reflections.getCaller(4);
+                if (e.getClassName().equals(Debugger.class.getName()) && e.getMethodName().equals("error")) {
+                    return; //ignore, would cause duplicate reporting and offset issues
+                }
                 //Report exception
                 Debugger.DebugUtil.report(Debugger.DebugUtil.getOpts(), record.getThrown(), record.getMessage());
             }
