@@ -60,7 +60,6 @@ public class Configs {
      * @param o The object to interpret
      * @return A {@link Map} representing the section
      */
-    @SuppressWarnings("unchecked")
     public static Map<String, Object> getConfigSectionValue(Object o) {
         return Configs.getConfigSectionValue(o, false);
     }
