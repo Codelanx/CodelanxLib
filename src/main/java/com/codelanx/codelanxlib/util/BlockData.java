@@ -95,11 +95,9 @@ public class BlockData implements Comparable<BlockData> {
         return new MaterialData(this.mat, this.data > 0 ? this.data : 0);
     }
 
-    public void applyToBlock(Block b) {
-        b.setType(this.mat);
-        if (this.data > 0) {
-            b.setData(this.data);
-        }
+    public void toBlock(Block toChange) {
+        toChange.setType(this.mat);
+        toChange.setData(this.data > 0 ? this.data : 0);
     }
 
     public boolean comparable(ItemStack stack) {
