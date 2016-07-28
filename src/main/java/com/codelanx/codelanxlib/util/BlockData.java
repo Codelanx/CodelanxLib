@@ -21,7 +21,9 @@ package com.codelanx.codelanxlib.util;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import java.util.Objects;
 
@@ -52,6 +54,18 @@ public class BlockData implements Comparable<BlockData> {
         this.data = data.byteValue();
     }
 
+    public BlockData(Block b) {
+        this(b.getType(), b.getData());
+    }
+
+    public BlockData(ItemStack stack) {
+        this(stack.getType(), stack.getData().getData());
+    }
+
+    public BlockData(MaterialData data) {
+        this(data.getItemType(), data.getData());
+    }
+
     public Material getMaterial() {
         return this.mat;
     }
@@ -75,6 +89,31 @@ public class BlockData implements Comparable<BlockData> {
             back.getData().setData(this.data);
         }
         return back;
+    }
+
+    public MaterialData toMaterialData() {
+        return new MaterialData(this.mat, this.data > 0 ? this.data : 0);
+    }
+
+    public void applyToBlock(Block b) {
+        b.setType(this.mat);
+        if (this.data > 0) {
+            b.setData(this.data);
+        }
+    }
+
+    public boolean comparable(ItemStack stack) {
+        return this.comparable(stack.getData());
+    }
+
+    public boolean comparable(Block b) {
+        return this.mat == b.getType()
+                && (this.data < 0 || b.getData() == this.data);
+    }
+
+    public boolean comparable(MaterialData data) {
+        return this.mat == data.getItemType()
+                && (this.data < 0 || data.getData() == this.data);
     }
 
     @Override
