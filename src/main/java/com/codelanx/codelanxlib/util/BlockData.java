@@ -100,16 +100,16 @@ public class BlockData implements Comparable<BlockData> {
         toChange.setData(this.data > 0 ? this.data : 0);
     }
 
-    public boolean comparable(ItemStack stack) {
-        return this.comparable(stack.getData());
+    public boolean matches(ItemStack stack) {
+        return this.matches(stack.getData());
     }
 
-    public boolean comparable(Block b) {
+    public boolean matches(Block b) {
         return this.mat == b.getType()
                 && (this.data < 0 || b.getData() == this.data);
     }
 
-    public boolean comparable(MaterialData data) {
+    public boolean matches(MaterialData data) {
         return this.mat == data.getItemType()
                 && (this.data < 0 || data.getData() == this.data);
     }
