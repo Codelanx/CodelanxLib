@@ -32,7 +32,7 @@ import java.util.Objects;
  *
  * @since 0.2.0
  * @author 1Rogue
- * @version 0.2.0
+ * @version 0.3.1
  */
 public class BlockData implements Comparable<BlockData> {
 
