@@ -89,7 +89,9 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
     private int minArgs = 0;
 
     /**
-     * Initializes a new {@link CommandNode} with no parent object
+     * Initializes a new {@link CommandNode} with no parent object,
+     * and automatically attatches a {@link HelpCommand} as a sub-command
+     * in order to automate help output
      *
      * @since 0.1.0
      * @version 0.1.0
@@ -98,7 +100,19 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @param plugin The {@link Plugin} relevant to this node
      */
     public CommandNode(E plugin) {
-        this(plugin, null);
+        this(plugin, true);
+    }
+
+    /**
+     * Initializes a new {@link CommandNode} with no parent object.
+     * This also attaches a {@link HelpCommand} as a sub-command if the boolean usingHelpCommand is true
+     * in order to automate help output
+     *
+     * @param plugin The {@link Plugin} relevant to this node
+     * @param usingHelpCommand
+     */
+    public CommandNode(E plugin, boolean usingHelpCommand) {
+        this(plugin, null, usingHelpCommand);
     }
 
     /**
@@ -112,14 +126,27 @@ public abstract class CommandNode<E extends Plugin> implements CommandExecutor, 
      * @param plugin The {@link Plugin} relevant to this node
      * @param parent The parent {@link CommandNode}, or {@code null} for none
      */
-    public CommandNode(E plugin, CommandNode<?> parent) {
+    public CommandNode(E plugin, CommandNode<?> parent) { this(plugin, parent, true); }
+
+    /**
+     * Initializes a new {@link CommandNode} with the passed parent object. This
+     * also attaches a {@link HelpCommand} as a sub-command if the boolean usingHelpCommand is true
+     * in order to automate help output
+     *
+     * @param plugin The {@link Plugin} relevant to this node
+     * @param parent The parent {@link CommandNode}, or {@code null} for none
+     * @param usingHelpCommand Whether or not the HelpCommand will be attatced
+     */
+    public CommandNode(E plugin, CommandNode<?> parent, boolean usingHelpCommand) {
         this.plugin = plugin;
         this.format = Lang.getFormat(this.plugin);
         if (parent != null) {
             this.setParent(parent);
         }
-        if (!(this instanceof HelpCommand)) {
-            this.addChild(new HelpCommand<>(this.plugin));
+        if(usingHelpCommand) {
+            if (!(this instanceof HelpCommand)) {
+                this.addChild(new HelpCommand<>(this.plugin));
+            }
         }
     }
 
