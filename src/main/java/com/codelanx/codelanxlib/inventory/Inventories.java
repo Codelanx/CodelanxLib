@@ -60,37 +60,6 @@ public final class Inventories {
     }
 
     /**
-     * Returns the inventory slot for the item in a Player's hand.
-     *
-     * @since 0.1.0
-     * @version 0.1.0
-     *
-     * @param p The player to get the item slot from
-     * @return The non-raw slot number of the item being held
-     * @throws IllegalStateException if the item is modified during the method
-     *                               execution
-     */
-    public static int getHeldItemSlot(Player p) {
-        synchronized (p.getInventory()) {
-            byte[] b = new byte[32];
-            RNG.THREAD_LOCAL().nextBytes(b);
-            List<String> bitStr = new ArrayList<>(Arrays.asList(Base64.encode(b)));
-            ItemStack[] contents = p.getInventory().getContents();
-            //Time is of the essence now
-            List<String> oldLore = p.getItemInHand().getItemMeta().getLore();
-            p.getItemInHand().getItemMeta().setLore(bitStr);
-            for (int i = 0; i < 9; i++) {
-                if (contents[i].getItemMeta().getLore().equals(bitStr)) {
-                    p.getItemInHand().getItemMeta().setLore(oldLore);
-                    return i;
-                }
-            }
-            p.getItemInHand().getItemMeta().setLore(oldLore);
-            throw new IllegalStateException("Race conflict with other plugin while running method");
-        }
-    }
-
-    /**
      * Returns the slot(s) that an {@link Item} would be placed into.
      * 
      * @since 0.1.0
