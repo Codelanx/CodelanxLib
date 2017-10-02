@@ -26,6 +26,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+
 /**
  * Created by Rogue on 11/17/2015.
  */
@@ -104,5 +114,54 @@ public class ReflectBukkit { //blergh, save me from this classname
             Debugger.error(ex, "Error reflecting for plugin class");
             throw new IllegalStateException("Could not load from called class (Classloader issue?)", ex);
         }
+    }
+
+    /**
+     * Checks whether or not there is a plugin on the server with the name of
+     * the passed {@code name} paramater. This method achieves this by scanning
+     * the plugins folder and reading the {@code plugin.yml} files of any
+     * respective jarfiles in the directory.
+     *
+     * @since 0.1.0
+     * @version 0.2.0
+     *
+     * @param name The name of the plugin as specified in the {@code plugin.yml}
+     * @return The {@link File} for the plugin jarfile, or {@code null} if not
+     *         found
+     */
+    public static File findPluginJarfile(String name) {
+        File plugins = new File("plugins");
+        Exceptions.illegalState(plugins.isDirectory(), "'plugins' isn't a directory! (wat)");
+        for (File f : plugins.listFiles((File pathname) -> {
+            return pathname.getPath().endsWith(".jar");
+        })) {
+            try (InputStream is = new FileInputStream(f); ZipInputStream zi = new ZipInputStream(is)) {
+                ZipEntry ent = null;
+                while ((ent = zi.getNextEntry()) != null) {
+                    if (ent.getName().equalsIgnoreCase("plugin.yml")) {
+                        break;
+                    }
+                }
+                if (ent == null) {
+                    continue; //no plugin.yml found
+                }
+                ZipFile z = new ZipFile(f);
+                try (InputStream fis = z.getInputStream(ent);
+                     InputStreamReader fisr = new InputStreamReader(fis);
+                     BufferedReader scan = new BufferedReader(fisr)) {
+                    String in;
+                    while ((in = scan.readLine()) != null) {
+                        if (in.startsWith("name: ")) {
+                            if (in.substring(6).equalsIgnoreCase(name)) {
+                                return f;
+                            }
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                Debugger.error(ex, "Error reading plugin jarfiles");
+            }
+        }
+        return null;
     }
 }
