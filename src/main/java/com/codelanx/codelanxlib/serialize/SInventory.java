@@ -59,8 +59,8 @@ public class SInventory implements ConfigurationSerializable {
      * @param contents The {@link ItemStack}s to copy
      */
     public SInventory(ItemStack... contents) {
-        this.items.addAll(Arrays.asList(contents).stream()
-                .map(i -> i.clone()).collect(Collectors.toList()));
+        this.items.addAll(Arrays.stream(contents)
+                .map(ItemStack::clone).collect(Collectors.toList()));
     }
 
     /**

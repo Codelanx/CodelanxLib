@@ -84,11 +84,7 @@ public class BlockData implements Comparable<BlockData> {
      * @return This {@link BlockData} in {@link ItemStack} form
      */
     public ItemStack toItemStack() {
-        ItemStack back = new ItemStack(this.mat);
-        if (this.data > 0) {
-            back.getData().setData(this.data);
-        }
-        return back;
+        return new ItemStack(this.mat, 1, ((this.data > 0) ? this.data : 0));
     }
 
     public MaterialData toMaterialData() {
